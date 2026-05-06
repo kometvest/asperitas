@@ -23,10 +23,10 @@ const Contact = () => {
       <section className="section dark-section">
         <div className="container">
           <div className="contact-layout" style={{ display: 'flex', flexWrap: 'wrap', gap: '4rem', justifyContent: 'space-between' }}>
-            
+
             <div className="contact-info" style={{ flex: '1', minWidth: '300px' }}>
               <h2 className="section-title" style={{ textAlign: 'left', marginBottom: '2rem' }}>Get in Touch</h2>
-              
+
               <div className="cards-grid" style={{ gap: '1.5rem', marginBottom: '3rem' }}>
                 <div className="card glow-box" style={{ padding: '1.5rem' }}>
                   <h3 style={{ color: 'var(--accent-cyan)', fontSize: '1.1rem' }}>Investment</h3>
@@ -67,7 +67,7 @@ const Contact = () => {
                       <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Name</label>
                       <input type="text" required placeholder="Your Name" style={{ width: '100%', padding: '1rem', background: 'var(--bg-primary)', border: '1px solid rgba(140, 150, 166, 0.2)', borderRadius: '6px', color: 'var(--text-main)', fontFamily: 'var(--font-body)' }} />
                     </div>
-                    
+
                     <div className="form-group">
                       <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>Email</label>
                       <input type="email" required placeholder="Your Email" style={{ width: '100%', padding: '1rem', background: 'var(--bg-primary)', border: '1px solid rgba(140, 150, 166, 0.2)', borderRadius: '6px', color: 'var(--text-main)', fontFamily: 'var(--font-body)' }} />
