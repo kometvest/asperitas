@@ -2,7 +2,7 @@ import './Home.css';
 
 const LinkedInIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
   </svg>
 );
 
@@ -19,6 +19,12 @@ const Company = () => {
       title: 'CFO',
       linkedin: 'https://www.linkedin.com/in/caustic',
       image: '/cfo.jpeg'
+    },
+    {
+      name: 'Beonseok Oh',
+      title: 'COO',
+      linkedin: '',
+      image: '/coo.png'
     }
   ];
 
@@ -43,7 +49,7 @@ const Company = () => {
               Asperitas Inc. is building a vertically integrated biotechnology platform that connects global biodiversity resources with synthetic biology product development. We believe that nature is the largest unexplored library of biotechnology, and that conservation, discovery, and engineering should work together rather than separately.
             </p>
           </div>
-          
+
           <div className="card glow-box" style={{ width: '100%' }}>
             <h2 style={{ color: 'var(--accent-green)', marginBottom: '1rem' }}>Mission</h2>
             <p style={{ fontSize: '1.1rem', lineHeight: '1.8' }}>To transform biodiversity into biotechnology.</p>
@@ -68,9 +74,11 @@ const Company = () => {
                 <div style={{ flex: 1 }}>
                   <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{member.name}</h3>
                   <p style={{ color: 'var(--accent-cyan)', marginBottom: '1rem', fontWeight: 500 }}>{member.title}</p>
-                  <a href={member.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent-cyan)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
-                    <LinkedInIcon />
-                  </a>
+                  {member.linkedin && (
+                    <a href={member.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = 'var(--accent-cyan)'} onMouseOut={(e) => e.currentTarget.style.color = 'var(--text-muted)'}>
+                      <LinkedInIcon />
+                    </a>
+                  )}
                 </div>
               </div>
             ))}
