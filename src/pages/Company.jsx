@@ -21,8 +21,8 @@ const Company = () => {
       image: '/cfo.jpeg'
     },
     {
-      name: 'Beonseok Oh',
-      title: 'COO',
+      name: 'Beomseok Oh',
+      title: 'COO & AI Manager',
       linkedin: '',
       image: '/coo.png'
     }
