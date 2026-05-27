@@ -12,7 +12,7 @@ const Company = () => {
       name: 'Minseo Kim',
       title: 'Founder & CEO',
       linkedin: 'https://www.linkedin.com/in/piloesnim/',
-      image: '/ceo.jpg'
+      image: '/IMG_1286.jpeg'
     },
     {
       name: 'Eunseong Lee',
