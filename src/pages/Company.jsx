@@ -22,7 +22,7 @@ const Company = () => {
     },
     {
       name: 'Beomseok Oh',
-      title: 'CCO & AI Manager',
+      title: 'COO & AI Manager',
       linkedin: 'https://www.linkedin.com/in/범석-오-66154340a/',
       image: '/coo.png'
     }
