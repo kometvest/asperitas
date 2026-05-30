@@ -28,7 +28,7 @@ const Company = () => {
     },
     {
       name: 'Juwon Ham',
-      title: 'CSO',
+      title: 'CSO (Chief Science Officer)',
       linkedin: 'https://www.linkedin.com/in/주원-함-0b7905412?',
       image: '/cso.png'
     }
