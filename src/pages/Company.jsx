@@ -25,6 +25,12 @@ const Company = () => {
       title: 'COO & AI Manager',
       linkedin: 'https://www.linkedin.com/in/범석-오-66154340a/',
       image: '/coo.png'
+    },
+    {
+      name: 'Juwon Ham',
+      title: 'CSO',
+      linkedin: 'https://www.linkedin.com/in/주원-함-0b7905412?',
+      image: '/cso.png'
     }
   ];
 
