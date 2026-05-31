@@ -31,11 +31,6 @@ const Company = () => {
       title: 'CSO (Chief Science Officer)',
       linkedin: 'https://www.linkedin.com/in/주원-함-0b7905412?',
       image: '/cso.png'
-    },
-     {
-      name: 'Seungbin Ha',
-      title: 'CMO (Chief Mathematics Officer',
-      image: '/cso.png'
     }
   ];
 
