@@ -28,9 +28,15 @@ const Company = () => {
     },
     {
       name: 'Juwon Ham',
-      title: 'CSO (Chief Science Officer)',
+      title: 'Biotechnology Researcher',
       linkedin: 'https://www.linkedin.com/in/주원-함-0b7905412?',
       image: '/cso.png'
+    },
+    {
+      name: 'Minjae Kim',
+      title: 'Biotechnology Researcher',
+      linkedin: 'www.linkedin.com/in/rninjae-kim',
+      image: '/minjae.jpeg'
     }
   ];
 
