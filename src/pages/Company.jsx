@@ -35,7 +35,7 @@ const Company = () => {
     {
       name: 'Minjae Kim',
       title: 'Biotechnology Researcher',
-      linkedin: 'www.linkedin.com/in/rninjae-kim',
+      linkedin: 'https://www.linkedin.com/in/rninjae-kim',
       image: '/minjae.jpeg'
     }
   ];
