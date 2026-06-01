@@ -1,133 +1,242 @@
-import { Globe2, Sprout, HandHeart, FlaskConical } from 'lucide-react';
-import './Home.css';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import InteractiveGlobe from '../components/InteractiveGlobe';
+import { SPECIES_DATA } from '../data/speciesData';
+import './Conservation.css';
+
+// ── IUCN SPECIES BARS ─────────────────────────────────────────────────────
+const iucnCounts = SPECIES_DATA.reduce((acc, s) => {
+  acc[s.iucn] = (acc[s.iucn] || 0) + 1;
+  return acc;
+}, {});
+
+const IUCN_CATEGORIES = [
+  { code: 'EW', label: 'Extinct in Wild',        color: '#5C2D91', count: iucnCounts['EW'] || 0 },
+  { code: 'CR', label: 'Critically Endangered',  color: '#D7191C', count: iucnCounts['CR'] || 0 },
+  { code: 'EN', label: 'Endangered',             color: '#F17C20', count: iucnCounts['EN'] || 0 },
+  { code: 'VU', label: 'Vulnerable',             color: '#FECC02', count: iucnCounts['VU'] || 0 },
+];
+
+function IUCNBars() {
+  const [animated, setAnimated] = useState(false);
+  const ref = useRef(null);
+  const maxCount = Math.max(...IUCN_CATEGORIES.map((c) => c.count));
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setAnimated(true); },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div className="cn-iucn" ref={ref}>
+      {IUCN_CATEGORIES.map((cat) => (
+        <div key={cat.code} className="cn-iucn-row">
+          <div className="cn-iucn-meta">
+            <span className="cn-iucn-code" style={{ color: cat.color }}>{cat.code}</span>
+            <span className="cn-iucn-label">{cat.label}</span>
+          </div>
+          <div className="cn-iucn-track">
+            <div
+              className="cn-iucn-bar"
+              style={{
+                background: cat.color,
+                width: animated ? `${(cat.count / maxCount) * 100}%` : '0%',
+                boxShadow: `0 0 12px ${cat.color}66`,
+              }}
+            />
+          </div>
+          <span className="cn-iucn-count">{cat.count}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── SLIDE GALLERY ─────────────────────────────────────────────────────────
+function SlideGallery() {
+  const [randomItems, setRandomItems] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    // Pick 10 random items from SPECIES_DATA
+    const shuffled = [...SPECIES_DATA].sort(() => 0.5 - Math.random());
+    setRandomItems(shuffled.slice(0, 10));
+  }, []);
+
+  const go = (idx) => {
+    if (randomItems.length === 0) return;
+    clearTimeout(timerRef.current);
+    setCurrent((idx + randomItems.length) % randomItems.length);
+  };
+
+  useEffect(() => {
+    if (randomItems.length === 0) return;
+    timerRef.current = setTimeout(() => {
+      setCurrent((p) => (p + 1) % randomItems.length);
+    }, 4000);
+    return () => clearTimeout(timerRef.current);
+  }, [current, randomItems]);
+
+  if (randomItems.length === 0) {
+    return <div className="cn-gallery-loading">Loading featured species...</div>;
+  }
+
+  return (
+    <div className="cn-gallery">
+      <div className="cn-gallery-stage">
+        {randomItems.map((item, i) => (
+          <div
+            key={i}
+            className={`cn-gallery-slide${i === current ? ' cn-slide-active' : ''}`}
+          >
+            {item.image === 'preparing' ? (
+              <div className="cn-gallery-placeholder">
+                <div className="cn-gallery-placeholder-text">{item.name}</div>
+                <div className="cn-gallery-placeholder-sub">Photo Preparing</div>
+              </div>
+            ) : (
+              <img src={item.image} alt={item.name} />
+            )}
+            <div className="cn-gallery-caption">
+              <span className="cn-gallery-name">{item.name}</span>
+              <span className="cn-gallery-sci">{item.scientific}</span>
+            </div>
+          </div>
+        ))}
+        <button className="cn-gallery-btn cn-btn-prev" onClick={() => go(current - 1)}>‹</button>
+        <button className="cn-gallery-btn cn-btn-next" onClick={() => go(current + 1)}>›</button>
+      </div>
+      <div className="cn-gallery-dots">
+        {randomItems.map((_, i) => (
+          <button
+            key={i}
+            className={`cn-dot${i === current ? ' cn-dot-active' : ''}`}
+            onClick={() => go(i)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── PAGE ──────────────────────────────────────────────────────────────────
+const PARTNERS = [
+  { name: 'KAIST', logo: '/kaist.png' },
+  { name: 'KSA',   logo: '/ksa.png'   },
+  { name: 'KAIST', logo: '/kaist.png' },
+  { name: 'KSA',   logo: '/ksa.png'   },
+  { name: 'KAIST', logo: '/kaist.png' },
+  { name: 'KSA',   logo: '/ksa.png'   },
+  { name: 'KAIST', logo: '/kaist.png' },
+  { name: 'KSA',   logo: '/ksa.png'   },
+];
 
 const Conservation = () => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 100);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <div className="conservation-page">
-      <section className="hero section" style={{ minHeight: '60vh', position: 'relative', backgroundImage: 'url("/conservation.jpeg")', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.7)', zIndex: 1 }}></div>
-        <div className="container hero-container" style={{ textAlign: 'center', justifyContent: 'center', position: 'relative', zIndex: 2 }}>
-          <div className="hero-content" style={{ maxWidth: '1400px' }}>
-            <h1 className="hero-title text-gradient">Conservation</h1>
-            <p className="hero-subtitle" style={{ fontSize: '1.4rem', whiteSpace: 'nowrap', width: '100%', color: '#fff' }}>
-              Conservation through responsible propagation, research access, and biodiversity partnerships.
+    <div className="cn-page">
+
+      {/* ── HERO ── */}
+      <section className="cn-hero section">
+        {/* Animated title */}
+        <div className="cn-hero-title-wrap">
+          <h1 className={`cn-hero-title text-gradient${visible ? ' cn-hero-visible' : ''}`}>
+            Conservation
+          </h1>
+        </div>
+
+        {/* Stat + globe row */}
+        <div className="cn-hero-body">
+          {/* Left: stat + description */}
+          <div className="cn-hero-left">
+            <div className="cn-hero-stat">
+              <span className="cn-stat-number">1M+</span>
+              <span className="cn-stat-unit">species</span>
+            </div>
+            <p className="cn-hero-stat-label">are endangered worldwide</p>
+            <p className="cn-hero-desc">
+              Biodiversity loss is accelerating at an unprecedented rate. Over one million animal
+              and plant species now face extinction — many within decades. Asperitas works to
+              reverse this trajectory through conservation-oriented breeding, responsible
+              propagation, and biotechnology research.
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Restoration Status Section */}
-      <section className="section" style={{ padding: '4rem 0', background: 'rgba(124, 255, 155, 0.02)' }}>
-        <div className="container">
-          <h2 className="section-title" style={{ fontSize: '2rem', marginBottom: '3rem' }}>Restoration Status</h2>
-          <div className="cards-grid grid-2">
-            <div className="card glow-box" style={{ textAlign: 'center' }}>
-              <h3 style={{ color: 'var(--accent-green)', fontSize: '2.5rem', marginBottom: '1rem' }}>5000+ / 30000+</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>CITES I, II, III: Imported & Bred</p>
-            </div>
-            <div className="card glow-box" style={{ textAlign: 'center' }}>
-              <h3 style={{ color: 'var(--accent-cyan)', fontSize: '2.5rem', marginBottom: '1rem' }}>18+</h3>
-              <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>Exclusive Overseas Farms Owned</p>
+            <div style={{ marginTop: '1rem', display: 'flex' }}>
+              <Link to="/conservation/farms" className="cn-more-btn">
+                Explore Farms <span>→</span>
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="section dark-section">
-        <div className="container">
-          <h2 className="section-title">Our Conservation Model</h2>
-          
-          <div className="flow-diagram" style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: '1.5rem', alignItems: 'center' }}>
-            <div className="flow-step" style={{ padding: '0.8rem 1.5rem' }}>Legal Import / Export</div>
-            <div className="flow-arrow" style={{ fontSize: '1.5rem', color: 'var(--accent-cyan)' }}>→</div>
-            <div className="flow-step" style={{ padding: '0.8rem 1.5rem' }}>Quarantine & Welfare</div>
-            <div className="flow-arrow" style={{ fontSize: '1.5rem', color: 'var(--accent-cyan)' }}>→</div>
-            <div className="flow-step" style={{ padding: '0.8rem 1.5rem' }}>Breeding & Population Growth</div>
-            <div className="flow-arrow" style={{ fontSize: '1.5rem', color: 'var(--accent-cyan)' }}>→</div>
-            <div className="flow-step" style={{ padding: '0.8rem 1.5rem' }}>Partnerships</div>
-            <div className="flow-arrow" style={{ fontSize: '1.5rem', color: 'var(--accent-cyan)' }}>→</div>
-            <div className="flow-step highlight-step" style={{ padding: '0.8rem 1.5rem', background: 'var(--accent-cyan)', color: '#000' }}>
-              Conservation Collaboration
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-          <div className="card glow-box" style={{ width: '100%' }}>
-            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <Sprout size={32} color="var(--accent-green)" />
-              <h2 style={{ fontSize: '1.8rem', margin: 0 }}>Species Scope</h2>
-            </div>
-            <ul style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.8', listStyle: 'none', padding: 0 }}>
-              <li>• CITES Appendix I, II, III species</li>
-              <li>• Rare reptiles, amphibians, plants, and other biological resources</li>
-            </ul>
-          </div>
-
-          <div className="card glow-box" style={{ width: '100%' }}>
-            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <HandHeart size={32} color="var(--accent-rose)" />
-              <h2 style={{ fontSize: '1.8rem', margin: 0 }}>Local Impact</h2>
-            </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.8' }}>
-              Creating economic incentives for local communities to conserve and breed species responsibly.
-            </p>
-          </div>
-
-          <div className="card glow-box" style={{ width: '100%' }}>
-            <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <Globe2 size={32} color="var(--accent-cyan)" />
-              <h2 style={{ fontSize: '1.8rem', margin: 0 }}>Global Network</h2>
-            </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: '1.8' }}>
-              Connecting conservation partners and responsible breeders across the globe.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="section dark-section" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <div className="container">
-          <h2 className="section-title">Global Network Map</h2>
-          <div style={{ margin: '3rem 0' }}>
+          {/* Right: Interactive Globe */}
+          <div className="cn-hero-right">
             <InteractiveGlobe />
           </div>
         </div>
       </section>
 
-      {/* Future Plan Section */}
-      <section className="section" style={{ background: 'var(--bg-main)' }}>
+      {/* ── SPECIES LIST ── */}
+      <section className="section cn-species-section">
         <div className="container">
-          <div className="card glow-box" style={{ border: '1px solid var(--accent-cyan)' }}>
-            <h2 className="section-title" style={{ textAlign: 'left', display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <FlaskConical size={32} color="var(--accent-cyan)" />
-              Future Plan: Global Research Centers
-            </h2>
-            <div style={{ marginTop: '2rem' }}>
-              <p style={{ fontSize: '1.2rem', color: 'var(--text-main)', lineHeight: '1.8', marginBottom: '1.5rem' }}>
-                We plan to transform our existing global farm network beyond simple production facilities into <strong>state-of-the-art Life Science Research Centers</strong>.
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-                <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
-                  <h4 style={{ color: 'var(--accent-green)', marginBottom: '1rem' }}>In-situ Laboratories</h4>
-                  <p style={{ color: 'var(--text-muted)' }}>
-                    We will establish professional laboratories at each base farm to strengthen real-time research and management of local biological resources.
-                  </p>
-                </div>
-                <div style={{ padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px' }}>
-                  <h4 style={{ color: 'var(--accent-cyan)', marginBottom: '1rem' }}>Biological Discovery</h4>
-                  <p style={{ color: 'var(--text-muted)' }}>
-                    The centers will conduct basic species research and discover high-value bio-byproducts, such as new enzymes and pigments, during the process.
-                  </p>
-                </div>
-              </div>
+          <div className="cn-species-header">
+            <div>
+              <h2 className="cn-section-heading">Species by IUCN Status</h2>
+              <p className="cn-species-sub">Species under our active conservation program</p>
             </div>
+          </div>
+
+          <IUCNBars />
+
+          <div className="cn-restoration-row">
+            <div className="cn-restoration-text">
+              <p>
+                Asperitas currently maintains active conservation breeding programs for over{' '}
+                <strong style={{ color: 'var(--accent-green)' }}>{SPECIES_DATA.length} species</strong> across
+                IUCN threat categories, with dedicated husbandry protocols, genetic tracking,
+                and international CITES compliance across 18+ partner farms worldwide.
+              </p>
+            </div>
+            <Link to="/species-list" className="cn-more-btn">
+              More <span>→</span>
+            </Link>
           </div>
         </div>
       </section>
+
+      {/* ── SLIDE GALLERY ── */}
+      <section className="section cn-gallery-section">
+        <div className="container">
+          <h2 className="cn-section-heading" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            Featured Species
+          </h2>
+          <SlideGallery />
+        </div>
+      </section>
+
+      {/* ── OUR PARTNERS ── */}
+      <section className="cn-partners-section">
+        <div className="container">
+          <p className="cn-partners-label">Our Partners</p>
+        </div>
+        <div className="cn-marquee-wrap">
+          <div className="cn-marquee-track">
+            {[...PARTNERS, ...PARTNERS].map((p, i) => (
+              <img key={i} src={p.logo} alt={p.name} className="cn-partner-logo" />
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };

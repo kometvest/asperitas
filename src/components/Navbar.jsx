@@ -33,13 +33,10 @@ const Navbar = () => {
             <Link to="/conservation" className={isActive('/conservation') ? 'active' : ''}>Conservation</Link>
           </li>
           <li>
-            <Link to="/scitech" className={isActive('/scitech') ? 'active' : ''}>Sci. & Tech.</Link>
+            <Link to="/research" className={isActive('/research') ? 'active' : ''}>Research</Link>
           </li>
           <li>
             <Link to="/news" className={isActive('/news') ? 'active' : ''}>News</Link>
-          </li>
-          <li>
-            <Link to="/contact" className="btn btn-primary nav-contact-btn">Invest / Partner</Link>
           </li>
         </ul>
       </div>

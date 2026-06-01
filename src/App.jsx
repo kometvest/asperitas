@@ -4,9 +4,12 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Company from './pages/Company';
 import Conservation from './pages/Conservation';
-import SciTech from './pages/SciTech';
+import Farms from './pages/Farms';
+import Research from './pages/Research';
+import ProjectDetail from './pages/ProjectDetail';
 import News from './pages/News';
 import Contact from './pages/Contact';
+import SpeciesList from './pages/SpeciesList';
 
 function App() {
   return (
@@ -17,7 +20,10 @@ function App() {
           <Route index element={<Home />} />
           <Route path="company" element={<Company />} />
           <Route path="conservation" element={<Conservation />} />
-          <Route path="scitech" element={<SciTech />} />
+          <Route path="conservation/farms" element={<Farms />} />
+          <Route path="species-list" element={<SpeciesList />} />
+          <Route path="research" element={<Research />} />
+          <Route path="research/project/:id" element={<ProjectDetail />} />
           <Route path="news" element={<News />} />
           <Route path="contact" element={<Contact />} />
         </Route>

@@ -6,19 +6,25 @@ const Home = () => {
   return (
     <div className="home-page">
       {/* Hero Section */}
-      <section className="hero section" style={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'right', position: 'relative', backgroundImage: 'url("/flower.jpeg")', backgroundSize: 'cover', backgroundPosition: 'center 25%' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1 }}></div>
-        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <h1 style={{ fontSize: '5rem', lineHeight: '1.1', marginBottom: '2rem', fontFamily: 'var(--font-heading)' }}>
-            Turning Biodiversity <br/>into Biotechnology.
+      <section className="home-hero">
+        <div className="home-hero-bg-overlay" />
+        <div className="home-hero-glow-1" />
+        <div className="home-hero-glow-2" />
+        
+        <div className="container home-hero-container">
+          <h1 className="home-hero-title">
+            <span className="home-title-word word-1">Turning</span>{' '}
+            <span className="home-title-word word-2 grad-green">Biodiversity</span> <br/>
+            <span className="home-title-word word-3">into</span>{' '}
+            <span className="home-title-word word-4 grad-cyan-violet">Biotechnology.</span>
           </h1>
-          <p style={{ fontSize: '1.25rem', color: 'var(--text-main)', maxWidth: '1100px', marginLeft: 'auto', marginBottom: '3rem', lineHeight: '1.6', fontStyle: 'italic', textAlign: 'right' }}>
+          <p className="home-hero-subtitle">
             Asperitas is a synthetic biology company building a vertically integrated platform<br/>
             that connects biodiversity conservation, biological discovery, and high-value bio-product development.
           </p>
-          <div style={{ display: 'flex', gap: '1.5rem', justifyContent: 'flex-end' }}>
-            <Link to="/scitech" className="btn btn-primary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', background: 'var(--accent-green)', color: '#000', border: 'none' }}>Explore</Link>
-            <Link to="/contact" className="btn btn-secondary" style={{ padding: '1rem 2.5rem', fontSize: '1.1rem', borderRadius: '50px', background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.3)' }}>Partner with Us</Link>
+          <div className="home-hero-cta">
+            <Link to="/company" className="home-btn home-btn-primary">Explore</Link>
+            <Link to="/contact" className="home-btn home-btn-secondary">Partner with Us</Link>
           </div>
         </div>
       </section>
