@@ -38,16 +38,16 @@ const LEADERSHIP = [
     image: '/coo.png',
     description: 'Freshman at Harbin Institute of Technology specializing in AI, and Electrical & Information Engineering.',
   },
+];
+
+const FACULTY = [
   {
     name: 'Minjae Kim',
-    title: 'CTO',
+    title: 'Faculty',
     linkedin: 'https://www.linkedin.com/in/rninjae-kim',
     image: '/minjae.jpeg',
     description: 'Senior at Seoul Science High School specializing in biology & engineering. President of student community. Korea National Representative, 37th International Biology Olympiad.',
   },
-];
-
-const FACULTY = [
   {
     name: 'Juwon Ham',
     title: 'Faculty',
@@ -55,6 +55,7 @@ const FACULTY = [
     image: '/cso.png',
     description: 'Senior at Korea Science Academy of KAIST, specializing in biology. Won 2026 ISEF special prize.',
   },
+  
 ];
 
 const ADVISORY = [];
