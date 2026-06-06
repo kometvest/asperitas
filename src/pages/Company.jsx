@@ -42,20 +42,19 @@ const LEADERSHIP = [
 
 const FACULTY = [
   {
-    name: 'Minjae Kim',
-    title: 'Faculty',
-    linkedin: 'https://www.linkedin.com/in/rninjae-kim',
-    image: '/minjae.jpeg',
-    description: 'Senior at Seoul Science High School specializing in biology & engineering. President of student community. Korea National Representative, 37th International Biology Olympiad.',
-  },
-  {
     name: 'Juwon Ham',
     title: 'Faculty',
     linkedin: 'https://www.linkedin.com/in/주원-함-0b7905412?',
     image: '/cso.png',
     description: 'Senior at Korea Science Academy of KAIST, specializing in biology. Won 2026 ISEF special prize.',
   },
-  
+  {
+    name: 'Minjae Kim',
+    title: 'Faculty',
+    linkedin: 'https://www.linkedin.com/in/rninjae-kim',
+    image: '/minjae.jpeg',
+    description: 'Senior at Seoul Science High School specializing in biology & engineering. President of student community. Korea National Representative, 37th International Biology Olympiad.',
+  },
 ];
 
 const ADVISORY = [];
@@ -226,6 +225,29 @@ function TeamTab() {
 
   return (
     <>
+      {/* ── CAREER BANNER ── */}
+      <div className="co-career-banner">
+        <div className="co-career-banner-left">
+          <span className="co-career-label">CAREERS</span>
+          <h2 className="co-career-heading">Join Our Team</h2>
+          <p className="co-career-sub">
+            We're looking for passionate scientists, engineers, and visionaries to help build
+            the future of biodiversity-driven biotechnology.
+          </p>
+        </div>
+        <a
+          href="https://bca87jmu.ninehire.site/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="co-career-cta"
+        >
+          View Open Positions
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+      </div>
+
       <div className="co-team-grid">
         <Column title="Leadership" members={LEADERSHIP} accent="var(--accent-cyan)" />
         <Column title="Faculty" members={FACULTY} accent="var(--accent-green)" />
