@@ -327,6 +327,97 @@
 }
 
 /* ──────────────────────────────────
+   CAREER BANNER
+────────────────────────────────── */
+.co-career-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.5rem 3rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(88,216,255,0.06) 0%, rgba(124,255,155,0.04) 50%, rgba(167,139,250,0.06) 100%);
+  border: 1px solid rgba(88,216,255,0.18);
+  margin-bottom: 3.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.co-career-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 0% 50%, rgba(88,216,255,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.co-career-banner:hover {
+  border-color: rgba(88,216,255,0.35);
+  box-shadow: 0 0 40px rgba(88,216,255,0.1);
+}
+
+.co-career-banner-left {
+  flex: 1;
+}
+
+.co-career-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  color: var(--accent-cyan);
+  font-weight: 700;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.co-career-heading {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.6rem;
+  line-height: 1.25;
+}
+
+.co-career-sub {
+  font-size: 0.97rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 540px;
+}
+
+.co-career-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, var(--accent-cyan), #0090cc);
+  color: #000;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, filter 0.3s ease;
+  box-shadow: 0 4px 24px rgba(88,216,255,0.3);
+}
+
+.co-career-cta:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 36px rgba(88,216,255,0.45);
+  filter: brightness(1.1);
+}
+
+.co-career-cta svg {
+  transition: transform 0.3s ease;
+}
+
+.co-career-cta:hover svg {
+  transform: translateX(4px);
+}
+
+/* ──────────────────────────────────
    TEAM TAB
 ────────────────────────────────── */
 .co-team-grid {
@@ -581,4 +672,6 @@
   .co-timeline-dot { left: 12px; }
   .co-modal-inner { flex-direction: column; align-items: center; text-align: center; }
   .co-mission-strip { flex-direction: column; gap: 0.5rem; text-align: center; }
+  .co-career-banner { flex-direction: column; align-items: flex-start; padding: 2rem; }
+  .co-career-cta { width: 100%; justify-content: center; }
 }
