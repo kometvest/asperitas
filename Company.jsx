@@ -25,11 +25,11 @@ const LEADERSHIP = [
     description: 'Senior at Korea Science Academy of KAIST, specializing in synthetic biology.',
   },
   {
-    name: 'Eunseong Lee',
-    title: 'CFO',
-    linkedin: 'https://www.linkedin.com/in/caustic',
-    image: '/cfo.jpeg',
-    description: 'Senior at Korea Science Academy of KAIST specializing in Numerical Analysis & Computational Physics (Simulation).',
+    name: 'Minjae Kim',
+    title: 'CTO',
+    linkedin: 'https://www.linkedin.com/in/rninjae-kim',
+    image: '/minjae.jpeg',
+    description: 'Senior at Seoul Science High School specializing in biology & engineering. President of student community. Korea National Representative, 37th International Biology Olympiad.',
   },
   {
     name: 'Beomseok Oh',
@@ -37,6 +37,13 @@ const LEADERSHIP = [
     linkedin: 'https://www.linkedin.com/in/범석-오-66154340a/',
     image: '/coo.png',
     description: 'Freshman at Harbin Institute of Technology specializing in AI, and Electrical & Information Engineering.',
+  },
+  {
+    name: 'Eunseong Lee',
+    title: 'CFO',
+    linkedin: 'https://www.linkedin.com/in/caustic',
+    image: '/cfo.jpeg',
+    description: 'Senior at Korea Science Academy of KAIST specializing in Numerical Analysis & Computational Physics (Simulation).',
   },
 ];
 
@@ -49,11 +56,11 @@ const FACULTY = [
     description: 'Senior at Korea Science Academy of KAIST, specializing in biology. Won 2026 ISEF special prize.',
   },
   {
-    name: 'Minjae Kim',
+    name: 'Junsoo Bae',
     title: 'Faculty',
-    linkedin: 'https://www.linkedin.com/in/rninjae-kim',
-    image: '/minjae.jpeg',
-    description: 'Senior at Seoul Science High School specializing in biology & engineering. President of student community. Korea National Representative, 37th International Biology Olympiad.',
+    linkedin: '',
+    image: 'junsoo.jpeg',
+    description: 'Senior at Gyeonggi Science High School for the Gifted specializing in biology. Korea National Representative, 37th International Biology Olympiad. ',
   },
 ];
 
