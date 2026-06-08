@@ -1,0 +1,84 @@
+Created At: 2026-06-08T14:38:19Z
+Completed At: 2026-06-08T14:38:19Z
+File Path: `file:///Users/hayung/Desktop/Asperitas%20Renew/company.html`
+Total Lines: 272
+Total Bytes: 13095
+Showing lines 150 to 272
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+150:             <span class="team-bio-link">Read Bio &rarr;</span>
+151:           </div>
+152:         </div>
+153: 
+154:         <!-- Junsoo Bae -->
+155:         <div class="team-card animate-on-scroll" onclick="openTeamModal('Junsoo Bae', 'Faculty', 'assets/junsoo.jpeg', 'Senior at Gyeonggi Science High School for the Gifted specializing in biology. Korea National Representative, 37th International Biology Olympiad.', '')">
+156:           <div class="team-avatar-wrapper">
+157:             <img src="assets/junsoo.jpeg" alt="Junsoo Bae Photo" class="team-avatar-img">
+158:           </div>
+159:           <div class="team-info">
+160:             <h3 class="team-name">Junsoo Bae</h3>
+161:             <p class="team-role">Faculty</p>
+162:             <span class="team-bio-link">Read Bio &rarr;</span>
+163:           </div>
+164:         </div>
+165:       </div>
+166: 
+167:       <!-- Advisory -->
+168:       <h2 class="team-section-header">Advisory</h2>
+169:       <div class="advisory-list animate-on-scroll" style="min-height: 40px;">
+170:         <!-- Left completely empty as requested -->
+171:       </div>
+172:     </div>
+173:   </section>
+174: 
+175:   <!-- Careers Section -->
+176:   <section class="careers-section" id="careers">
+177:     <div class="container">
+178:       <div class="careers-banner animate-on-scroll" style="text-align: left;">
+179:         <h2 class="careers-heading-left">Join the Frontier of Biology</h2>
+180:         <p class="careers-desc-left" style="margin-bottom: 30px; max-width: 700px;">
+181:           We are looking for computational biologists, synthetic biol
+<truncated 2330 bytes>
+ology Research</a></li>
+232:             </ul>
+233:           </div>
+234:         </div>
+235:       </div>
+236: 
+237:       <div class="footer-bottom">
+238:         <p>&copy; 2026 Asperitas Inc. All rights reserved.</p>
+239:         <div class="footer-legal-links">
+240:           <a href="#">Privacy Policy</a>
+241:           <a href="#">Terms of Service</a>
+242:         </div>
+243:       </div>
+244:     </div>
+245:   </footer>
+246: 
+247:   <!-- Team Member Detail Modal -->
+248:   <div id="team-modal" class="team-modal" onclick="closeTeamModal(event)">
+249:     <div class="team-modal-content" onclick="event.stopPropagation()">
+250:       <span class="team-modal-close" onclick="closeTeamModal(event)">&times;</span>
+251:       <div class="team-modal-left">
+252:         <img id="modal-img" src="" alt="Team Member Photo" class="team-modal-img">
+253:       </div>
+254:       <div class="team-modal-right">
+255:         <h3 id="modal-name" class="team-modal-name"></h3>
+256:         <p id="modal-role" class="team-modal-role"></p>
+257:         <p id="modal-desc" class="team-modal-desc"></p>
+258:         <div class="team-modal-social">
+259:           <a id="modal-linkedin" href="" target="_blank" rel="noopener noreferrer" class="team-modal-linkedin" aria-label="LinkedIn Profile">
+260:             <svg viewBox="0 0 24 24">
+261:               <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.8v8.37h2.8v-4.87c0-.26.05-.52.13-.7a.78.78 0 0 1 .72-.52c.5 0 .69.43.69 1v5.1h2.8M6.5 8.37a1.37 1.37 0 1 0 0-2.75 1.37 1.37 0 0 0 0 2.75M8 18.5V10.13H5.2v8.37H8z"/>
+262:             </svg>
+263:           </a>
+264:         </div>
+265:       </div>
+266:     </div>
+267:   </div>
+268: 
+269:   <script src="js/main.js"></script>
+270: </body>
+271: </html>
+272: 
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
+

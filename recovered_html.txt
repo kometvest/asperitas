@@ -1,0 +1,73 @@
+            <span class="team-bio-link">Read Bio &rarr;</span>
+          </div>
+        </div>
+
+        <!-- Junsoo Bae -->
+        <div class="team-card animate-on-scroll" onclick="openTeamModal('Junsoo Bae', 'Faculty', 'assets/junsoo.jpeg', 'Senior at Gyeonggi Science High School for the Gifted specializing in biology. Korea National Representative, 37th International Biology Olympiad.', '')">
+          <div class="team-avatar-wrapper">
+            <img src="assets/junsoo.jpeg" alt="Junsoo Bae Photo" class="team-avatar-img">
+          </div>
+          <div class="team-info">
+            <h3 class="team-name">Junsoo Bae</h3>
+            <p class="team-role">Faculty</p>
+            <span class="team-bio-link">Read Bio &rarr;</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Advisory -->
+      <h2 class="team-section-header">Advisory</h2>
+      <div class="advisory-list animate-on-scroll" style="min-height: 40px;">
+        <!-- Left completely empty as requested -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Careers Section -->
+  <section class="careers-section" id="careers">
+    <div class="container">
+      <div class="careers-banner animate-on-scroll" style="text-align: left;">
+        <h2 class="careers-heading-left">Join the Frontier of Biology</h2>
+        <p class="careers-desc-left" style="margin-bottom: 30px; max-width: 700px;">
+          We are looking for computational biologists, synthetic biol
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Asperitas Inc. All rights reserved.</p>
+        <div class="footer-legal-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Team Member Detail Modal -->
+  <div id="team-modal" class="team-modal" onclick="closeTeamModal(event)">
+    <div class="team-modal-content" onclick="event.stopPropagation()">
+      <span class="team-modal-close" onclick="closeTeamModal(event)">&times;</span>
+      <div class="team-modal-left">
+        <img id="modal-img" src="" alt="Team Member Photo" class="team-modal-img">
+      </div>
+      <div class="team-modal-right">
+        <h3 id="modal-name" class="team-modal-name"></h3>
+        <p id="modal-role" class="team-modal-role"></p>
+        <p id="modal-desc" class="team-modal-desc"></p>
+        <div class="team-modal-social">
+          <a id="modal-linkedin" href="" target="_blank" rel="noopener noreferrer" class="team-modal-linkedin" aria-label="LinkedIn Profile">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.8v8.37h2.8v-4.87c0-.26.05-.52.13-.7a.78.78 0 0 1 .72-.52c.5 0 .69.43.69 1v5.1h2.8M6.5 8.37a1.37 1.37 0 1 0 0-2.75 1.37 1.37 0 0 0 0 2.75M8 18.5V10.13H5.2v8.37H8z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
+

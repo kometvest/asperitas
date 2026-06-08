@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bio AI | Asperitas Inc.</title>
+<meta content="Discover the Bio AI / Dry Lab Platform of Asperitas Inc. Building the Biological Knowledge Graph." name="description"/>
+<link href="css/style.css" rel="stylesheet"/>
+<style>
+    /* Specific interactive styles for the technology page */
+    .graph-node {
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    .graph-node:hover {
+      transform: scale(1.1);
+      filter: brightness(0.9);
+    }
+    .graph-connection {
+      stroke: var(--border-color);
+      stroke-width: 1.5;
+      stroke-dasharray: 4;
+      animation: dash 20s linear infinite;
+      transition: var(--transition-smooth);
+    }
+    .graph-connection.active {
+      stroke: var(--accent-green);
+      stroke-width: 2.5;
+      filter: drop-shadow(0 0 2px rgba(10, 126, 84, 0.3));
+    }
+    .graph-connection.active-blue {
+      stroke: var(--accent-blue);
+      stroke-width: 2.5;
+      filter: drop-shadow(0 0 2px rgba(0, 82, 204, 0.3));
+    }
+    @keyframes dash {
+      to {
+        stroke-dashoffset: -100;
+      }
+    }
+    .node-label {
+      font-family: var(--font-title);
+      font-size: 11px;
+      fill: var(--text-secondary);
+      transition: var(--transition-fast);
+      pointer-events: none;
+    }
+    .graph-node:hover + .node-label,
+    .node-label.active {
+      fill: var(--text-primary);
+      font-weight: 600;
+    }
+    .graph-info-card {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      width: 100%;
+      min-height: 80px;
+      font-size: 13px;
+    }
+    .graph-info-title {
+      font-family: var(--font-title);
+      font-weight: 600;
+      color: var(--accent-green);
+      margin-bottom: 4px;
+    }
+    .graph-info-text {
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+  </style>
+<link href="assets/logo-square-white.png" rel="icon" type="image/png"/></head>
+<body>
+<!-- Header -->
+<header class="header">
+<div class="container header-container">
+<a class="logo-link" href="index.html">
+<img alt="Asperitas Logo" class="logo-img" src="assets/logo-horizontal-white.png"/>
+</a>
+<button aria-label="Toggle navigation" class="mobile-nav-toggle" id="mobile-toggle">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<ul class="nav-menu" id="nav-menu">
+<li class="nav-item-dropdown">
+<a class="nav-link" href="company.html">Company</a>
+<ul class="dropdown-menu">
+<li><a class="dropdown-link" href="company.html#overview">Overview</a></li>
+<li><a class="dropdown-link" href="company.html#team">Team</a></li>
+<li><a class="dropdown-link" href="company.html#careers">Careers</a></li>
+<li><a class="dropdown-link" href="company.html#press">Press &amp; Pub.</a></li>
+</ul>
+</li>
+<li class="nav-item-dropdown">
+<a class="nav-link active" href="technology.html">Technology</a>
+<ul class="dropdown-menu">
+<li><a class="dropdown-link" href="technology.html">Overview</a></li>
+<li><a class="dropdown-link" href="technology-biodiversity.html">Biodiversity</a></li>
+<li><a class="dropdown-link" href="technology-ai.html">Synthetic Bio AI</a></li>
+<li><a class="dropdown-link" href="technology-synthetic-biology.html">Synthetic Biology</a></li>
+</ul>
+</li>
+<li class="nav-item-dropdown">
+<a class="nav-link" href="store.html">Store</a>
+</li>
+<li style="display: flex; align-items: center; margin-left: 20px;">
+<a class="btn-secondary" href="mailto:business@asperitas.bio" style="padding: 8px 16px; font-size: 13px;">Contact</a>
+</li>
+</ul>
+</div>
+</header>
+<!-- Subpage Grid Hero (AI) -->
+<section class="company-hero">
+<div class="container">
+<div class="overview-card animate-on-scroll">
+<span class="overview-tag">LAYER 02</span>
+<h1 class="overview-card-title">Synthetic Bio AI</h1>
+<p class="overview-card-desc">
+          Building a comprehensive Biological Knowledge Graph to predict adaptational traits and design optimized enzyme circuits.
+        </p>
+</div>
+</div>
+</section>
+<!-- Detailed Layer Section -->
+<section class="section-padding" style="background-color: var(--bg-primary);">
+<div class="container">
+<div class="tech-card-item" style="grid-template-columns: 1.2fr 1fr; border-bottom: none; padding-bottom: 0;">
+<div class="tech-card-text">
+<h2 class="tech-card-title" style="font-size: 32px; margin-bottom: 20px;">Dry Lab Platform Stack</h2>
+<p class="tech-card-desc">
+            Our Dry Lab processes raw biodiversity sequences into functional, design-ready components. By linking genomic databases with environmental factors and physical traits, our neural networks construct a highly detailed **Biological Knowledge Graph**.
+          </p>
+<p class="tech-card-desc" style="font-size: 15px; margin-bottom: 30px;">
+            Our modular model architecture comprises Large Language Models for hypothesis formulation, Protein Language Models for sequence mutations, DNA generative modules for regulatory circuit layout, and active learning engines to refine next-stage protocols.
+          </p>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%;">
+<div>
+<h4 style="font-family: var(--font-body); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px;">Knowledge Graph</h4>
+<p style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary); line-height: 1.5;">Mapping relations: <em>Species has Gene</em> → <em>Gene encodes Protein</em> → <em>Protein catalyzes reaction</em> → <em>Pathway causes Phenotype</em>.</p>
+</div>
+<div>
+<h4 style="font-family: var(--font-body); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px;">Function Prediction</h4>
+<p style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary); line-height: 1.5;">Detecting homolog functions in unstudied species to uncover novel enzymes, heat-resistant catalysts, and structural dyes.</p>
+</div>
+<div>
+<h4 style="font-family: var(--font-body); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px;">Pathway Design</h4>
+<p style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary); line-height: 1.5;">Recombining genomic transcripts from disparate organisms to construct novel light-emitting pathways and metabolic functions.</p>
+</div>
+<div>
+<h4 style="font-family: var(--font-body); font-weight: 700; font-size: 16px; color: var(--text-primary); margin-bottom: 8px;">Active Learning Loop</h4>
+<p style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary); line-height: 1.5;">Feeding experimental success and failure data back into our databases, maximizing information gain for subsequent design loops.</p>
+</div>
+</div>
+</div>
+<div class="tech-card-media" style="aspect-ratio: auto; border: none; overflow: visible;">
+<div class="graph-preview" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 6px; padding: 24px; width: 100%;">
+<div style="font-family: var(--font-title); font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 15px;">
+              Biological Knowledge Graph Navigator
+            </div>
+<!-- Interactive SVG Graph -->
+<svg style="width: 100%; height: 180px;" viewbox="0 0 300 200">
+<!-- Connections -->
+<line class="graph-connection" id="conn-1" x1="50" x2="110" y1="100" y2="60"></line>
+<line class="graph-connection" id="conn-2" x1="50" x2="110" y1="100" y2="140"></line>
+<line class="graph-connection" id="conn-3" x1="110" x2="190" y1="60" y2="60"></line>
+<line class="graph-connection" id="conn-4" x1="110" x2="190" y1="140" y2="140"></line>
+<line class="graph-connection" id="conn-5" x1="190" x2="250" y1="60" y2="100"></line>
+<line class="graph-connection" id="conn-6" x1="190" x2="250" y1="140" y2="100"></line>
+<!-- Nodes -->
+<!-- Species -->
+<circle class="graph-node" cx="50" cy="100" data-node="species" fill="var(--bg-primary)" r="14" stroke="var(--accent-green)" stroke-width="2"></circle>
+<text fill="var(--accent-green)" font-family="var(--font-title)" font-size="8" font-weight="700" style="pointer-events:none;" text-anchor="middle" x="50" y="103">SP</text>
+<text class="node-label" text-anchor="middle" x="50" y="125">Species</text>
+<!-- Gene -->
+<circle class="graph-node" cx="110" cy="60" data-node="gene" fill="var(--bg-primary)" r="12" stroke="var(--accent-blue)" stroke-width="2"></circle>
+<text fill="var(--accent-blue)" font-family="var(--font-title)" font-size="7" font-weight="700" style="pointer-events:none;" text-anchor="middle" x="110" y="63">GN</text>
+<text class="node-label" text-anchor="middle" x="110" y="42">Gene</text>
+<!-- Habitat -->
+<circle class="graph-node" cx="110" cy="140" data-node="habitat" fill="var(--bg-primary)" r="12" stroke="var(--accent-green)" stroke-width="1.5"></circle>
+<text fill="var(--accent-green)" font-family="var(--font-title)" font-size="7" style="pointer-events:none;" text-anchor="middle" x="110" y="143">HB</text>
+<text class="node-label" text-anchor="middle" x="110" y="165">Habitat</text>
+<!-- Protein -->
+<circle class="graph-node" cx="190" cy="60" data-node="protein" fill="var(--bg-primary)" r="12" stroke="var(--accent-blue)" stroke-width="2"></circle>
+<text fill="var(--accent-blue)" font-family="var(--font-title)" font-size="7" font-weight="700" style="pointer-events:none;" text-anchor="middle" x="190" y="63">PR</text>
+<text class="node-label" text-anchor="middle" x="190" y="42">Protein</text>
+<!-- Pathway -->
+<circle class="graph-node" cx="190" cy="140" data-node="pathway" fill="var(--bg-primary)" r="12" stroke="var(--accent-green)" stroke-width="1.5"></circle>
+<text fill="var(--accent-green)" font-family="var(--font-title)" font-size="7" style="pointer-events:none;" text-anchor="middle" x="190" y="143">PW</text>
+<text class="node-label" text-anchor="middle" x="190" y="165">Pathway</text>
+<!-- Phenotype -->
+<circle class="graph-node" cx="250" cy="100" data-node="phenotype" fill="var(--bg-primary)" r="14" stroke="var(--text-primary)" stroke-width="2"></circle>
+<text fill="var(--text-primary)" font-family="var(--font-title)" font-size="8" font-weight="700" style="pointer-events:none;" text-anchor="middle" x="250" y="103">PH</text>
+<text class="node-label" text-anchor="middle" x="250" y="125">Phenotype</text>
+</svg>
+<!-- Node Info Display Box -->
+<div class="graph-info-card" id="graph-info-box" style="transition: border-color 0.3s ease; height: 100px; display: flex; flex-direction: column; justify-content: center;">
+<div class="graph-info-title" id="graph-info-title">Hover over a node</div>
+<div class="graph-info-text" id="graph-info-text">Select any node on the graph to map related biological datasets.</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const nodes = document.querySelectorAll('.graph-node');
+          const titleEl = document.getElementById('graph-info-title');
+          const textEl = document.getElementById('graph-info-text');
+          const infoBox = document.getElementById('graph-info-box');
+
+          const nodeData = {
+            'species': {
+              title: 'Species Identification',
+              text: 'Our AI catalogs millions of unstudied organisms, indexing their unique environmental adaptations and survival traits.'
+            },
+            'gene': {
+              title: 'Genomic Extraction',
+              text: 'Deep learning models isolate functional gene clusters responsible for target traits, bypassing junk DNA.'
+            },
+            'habitat': {
+              title: 'Habitat Mapping',
+              text: 'Correlating genomic data with environmental stressors (e.g., extreme heat, deep ocean pressure) to predict enzyme stability.'
+            },
+            'protein': {
+              title: 'Protein Language Models',
+              text: 'Using transformer architectures to predict 3D protein structures and optimize amino acid sequences for industrial applications.'
+            },
+            'pathway': {
+              title: 'Metabolic Pathway Design',
+              text: 'Simulating complex enzymatic reactions to construct novel biosynthetic pathways for therapeutics and materials.'
+            },
+            'phenotype': {
+              title: 'Phenotypic Output',
+              text: 'Validating the final programmable biological product, such as autoluminescent plants or novel therapeutic compounds.'
+            }
+          };
+
+          nodes.forEach(node => {
+            node.style.cursor = 'pointer';
+            node.style.transition = 'all 0.3s ease';
+            // Increase hover hit area using a thick transparent stroke initially, but wait, 
+            // since we have an actual stroke color, we can't easily make it transparent without an overlay.
+            // Instead, we will store original stroke width and just apply CSS padding or rely on the SVG element.
+            node.setAttribute('data-original-stroke-width', node.getAttribute('stroke-width'));
+            // Best way to increase SVG hover area without extra elements: add thick transparent stroke
+            // But we already have a visible stroke! 
+            // So we'll append an invisible circle for each node to act as the hit area.
+            const hitArea = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            hitArea.setAttribute('cx', node.getAttribute('cx'));
+            hitArea.setAttribute('cy', node.getAttribute('cy'));
+            hitArea.setAttribute('r', parseInt(node.getAttribute('r')) + 10);
+            hitArea.setAttribute('fill', 'transparent');
+            hitArea.style.cursor = 'pointer';
+            node.parentNode.appendChild(hitArea);
+
+            const handleEnter = () => {
+              const type = node.getAttribute('data-node');
+              if (nodeData[type]) {
+                titleEl.textContent = nodeData[type].title;
+                textEl.textContent = nodeData[type].text;
+                
+                nodes.forEach(n => {
+                  if (n !== node) n.style.opacity = '0.3';
+                });
+                
+                node.style.transform = 'scale(1.25)';
+                node.style.transformOrigin = `${node.getAttribute('cx')}px ${node.getAttribute('cy')}px`;
+                node.setAttribute('stroke-width', '8');
+                node.setAttribute('stroke-opacity', '0.5');
+                
+                document.querySelectorAll('.graph-connection').forEach(c => c.style.opacity = '0.2');
+                infoBox.style.borderColor = node.getAttribute('stroke');
+              }
+            });
+
+            node.addEventListener('mouseleave', () => {
+              titleEl.textContent = 'Hover over a node';
+              textEl.textContent = 'Select any node on the graph to map related biological datasets.';
+              
+              nodes.forEach(n => {
+                n.style.opacity = '1';
+                n.style.transform = 'scale(1)';
+                n.setAttribute('stroke-width', n.getAttribute('data-original-stroke-width'));
+                n.setAttribute('stroke-opacity', '1');
+              });
+              document.querySelectorAll('.graph-connection').forEach(c => c.style.opacity = '1');
+              infoBox.style.borderColor = 'var(--border-color)';
+            };
+
+            hitArea.addEventListener('mouseenter', handleEnter);
+            hitArea.addEventListener('mouseleave', handleLeave);
+          });
+        });
+      </script>
+<div style="margin-top: 60px; border-top: 1px solid var(--border-color); padding-top: 40px; display: flex; justify-content: space-between;">
+<a class="btn-secondary" href="technology-biodiversity.html">← Prev: Biodiversity</a>
+<a class="btn-secondary" href="technology-synthetic-biology.html">Next: Synthetic Biology →</a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-top">
+<div class="footer-brand">
+<img alt="Asperitas Logo" class="footer-logo" src="assets/logo-horizontal-white.png"/>
+<div class="footer-socials">
+<a class="social-btn" href="https://www.linkedin.com/company/asperitasbio" rel="noopener noreferrer" target="_blank">
+<span>LinkedIn</span>
+</a>
+<a class="social-btn" href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">
+<span>Instagram</span>
+</a>
+<a class="social-btn" href="store.html">
+<span>Store</span>
+</a>
+</div>
+</div>
+<div></div>
+<div class="footer-links-grid">
+<div class="footer-links-col">
+<span class="footer-col-title">Company</span>
+<ul>
+<li><a href="company.html#overview">Overview</a></li>
+<li><a href="company.html#team">Team</a></li>
+<li><a href="company.html#careers">Careers</a></li>
+<li><a href="company.html#press">Press &amp; Publication</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<span class="footer-col-title">Technology</span>
+<ul>
+<li><a href="technology-biodiversity.html">Biodiversity</a></li>
+<li><a href="technology-ai.html">Synthetic Bio AI</a></li>
+<li><a href="technology-synthetic-biology.html">Synthetic Biology</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Asperitas Inc. All rights reserved.</p>
+<div class="footer-legal-links">
+<a href="#">Privacy Policy</a>
+<a href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>
