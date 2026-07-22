@@ -6,41 +6,7 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Store | Asperitas Inc.</title>
 <link href="css/style.css" rel="stylesheet"/>
-<style>
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      font-family: 'Pretendard', sans-serif;
-    }
-    .store-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px;
-    }
-    .preparing-text {
-      font-size: 8vw;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, #fff, #888);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 20px;
-    }
-    .sub-text {
-      font-size: 24px;
-      color: var(--text-secondary);
-      max-width: 600px;
-      margin: 0 auto 40px auto;
-    }
-  </style>
-<link href="assets/logo-square-white.png" rel="icon" type="image/png"/></head>
+</head>
 <body>
 <header class="header">
 <div class="container header-container">
@@ -80,13 +46,139 @@
 </ul>
 </div>
 </header>
-<div class="store-container">
-<div>
-<h1 class="preparing-text animate-on-scroll">PREPARING!</h1>
-<p class="sub-text animate-on-scroll">Our engineered reagents store is currently under construction. Check back soon for industry-leading synthetic biology products.</p>
-<a class="btn-secondary animate-on-scroll" href="technology-synthetic-biology.html">← Back to Synthetic Biology</a>
+
+<!-- Funding Banner -->
+<div class="funding-banner animate-on-scroll">
+  <p><span class="funding-banner-highlight">Funding!</span> Asperitas is actively receiving funding for research and development.</p>
+  <a href="mailto:business@asperitas.bio?subject=Funding%20Inquiry" class="funding-btn">Fund Us</a>
+</div>
+
+<!-- Merch Section -->
+<section class="store-section">
+  <div class="container">
+    <h2 class="store-section-header animate-on-scroll">Merch</h2>
+    <div class="store-grid">
+      <!-- Merch Item 1 -->
+      <div class="product-card animate-on-scroll">
+        <div class="product-image-placeholder">Image Preview</div>
+        <div class="product-info">
+          <span class="product-category">Apparel</span>
+          <h3 class="product-title">Asperitas Classic Hoodie</h3>
+          <span class="product-price">$ 85.00</span>
+          <a href="mailto:business@asperitas.bio?subject=Purchase%20Inquiry:%20Asperitas%20Classic%20Hoodie" class="product-btn">Buy / Inquire</a>
+        </div>
+      </div>
+      <!-- Merch Item 2 -->
+      <div class="product-card animate-on-scroll">
+        <div class="product-image-placeholder">Image Preview</div>
+        <div class="product-info">
+          <span class="product-category">Accessories</span>
+          <h3 class="product-title">Synthetic Bio Tote Bag</h3>
+          <span class="product-price">$ 25.00</span>
+          <a href="mailto:business@asperitas.bio?subject=Purchase%20Inquiry:%20Synthetic%20Bio%20Tote%20Bag" class="product-btn">Buy / Inquire</a>
+        </div>
+      </div>
+      <!-- Merch Item 3 -->
+      <div class="product-card animate-on-scroll">
+        <div class="product-image-placeholder">Image Preview</div>
+        <div class="product-info">
+          <span class="product-category">Drinkware</span>
+          <h3 class="product-title">Thermos Lab Flask</h3>
+          <span class="product-price">$ 40.00</span>
+          <a href="mailto:business@asperitas.bio?subject=Purchase%20Inquiry:%20Thermos%20Lab%20Flask" class="product-btn">Buy / Inquire</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Biological Products Section -->
+<section class="store-section" style="border-bottom: none;">
+  <div class="container">
+    <h2 class="store-section-header animate-on-scroll">Biological Products</h2>
+    <div class="store-grid">
+      <!-- Bio Product 1 -->
+      <div class="product-card animate-on-scroll">
+        <div class="product-image-placeholder">Image Preview</div>
+        <div class="product-info">
+          <span class="product-category">Reagents</span>
+          <h3 class="product-title">Autoluminescent Plasmid Kit</h3>
+          <span class="product-price">Contact for Pricing</span>
+          <a href="mailto:business@asperitas.bio?subject=Purchase%20Inquiry:%20Autoluminescent%20Plasmid%20Kit" class="product-btn">Buy / Inquire</a>
+        </div>
+      </div>
+      <!-- Bio Product 2 -->
+      <div class="product-card animate-on-scroll">
+        <div class="product-image-placeholder">Image Preview</div>
+        <div class="product-info">
+          <span class="product-category">Live Samples</span>
+          <h3 class="product-title">Engineered Chloroplast Culture</h3>
+          <span class="product-price">Contact for Pricing</span>
+          <a href="mailto:business@asperitas.bio?subject=Purchase%20Inquiry:%20Engineered%20Chloroplast%20Culture" class="product-btn">Buy / Inquire</a>
+        </div>
+      </div>
+      <!-- Bio Product 3 -->
+      <div class="product-card animate-on-scroll">
+        <div class="product-image-placeholder">Image Preview</div>
+        <div class="product-info">
+          <span class="product-category">Sequences</span>
+          <h3 class="product-title">Extremophile Resilience Promoters</h3>
+          <span class="product-price">Contact for Pricing</span>
+          <a href="mailto:business@asperitas.bio?subject=Purchase%20Inquiry:%20Extremophile%20Resilience%20Promoters" class="product-btn">Buy / Inquire</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+<div class="container">
+<div class="footer-top">
+<div class="footer-brand">
+<img alt="Asperitas Logo" class="footer-logo" src="assets/logo-horizontal-white.png"/>
+<div class="footer-socials">
+<a class="social-btn" href="https://www.linkedin.com/company/asperitasbio" rel="noopener noreferrer" target="_blank">
+<span>LinkedIn</span>
+</a>
+<a class="social-btn" href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">
+<span>Instagram</span>
+</a>
+<a class="social-btn" href="store.html">
+<span>Store</span>
+</a>
 </div>
 </div>
+<div></div>
+<div class="footer-links-grid">
+<div class="footer-links-col">
+<span class="footer-col-title">Company</span>
+<ul>
+<li><a href="company.html#overview">Overview</a></li>
+<li><a href="company.html#team">Team</a></li>
+<li><a href="company.html#careers">Careers</a></li>
+<li><a href="company.html#press">Press &amp; Publication</a></li>
+</ul>
+</div>
+<div class="footer-links-col">
+<span class="footer-col-title">Technology</span>
+<ul>
+<li><a href="technology-biodiversity.html">Biodiversity</a></li>
+<li><a href="technology-ai.html">Synthetic Bio AI</a></li>
+<li><a href="technology-synthetic-biology.html">Synthetic Biology</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Asperitas Inc. All rights reserved.</p>
+<div class="footer-legal-links">
+<a href="https://www.asperitas.bio/privacy-policy.html">Privacy Policy</a>
+<a href="https://www.asperitas.bio/terms.html">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
 <script src="js/main.js"></script>
 </body>
 </html>
