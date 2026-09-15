@@ -808,6 +808,15 @@
         const jitterAmp = 0.9;
         const jt = elapsed * 0.0016;
 
+        // Flare: confined to a thin band right at the sphere's rim (points
+        // whose screen-space distance from center is close to sphereR - an
+        // orthographic projection puts the limb exactly at that radius, so
+        // this is a cheap stand-in for "angularly near the edge" without an
+        // extra geoDistance call per point). Each rim point flickers/extends
+        // outward on its own continuous, never-stopping cycle.
+        const RIM_BAND = 0.14;
+        const flareTime = elapsed * 0.0022;
+
         for (let i = 0; i < dotPoints.length; i++) {
           const p = dotPoints[i];
           const proj = projection([p.lon, p.lat]);
@@ -815,6 +824,18 @@
 
           let px = proj[0] + Math.sin(jt * p.speed + p.phase) * jitterAmp;
           let py = proj[1] + Math.cos(jt * p.speed * 1.15 + p.phase * 1.3) * jitterAmp;
+          let flareBoost = 0;
+
+          const rdx = proj[0] - cx, rdy = proj[1] - cy;
+          const centerDist0 = Math.sqrt(rdx * rdx + rdy * rdy) || 0.0001;
+          const rimProximity = Math.max(0, (centerDist0 / sphereR - (1 - RIM_BAND)) / RIM_BAND);
+          if (rimProximity > 0) {
+            const flareWave = 0.5 + 0.5 * Math.sin(flareTime * p.speed + p.phase * 2.1);
+            const extend = rimProximity * flareWave * sphereR * 0.16;
+            px += (rdx / centerDist0) * extend;
+            py += (rdy / centerDist0) * extend;
+            flareBoost = rimProximity * flareWave;
+          }
 
           // Mouse interaction: a small local bulge centered on the actual
           // cursor position (screen-space distance to this point), not an
@@ -835,8 +856,8 @@
           }
 
           const flare = 0.5 + 0.5 * Math.sin(elapsed / 1800 * p.speed + p.phase + p.lat * 0.05);
-          const bucket = Math.min(BUCKETS - 1, Math.floor(flare * BUCKETS));
-          const r = (p.isLand ? landBaseR : oceanBaseR) * (0.88 + 0.24 * flare);
+          const bucket = Math.min(BUCKETS - 1, Math.floor(Math.min(1, flare + flareBoost * 0.6) * BUCKETS));
+          const r = (p.isLand ? landBaseR : oceanBaseR) * (0.88 + 0.24 * flare + flareBoost * 0.9);
           (p.isLand ? landBuckets : oceanBuckets)[bucket].push([px, py, r]);
         }
 
