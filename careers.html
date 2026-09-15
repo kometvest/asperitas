@@ -709,7 +709,7 @@
       fitCanvas();
 
       const projection = d3.geoOrthographic()
-        .scale(S / 3.4)
+        .scale(S / 2.267)
         .translate([S / 2, S / 2])
         .clipAngle(90)
         .rotate([0, -20]);
@@ -756,13 +756,22 @@
       // Mouse position (canvas-local px) while hovering the globe, or null -
       // used to bend the point cloud's surface toward the cursor, like a
       // magnetic/flare distortion reacting to touch.
+      // Listens on the wrapper (not the canvas itself): each location marker
+      // has an invisible pointer-events:auto hit-circle stacked on top of the
+      // canvas so it can be clicked, and while the cursor sits over one of
+      // those, a listener bound to the canvas stops receiving mousemove
+      // entirely - mouseX/mouseY froze at their last value while the globe
+      // kept rotating underneath, so the bulge snapped to the real cursor
+      // position the instant the mouse cleared the marker (the "bounce").
+      // Binding to the shared ancestor instead keeps receiving mousemove via
+      // bubbling no matter which layer the event actually targets.
       let mouseX = null, mouseY = null;
-      canvasEl.addEventListener('mousemove', (e) => {
+      container.addEventListener('mousemove', (e) => {
         const rect = canvasEl.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
         mouseY = e.clientY - rect.top;
       });
-      canvasEl.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
+      container.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
 
       // Idle auto-spin plus drag "momentum": dragging never snaps back - it
       // just changes rotX/rotY directly, and on release the last drag velocity
@@ -800,7 +809,7 @@
         }
         ctx.globalAlpha = 1;
 
-        const cx = S / 2, cy = S / 2, sphereR = S / 3.4;
+        const cx = S / 2, cy = S / 2, sphereR = S / 2.267;
 
         // No separate circle/ring is drawn here by design - the sphere's
         // shape and glow both come entirely from the dot cloud itself.
@@ -1041,7 +1050,7 @@
       const ro = new ResizeObserver(() => {
         S = size();
         svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
-        projection.scale(S / 3.4).translate([S / 2, S / 2]);
+        projection.scale(S / 2.267).translate([S / 2, S / 2]);
         fitCanvas();
       });
       ro.observe(container);
