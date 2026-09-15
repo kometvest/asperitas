@@ -726,16 +726,11 @@
             lat: Math.asin(y) * 180 / Math.PI,
             lon: Math.atan2(z, x) * 180 / Math.PI,
             isLand: false,
-            // Per-point shimmer: independent phase/speed so the whole sphere
-            // reads as a living, flickering surface (like a solar flare)
-            // rather than a static dot field, even while otherwise at rest.
+            // Per-point shimmer/jitter: independent phase/speed so the whole
+            // sphere reads as a living, flickering surface rather than a
+            // static dot field, even while otherwise at rest.
             phase: Math.random() * Math.PI * 2,
             speed: 0.5 + Math.random() * 1.1,
-            // How strongly this point participates in the radial flare
-            // displacement - varying it (rather than a uniform push) keeps
-            // the deformed silhouette looking organic/jagged, not a smooth
-            // uniformly-scaled circle.
-            flareMult: 0.5 + Math.random() * 0.9,
           });
         }
         return points;
@@ -753,16 +748,6 @@
         mouseY = e.clientY - rect.top;
       });
       canvasEl.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
-
-      // Organic, non-periodic-looking displacement field driving the flare
-      // shape - a couple of overlapping sine terms at different lat/lon
-      // frequencies and phase speeds, roughly in the range -1..1.
-      function flareNoise(lat, lon, t) {
-        return (
-          Math.sin(lat * 0.12 + t * 0.6) * Math.cos(lon * 0.10 - t * 0.4) * 0.6 +
-          Math.sin(lat * 0.35 - lon * 0.22 + t * 1.1) * 0.4
-        );
-      }
 
       // Idle auto-spin plus drag "momentum": dragging never snaps back - it
       // just changes rotX/rotY directly, and on release the last drag velocity
@@ -816,32 +801,38 @@
         const oceanBuckets = Array.from({ length: BUCKETS }, () => []);
         const landBaseR = 1.15, oceanBaseR = 0.65;
 
-        // The whole flare pattern breathes in and out (its amplitude rises
-        // and falls slowly), and gets an extra directional bulge toward the
-        // mouse, like the surface reacting to the cursor. Kept subtle - this
-        // is ambient texture, not the main event.
-        const breathe = 0.55 + 0.3 * (0.5 + 0.5 * Math.sin(elapsed * 0.00022));
-        const baseFlareAmp = sphereR * 0.035;
-        const t = elapsed * 0.0006;
-        const mouseAngle = mouseX !== null ? Math.atan2(mouseY - cy, mouseX - cx) : null;
+        // Ambient motion lives entirely on the surface now: each point wobbles
+        // in place by a pixel or so, constantly (no breathing pause), which
+        // reads as a shimmering texture without ever changing the sphere's
+        // overall silhouette - that stays a clean circle.
+        const jitterAmp = 0.9;
+        const jt = elapsed * 0.0016;
 
         for (let i = 0; i < dotPoints.length; i++) {
           const p = dotPoints[i];
           const proj = projection([p.lon, p.lat]);
           if (!proj) continue;
 
-          const dx = proj[0] - cx, dy = proj[1] - cy;
-          const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
-          let disp = flareNoise(p.lat, p.lon, t) * p.flareMult * baseFlareAmp * breathe;
-          if (mouseAngle !== null) {
-            const pointAngle = Math.atan2(dy, dx);
-            let diff = Math.abs(pointAngle - mouseAngle);
-            if (diff > Math.PI) diff = Math.PI * 2 - diff;
-            const falloff = Math.max(0, 1 - diff / (Math.PI * 0.22));
-            disp += falloff * falloff * sphereR * 0.05;
+          let px = proj[0] + Math.sin(jt * p.speed + p.phase) * jitterAmp;
+          let py = proj[1] + Math.cos(jt * p.speed * 1.15 + p.phase * 1.3) * jitterAmp;
+
+          // Mouse interaction: a small local bulge centered on the actual
+          // cursor position (screen-space distance to this point), not an
+          // angular wedge from the globe's center - so it follows the cursor
+          // itself around the surface rather than sweeping like a radar.
+          if (mouseX !== null) {
+            const mdx = px - mouseX, mdy = py - mouseY;
+            const mdist = Math.sqrt(mdx * mdx + mdy * mdy) || 0.0001;
+            const influenceR = sphereR * 0.3;
+            if (mdist < influenceR) {
+              const cdx = px - cx, cdy = py - cy;
+              const centerDist = Math.sqrt(cdx * cdx + cdy * cdy) || 0.0001;
+              const falloff = 1 - mdist / influenceR;
+              const push = falloff * falloff * sphereR * 0.05;
+              px += (cdx / centerDist) * push;
+              py += (cdy / centerDist) * push;
+            }
           }
-          const scale = 1 + disp / dist;
-          const px = cx + dx * scale, py = cy + dy * scale;
 
           const flare = 0.5 + 0.5 * Math.sin(elapsed / 1800 * p.speed + p.phase + p.lat * 0.05);
           const bucket = Math.min(BUCKETS - 1, Math.floor(flare * BUCKETS));
