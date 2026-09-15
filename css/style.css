@@ -574,15 +574,15 @@ body.page-home .logo-img {
 }
 
 .nav-link:hover {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .header.light-nav .nav-link:hover {
-  color: var(--text-primary);
+  color: var(--text-muted);
 }
 
 .header.scrolled .nav-link:hover {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .nav-link::after {
@@ -596,7 +596,6 @@ body.page-home .logo-img {
   transition: var(--transition-fast);
 }
 
-.nav-link:hover::after,
 .nav-link.active::after {
   width: 100%;
 }

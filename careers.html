@@ -818,10 +818,11 @@
 
         // The whole flare pattern breathes in and out (its amplitude rises
         // and falls slowly), and gets an extra directional bulge toward the
-        // mouse, like the surface reacting to the cursor.
-        const breathe = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(elapsed * 0.00035));
-        const baseFlareAmp = sphereR * 0.1;
-        const t = elapsed * 0.001;
+        // mouse, like the surface reacting to the cursor. Kept subtle - this
+        // is ambient texture, not the main event.
+        const breathe = 0.55 + 0.3 * (0.5 + 0.5 * Math.sin(elapsed * 0.00022));
+        const baseFlareAmp = sphereR * 0.035;
+        const t = elapsed * 0.0006;
         const mouseAngle = mouseX !== null ? Math.atan2(mouseY - cy, mouseX - cx) : null;
 
         for (let i = 0; i < dotPoints.length; i++) {
@@ -842,9 +843,9 @@
           const scale = 1 + disp / dist;
           const px = cx + dx * scale, py = cy + dy * scale;
 
-          const flare = 0.5 + 0.5 * Math.sin(elapsed / 900 * p.speed + p.phase + p.lat * 0.05);
+          const flare = 0.5 + 0.5 * Math.sin(elapsed / 1800 * p.speed + p.phase + p.lat * 0.05);
           const bucket = Math.min(BUCKETS - 1, Math.floor(flare * BUCKETS));
-          const r = (p.isLand ? landBaseR : oceanBaseR) * (0.75 + 0.55 * flare);
+          const r = (p.isLand ? landBaseR : oceanBaseR) * (0.88 + 0.24 * flare);
           (p.isLand ? landBuckets : oceanBuckets)[bucket].push([px, py, r]);
         }
 
