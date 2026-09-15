@@ -139,8 +139,6 @@
      finish and never restarts or gets interrupted. -->
 <video autoplay="" class="hero-bg" controlslist="nodownload nofullscreen noremoteplayback nopictureinpicture" disablepictureinpicture="" disableremoteplayback="" id="persistent-hero-video" loop="" muted="" oncontextmenu="return false" playsinline="">
 <source src="assets/hero-video.mp4" type="video/mp4"/>
-<!-- Fallback to our generated image -->
-<img alt="Bioluminescent Rainforest Background" src="assets/hero-bg.png"/>
 </video>
 <div class="hero-overlay"></div>
 </div>
@@ -161,13 +159,16 @@
 </div>
 </div>
 </section>
-<!-- Scroll-pinned reveal: a tall wrapper + a position:sticky inner keep the
-     framed video on-screen for the whole shrink, however tall the page's
-     other content is - no guessed pixel distance to get out of sync with. -->
+<!-- Scroll-pinned reveal: a tall wrapper + a position:sticky inner keep this
+     whole staged sequence on-screen for its entire scroll range, however
+     tall the page's other content is. The hero video shrinks into a docked
+     card, holds so its caption can be read, then the same card (never
+     duplicated) slides right and then left across two more staged captions -
+     all inside one pinned viewport, no separate section to scroll to after. -->
 <div class="narrow-pin-wrap" id="narrow-pin-wrap">
 <div class="narrow-pin-sticky">
 <section class="narrow-biology-section" id="narrow-biology">
-<div class="narrow-frame-stage">
+<div class="narrow-frame-stage" id="narrow-frame-stage">
 <div class="narrow-frame-ghost narrow-frame-ghost-2"></div>
 <div class="narrow-frame-ghost narrow-frame-ghost-1"></div>
 <div class="narrow-frame" id="narrow-frame">
@@ -190,15 +191,21 @@
 <text fill="rgba(255,255,255,0.5)" font-family="var(--font-mono)" font-size="13" x="20" y="530">111</text>
 </svg>
 </div>
-</section>
-</div>
-</div>
-<section class="narrow-biology-copy-section" id="narrow-biology-copy-section">
-<div class="container narrow-biology-copy">
+<div class="narrow-copy narrow-copy-a" id="narrow-copy-a">
 <h2 class="narrow-biology-heading">Biotechnology keeps engineering<br/>the same narrow biology.</h2>
 <p class="narrow-biology-sub">Nature already solved billions of years of chemistry. We keep studying only a tiny fraction.</p>
 </div>
+<div class="narrow-copy" id="narrow-copy-b">
+<h2 class="narrow-side-heading">One Species Can Change<br/>Entire Industry.</h2>
+<p class="narrow-side-sub">The Next One Hasn't Discovered Yet.</p>
+</div>
+<div class="narrow-copy" id="narrow-copy-c">
+<h2 class="narrow-side-heading">A closed loop platform for<br/>biodiversity-derived innovation</h2>
+<p class="narrow-side-sub">The Next One Hasn't Discovered Yet.</p>
+</div>
 </section>
+</div>
+</div>
 <!-- Typewriter Animation Section -->
 <section class="typing-section" id="featured">
 <div class="container typing-container">
@@ -439,23 +446,28 @@
     });
   });
 
-  // Scroll-scrubbed video: the SAME <video> element used by the hero (never
-  // cloned or reloaded, so playback never restarts or drops a frame) stays
-  // pinned full-bleed while you scroll past the hero, then continuously
-  // shrinks/tilts in lockstep with scroll position - not a one-time trigger -
-  // until it reaches the framed card's slot, where it docks into the normal
-  // page flow. Scrolling back up reverses the same interpolation. A live
-  // edge-detection pass on the video's own pixels then traces a white
-  // outline of whatever it's actually showing, redrawn continuously.
+  // Scroll-scrubbed staged sequence: the SAME <video> element used by the
+  // hero (never cloned or reloaded, so playback never restarts or drops a
+  // frame) stays pinned full-bleed while you scroll past the hero, then
+  // continuously shrinks/tilts in lockstep with scroll position into a
+  // docked card. From there, scrolling further slides that same card right
+  // then left across two more staged captions, all still driven by the one
+  // continuous progress value - not separate one-time triggers. Scrolling
+  // back up reverses every bit of it. A live edge-detection pass on the
+  // video's own pixels traces a white outline of whatever it's actually
+  // showing, redrawn continuously, for as long as the card is docked.
   document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('persistent-hero-video');
     const heroBgWrapper = document.querySelector('.hero-bg-wrapper');
     const pinWrap = document.getElementById('narrow-pin-wrap');
     const section = document.getElementById('narrow-biology');
-    const copySection = document.getElementById('narrow-biology-copy-section');
+    const frameStage = document.getElementById('narrow-frame-stage');
     const frame = document.getElementById('narrow-frame');
     const edgesCanvas = document.getElementById('narrow-frame-edges');
-    if (!video || !heroBgWrapper || !pinWrap || !section || !frame) return;
+    const copyA = document.getElementById('narrow-copy-a');
+    const copyB = document.getElementById('narrow-copy-b');
+    const copyC = document.getElementById('narrow-copy-c');
+    if (!video || !heroBgWrapper || !pinWrap || !section || !frame || !frameStage) return;
 
     // "Can't be stopped": no visible control ever exists (no `controls`
     // attribute, context menu disabled, picture-in-picture/remote-playback
@@ -468,8 +480,137 @@
     });
 
     const lerp = (a, b, t) => a + (b - a) * t;
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
+    const easeInOut = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+    // Progress breakpoints, as fractions of the whole pin-wrap's scroll
+    // range: dock the shrinking hero video into a centered card (0 -> DOCK),
+    // hold so its caption can be read (DOCK -> A_HOLD_END), slide the same
+    // card right for a second caption (-> AB_END, hold -> B_HOLD_END), then
+    // left for a third (-> BC_END, hold the rest of the way). A "hold" is
+    // just a flat stretch where the position function below never changes,
+    // so scrolling through it reads as a pause even as progress keeps ticking.
+    const DOCK = 0.20, A_HOLD_END = 0.34, AB_END = 0.46, B_HOLD_END = 0.60, BC_END = 0.72;
+
     let docked = false;
     let edgeTracingStarted = false;
+
+    // All positions are recomputed from the live viewport size every frame
+    // (cheap - a handful of arithmetic ops), so a window resize never leaves
+    // anything stale.
+    function computeLayout() {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const aspect = 16 / 10.5;
+
+      const aWidth = Math.min(780, vw * 0.72, vh * 0.5 * aspect);
+      const aHeight = aWidth / aspect;
+      const A = { top: vh * 0.11, left: (vw - aWidth) / 2, width: aWidth, height: aHeight };
+      const copyATop = A.top + A.height + 32;
+
+      // Narrow viewports keep every stage in the same centered layout as
+      // stage A - a side-by-side video+text column doesn't fit - only the
+      // caption underneath changes from stage to stage.
+      if (vw < 700) {
+        return { A, B: A, C: A, copyATop, side: null };
+      }
+
+      const sideWidth = Math.min(560, vw * 0.40);
+      const sideHeight = sideWidth / aspect;
+      const sideTop = (vh - sideHeight) / 2;
+      const margin = Math.max(56, vw * 0.07);
+      const gap = Math.max(40, vw * 0.045);
+      const B = { top: sideTop, left: vw - margin - sideWidth, width: sideWidth, height: sideHeight };
+      const C = { top: sideTop, left: margin, width: sideWidth, height: sideHeight };
+      const textWidth = Math.max(240, vw - margin * 2 - sideWidth - gap);
+      return {
+        A, B, C, copyATop,
+        side: { textWidth, bTextLeft: margin, cTextLeft: margin + sideWidth + gap, centerY: sideTop + sideHeight / 2 },
+      };
+    }
+
+    function lerpRect(r1, r2, t) {
+      return {
+        top: lerp(r1.top, r2.top, t),
+        left: lerp(r1.left, r2.left, t),
+        width: lerp(r1.width, r2.width, t),
+        height: lerp(r1.height, r2.height, t),
+      };
+    }
+
+    function stageRect(layout, p) {
+      if (p <= A_HOLD_END) return layout.A;
+      if (p <= AB_END) return lerpRect(layout.A, layout.B, easeInOut((p - A_HOLD_END) / (AB_END - A_HOLD_END)));
+      if (p <= B_HOLD_END) return layout.B;
+      if (p <= BC_END) return lerpRect(layout.B, layout.C, easeInOut((p - B_HOLD_END) / (BC_END - B_HOLD_END)));
+      return layout.C;
+    }
+
+    // Each caption fades in during the second half of the transition that
+    // carries the card toward its position and fades out during the first
+    // half of the transition that carries it away, so the old caption is
+    // gone before the new one starts appearing - keyed to the very same
+    // progress value driving the card's position above.
+    function fadeRamp(p, start, end) {
+      if (end <= start) return p >= end ? 1 : 0;
+      return clamp01((p - start) / (end - start));
+    }
+    function captionOpacity(p, kind) {
+      if (kind === 'a') {
+        return fadeRamp(p, DOCK, DOCK + 0.035) * (1 - fadeRamp(p, A_HOLD_END, A_HOLD_END + (AB_END - A_HOLD_END) * 0.5));
+      }
+      if (kind === 'b') {
+        const inStart = A_HOLD_END + (AB_END - A_HOLD_END) * 0.5;
+        return fadeRamp(p, inStart, AB_END) * (1 - fadeRamp(p, B_HOLD_END, B_HOLD_END + (BC_END - B_HOLD_END) * 0.5));
+      }
+      const inStart = B_HOLD_END + (BC_END - B_HOLD_END) * 0.5;
+      return fadeRamp(p, inStart, BC_END);
+    }
+
+    function layoutCenteredCaption(el, layout) {
+      el.style.right = '';
+      el.style.left = '0';
+      el.style.width = '100%';
+      el.style.top = layout.copyATop + 'px';
+      el.style.textAlign = 'center';
+    }
+
+    function layoutSideCaption(el, layout, leftPx) {
+      el.style.left = leftPx + 'px';
+      el.style.width = layout.side.textWidth + 'px';
+      el.style.top = layout.side.centerY + 'px';
+      el.style.textAlign = 'left';
+    }
+
+    function applyCaptions(layout, p) {
+      if (copyA) {
+        layoutCenteredCaption(copyA, layout);
+        const o = captionOpacity(p, 'a');
+        copyA.style.opacity = o;
+        copyA.style.transform = `translateY(${(1 - o) * 16}px)`;
+      }
+      if (copyB) {
+        const o = captionOpacity(p, 'b');
+        if (layout.side) {
+          layoutSideCaption(copyB, layout, layout.side.bTextLeft);
+          copyB.style.transform = `translateY(calc(-50% + ${(1 - o) * 14}px))`;
+        } else {
+          layoutCenteredCaption(copyB, layout);
+          copyB.style.transform = `translateY(${(1 - o) * 16}px)`;
+        }
+        copyB.style.opacity = o;
+      }
+      if (copyC) {
+        const o = captionOpacity(p, 'c');
+        if (layout.side) {
+          layoutSideCaption(copyC, layout, layout.side.cTextLeft);
+          copyC.style.transform = `translateY(calc(-50% + ${(1 - o) * 14}px))`;
+        } else {
+          layoutCenteredCaption(copyC, layout);
+          copyC.style.transform = `translateY(${(1 - o) * 16}px)`;
+        }
+        copyC.style.opacity = o;
+      }
+    }
 
     function dockVideoInFrame() {
       video.classList.remove('hero-bg');
@@ -478,7 +619,6 @@
       frame.insertBefore(video, edgesCanvas);
       docked = true;
       section.classList.add('in-view');
-      if (copySection) copySection.classList.add('in-view');
       if (!edgeTracingStarted) {
         edgeTracingStarted = true;
         startEdgeTracing(video, edgesCanvas);
@@ -491,54 +631,68 @@
       heroBgWrapper.insertBefore(video, heroBgWrapper.firstChild);
       docked = false;
       section.classList.remove('in-view');
-      if (copySection) copySection.classList.remove('in-view');
+      [copyA, copyB, copyC].forEach((el) => { if (el) el.style.opacity = 0; });
     }
 
     function targetProgress() {
       const scrollY = window.scrollY || window.pageYOffset;
       const pinTop = pinWrap.offsetTop;
       const scrollRange = Math.max(1, pinWrap.offsetHeight - window.innerHeight);
-      return Math.min(1, Math.max(0, (scrollY - pinTop) / scrollRange));
+      return clamp01((scrollY - pinTop) / scrollRange);
     }
 
-    function applyVideoTransform(progress) {
-      const frameRect = frame.getBoundingClientRect();
+    // Before docking, the video is still full-bleed-to-card: fixed position,
+    // interpolated straight from the full viewport toward stage A's rect.
+    function applyVideoTransform(progress, layout) {
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const t = clamp01(progress / DOCK);
 
       video.style.position = 'fixed';
-      video.style.top = lerp(0, frameRect.top, progress) + 'px';
-      video.style.left = lerp(0, frameRect.left, progress) + 'px';
-      video.style.width = lerp(vw, frameRect.width, progress) + 'px';
-      video.style.height = lerp(vh, frameRect.height, progress) + 'px';
-      video.style.borderRadius = lerp(0, 18, progress) + 'px';
-      video.style.transform = `rotate(${lerp(0, -1.5, progress)}deg)`;
+      video.style.top = lerp(0, layout.A.top, t) + 'px';
+      video.style.left = lerp(0, layout.A.left, t) + 'px';
+      video.style.width = lerp(vw, layout.A.width, t) + 'px';
+      video.style.height = lerp(vh, layout.A.height, t) + 'px';
+      video.style.borderRadius = lerp(0, 18, t) + 'px';
+      video.style.transform = `rotate(${lerp(0, -1.5, t)}deg)`;
       video.style.objectFit = 'cover';
       video.style.zIndex = '2';
     }
 
     // A continuous rAF loop - not a per-scroll-event handler - samples the
     // real scroll position every rendered frame and eases the displayed
-    // shrink toward it. Relying on scroll events alone would let a fast
+    // progress toward it. Relying on scroll events alone would let a fast
     // trackpad flick or a wheel jump land on a single big scroll delta with
-    // no frames rendered in between, which reads as a sudden jump/stutter
-    // rather than a shrink; this makes the motion smooth no matter how the
-    // scroll itself arrives.
+    // no frames rendered in between, which reads as a sudden jump/stutter;
+    // this makes the whole sequence smooth no matter how the scroll arrives.
     let displayed = targetProgress();
     function loop() {
       const target = targetProgress();
       displayed += (target - displayed) * 0.2;
       if (Math.abs(target - displayed) < 0.0015) displayed = target;
 
-      // Small hysteresis at the boundary so a value bouncing right around 1
-      // (scroll jitter, sub-pixel rounding) can't flap the video in and out
-      // of the frame over and over.
-      if (target >= 1 && displayed > 0.995) {
+      const layout = computeLayout();
+
+      // Small hysteresis at the dock boundary so a value bouncing right
+      // around it (scroll jitter, sub-pixel rounding) can't flap the video
+      // in and out of the frame over and over.
+      if (target >= DOCK && displayed > DOCK - 0.005) {
         if (!docked) dockVideoInFrame();
-      } else {
-        if (docked && target < 0.995) undockVideoToHero();
-        if (!docked) applyVideoTransform(displayed);
+      } else if (docked && target < DOCK - 0.005) {
+        undockVideoToHero();
       }
+
+      if (docked) {
+        const rect = stageRect(layout, displayed);
+        frameStage.style.top = rect.top + 'px';
+        frameStage.style.left = rect.left + 'px';
+        frameStage.style.width = rect.width + 'px';
+        frameStage.style.height = rect.height + 'px';
+        applyCaptions(layout, displayed);
+      } else {
+        applyVideoTransform(displayed, layout);
+      }
+
       requestAnimationFrame(loop);
     }
     requestAnimationFrame(loop);

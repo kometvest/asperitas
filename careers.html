@@ -219,7 +219,11 @@
   .world-section {
     background: #0a0a0a;
     color: #ffffff;
-    padding: 100px 0 140px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 90px 0;
   }
   .world-heading {
     font-family: var(--font-title);
@@ -227,16 +231,20 @@
     font-weight: 500;
     letter-spacing: -0.02em;
     color: #ffffff;
-    margin-bottom: 36px;
+    margin-bottom: 24px;
   }
   .world-grid {
     display: grid;
     grid-template-columns: 1fr 340px;
     border: 1px solid rgba(255, 255, 255, 0.15);
+    /* Fixed height (not the old aspect-ratio-driven one, which could grow
+       taller than the viewport) so the whole section - heading, globe and
+       info panel together - fits on one screen without extra scrolling. */
+    height: min(60vh, 580px);
   }
   .world-globe-wrap {
     position: relative;
-    aspect-ratio: 1/1;
+    height: 100%;
     background: #050505;
     border-right: 1px solid rgba(255, 255, 255, 0.15);
     overflow: hidden;
@@ -317,10 +325,12 @@
     line-height: 1.7;
     color: rgba(255, 255, 255, 0.7);
     flex: 1;
+    overflow-y: auto;
   }
   @media (max-width: 900px) {
-    .world-grid { grid-template-columns: 1fr; }
-    .world-globe-wrap { border-right: none; border-bottom: 1px solid var(--border-color); }
+    .world-section { min-height: 0; }
+    .world-grid { grid-template-columns: 1fr; height: auto; }
+    .world-globe-wrap { height: 70vw; max-height: 60vh; border-right: none; border-bottom: 1px solid var(--border-color); }
   }
 </style>
 </head>
@@ -563,9 +573,14 @@
 </div>
 </div>
 </footer>
-<script src="js/main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson@3/dist/topojson.min.js"></script>
+<!-- defer: these were blocking the whole page's first paint behind a slow
+     CDN round-trip (the page-transition overlay only lifts once main.js's
+     script finishes, and a render-blocking script anywhere still holds that
+     up) - deferring is safe because everything below that touches d3/topojson
+     already waits for DOMContentLoaded, which fires after deferred scripts. -->
+<script defer="" src="js/main.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script defer="" src="https://cdn.jsdelivr.net/npm/topojson@3/dist/topojson.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // How We Work - tabbed content. The panel's background/media never move;
