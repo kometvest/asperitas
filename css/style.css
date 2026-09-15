@@ -28,6 +28,7 @@
   /* Fonts */
   --font-title: 'Helvetica Now Display', 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --font-body: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
 
   /* Layout */
   --max-width: 1400px;
@@ -268,6 +269,7 @@ body.page-home .logo-img {
   display: flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 }
 
 .company-plus {
@@ -585,20 +587,6 @@ body.page-home .logo-img {
   color: rgba(255, 255, 255, 0.4);
 }
 
-.nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 16px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: var(--accent-green);
-  transition: var(--transition-fast);
-}
-
-.nav-link.active::after {
-  width: 100%;
-}
 
 .header .btn-secondary {
   border: 1px solid rgba(255, 255, 255, 0.4);
@@ -698,9 +686,6 @@ body.page-home .logo-img {
   position: relative;
   width: 100%;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   background-color: #07090e;
 }
@@ -733,51 +718,86 @@ body.page-home .logo-img {
 }
 
 .hero-content {
-  position: relative;
+  position: absolute;
+  top: 16%;
+  left: 0;
+  right: 0;
   z-index: 3;
-  text-align: center;
-  max-width: 1100px;
-  padding: 0 20px;
+  text-align: left;
+  padding: 0 60px;
 }
 
 .hero-title {
-  font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; /* Force Alliance 2 */
-  font-size: 72px;
-  line-height: 1.15;
-  font-weight: 300;
-  letter-spacing: -0.03em;
+  font-family: var(--font-title);
+  font-size: 64px;
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
   color: #ffffff;
+  max-width: 1500px;
   animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 @media (max-width: 768px) {
+  .hero-content {
+    top: 14%;
+    padding: 0 24px;
+  }
   .hero-title {
-    font-size: 40px;
+    font-size: 34px;
   }
 }
 
-.scroll-down {
+.hero-bottom-row {
   position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  bottom: 56px;
   z-index: 3;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  font-family: var(--font-title);
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  animation: bounce 2s infinite;
+  padding: 0 60px;
 }
 
-.scroll-down svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
+.hero-bottom-logo {
+  justify-self: center;
+}
+
+.hero-bottom-logo img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.hero-bottom-right {
+  justify-self: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+}
+
+.hero-bottom-right span {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .hero-bottom-row {
+    bottom: 32px;
+    padding: 0 24px;
+  }
+  .hero-bottom-logo img {
+    height: 28px;
+  }
+  .hero-bottom-right {
+    font-size: 12px;
+  }
 }
 
 /* Slider Section (Edge-to-Edge) */
