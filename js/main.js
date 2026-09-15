@@ -8,7 +8,7 @@
 // bio panel). Exposed on window so inline page scripts loaded after this file
 // can reuse it without duplicating the logic.
 window.TextScramble = class TextScramble {
-  constructor(el) {
+  constructor(el, opts = {}) {
     this.el = el;
     this.finalText = el.textContent;
     this.frame = 0;
@@ -16,6 +16,11 @@ window.TextScramble = class TextScramble {
     this.queue = [];
     this.ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     this.TOTAL_FRAMES = Math.round(500 / (1000 / 60)); // ~0.5s at 60fps
+    // Opt-in: characters don't exist at all (render as a space) until their
+    // own left-to-right appear-time, instead of scrambling from frame 0. Off
+    // by default so every existing usage (header menus, leadership panel,
+    // etc.) keeps behaving exactly as before.
+    this.revealFromBlank = !!opts.revealFromBlank;
   }
   setText(text) {
     // Allows reusing one scrambler instance for content that changes (e.g. a
@@ -28,7 +33,11 @@ window.TextScramble = class TextScramble {
     for (let i = 0; i < text.length; i++) {
       // Stagger only when each letter locks in, so the whole word decodes left-to-right within ~0.5s
       const end = Math.floor((i / text.length) * this.TOTAL_FRAMES * 0.6) + Math.floor(Math.random() * (this.TOTAL_FRAMES * 0.4));
-      this.queue.push({ to: text[i], end });
+      // When revealing from blank, each character also has its own (earlier)
+      // appear-time, staggered left-to-right, so the word visibly grows
+      // rightward before each newly-appeared letter starts decoding.
+      const start = this.revealFromBlank ? Math.floor((i / text.length) * this.TOTAL_FRAMES * 0.5) : 0;
+      this.queue.push({ to: text[i], end, start });
     }
     cancelAnimationFrame(this.frameRequest);
     this.frame = 0;
@@ -38,12 +47,14 @@ window.TextScramble = class TextScramble {
     let output = '';
     let complete = 0;
     for (let i = 0; i < this.queue.length; i++) {
-      const { to, end } = this.queue[i];
+      const { to, end, start } = this.queue[i];
       // Only letters/digits actually scramble; spaces, slashes, punctuation
       // etc. settle immediately so things like "01 / 04" don't flicker oddly.
       if (this.frame >= end || !/[A-Za-z0-9]/.test(to)) {
         complete++;
         output += to;
+      } else if (this.revealFromBlank && this.frame < start) {
+        output += ' ';
       } else {
         output += this.ALPHABET[Math.floor(Math.random() * this.ALPHABET.length)];
       }

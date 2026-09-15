@@ -134,7 +134,10 @@
 <!-- Hero Section (Video background with fallback image) -->
 <section class="hero">
 <div class="hero-bg-wrapper">
-<video autoplay="" class="hero-bg" loop="" muted="" playsinline="">
+<!-- This exact video element is never re-created: it's later moved (not
+     cloned) into the framed card below, so it plays continuously start to
+     finish and never restarts or gets interrupted. -->
+<video autoplay="" class="hero-bg" id="persistent-hero-video" loop="" muted="" oncontextmenu="return false" playsinline="">
 <source src="assets/hero-video.mp4" type="video/mp4"/>
 <!-- Fallback to our generated image -->
 <img alt="Bioluminescent Rainforest Background" src="assets/hero-bg.png"/>
@@ -164,17 +167,12 @@
 <section class="narrow-biology-section" id="narrow-biology">
 <div class="narrow-frame-stage">
 <div class="narrow-frame-ghost"></div>
-<div class="narrow-frame">
-<video autoplay="" class="narrow-frame-video" loop="" muted="" playsinline="">
-<source src="assets/hero-video.mp4" type="video/mp4"/>
-<img alt="Asperitas lab" src="assets/hero-bg.png"/>
-</video>
+<div class="narrow-frame" id="narrow-frame">
+<!-- The persistent hero video is moved in here by JS once scrolled into
+     view - never a second/duplicate video element. -->
+<canvas class="narrow-frame-edges" id="narrow-frame-edges"></canvas>
 </div>
 <svg class="narrow-frame-overlay" fill="none" viewbox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
-<path d="M30,150 C55,175 45,200 65,220 C88,243 58,265 78,292 C100,318 68,340 88,368 C110,395 76,415 96,442 C118,468 84,488 104,515" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"></path>
-<path d="M60,110 C95,130 85,158 112,168 C140,178 122,208 150,220 C178,232 156,262 184,278 C210,292 190,318 216,335" stroke="rgba(255,255,255,0.28)" stroke-width="1"></path>
-<path d="M905,140 C930,168 908,192 930,220 C952,248 922,272 946,300 C968,326 938,352 960,380 C982,406 950,430 972,458" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"></path>
-<path d="M860,470 C888,486 878,510 906,522 C932,534 918,560 946,570" stroke="rgba(255,255,255,0.25)" stroke-width="1"></path>
 <line stroke="rgba(255,255,255,0.4)" stroke-dasharray="4 6" stroke-width="1" x1="10" x2="230" y1="245" y2="245"></line>
 <polygon fill="rgba(255,255,255,0.55)" points="222,240 238,245 222,250"></polygon>
 <line stroke="rgba(255,255,255,0.3)" stroke-dasharray="4 6" stroke-width="1" x1="10" x2="200" y1="400" y2="400"></line>
@@ -426,7 +424,7 @@
     lineIds.forEach((id, i) => {
       const el = document.getElementById(id);
       if (!el) return;
-      const scrambler = new window.TextScramble(el);
+      const scrambler = new window.TextScramble(el, { revealFromBlank: true });
       setTimeout(() => {
         el.style.opacity = '1';
         scrambler.run();
@@ -435,23 +433,108 @@
   });
 
   // Scroll reveal for the shrunk/tilted framed video section - triggers once
-  // when scrolled into view, then stays revealed.
+  // when scrolled into view, then stays revealed. The SAME <video> element
+  // used by the hero is moved (not cloned) into the frame at that moment, so
+  // playback never restarts or drops a frame; a live edge-detection pass on
+  // the video's own pixels then traces a white outline of whatever the video
+  // is actually showing, redrawn continuously so it tracks the footage.
   document.addEventListener('DOMContentLoaded', () => {
+    const video = document.getElementById('persistent-hero-video');
     const section = document.getElementById('narrow-biology');
+    const frame = document.getElementById('narrow-frame');
+    const edgesCanvas = document.getElementById('narrow-frame-edges');
+
+    // "Can't be stopped": nothing in this page exposes a pause control, but
+    // guard against anything external (a browser gesture, an extension)
+    // pausing it anyway by immediately resuming playback.
+    if (video) {
+      video.addEventListener('pause', () => {
+        video.play().catch(() => {});
+      });
+    }
+
+    function dockVideoInFrame() {
+      if (!video || !frame) return;
+      video.classList.remove('hero-bg');
+      video.classList.add('narrow-frame-video');
+      frame.insertBefore(video, edgesCanvas);
+      startEdgeTracing(video, edgesCanvas);
+    }
+
     if (!section || !('IntersectionObserver' in window)) {
       if (section) section.classList.add('in-view');
+      dockVideoInFrame();
       return;
     }
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           section.classList.add('in-view');
+          dockVideoInFrame();
           observer.unobserve(section);
         }
       });
     }, { threshold: 0.35 });
     observer.observe(section);
   });
+
+  // Downsamples the live video to a small offscreen canvas, runs a Sobel
+  // edge-detection pass on it, and plots the resulting edge points (scaled
+  // back up) onto the visible overlay canvas every frame - a genuine trace
+  // of whatever the video currently shows, not a fixed decorative shape.
+  function startEdgeTracing(video, canvas) {
+    const ctx = canvas.getContext('2d');
+    const sampleW = 110, sampleH = 68;
+    const sample = document.createElement('canvas');
+    sample.width = sampleW;
+    sample.height = sampleH;
+    const sctx = sample.getContext('2d', { willReadFrequently: true });
+
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = Math.max(1, Math.round(rect.width));
+      canvas.height = Math.max(1, Math.round(rect.height));
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    // Re-measure once the docking CSS transition (scale/rotate) has settled,
+    // since the frame's on-screen size when tracing starts is mid-transition.
+    setTimeout(resize, 1200);
+
+    function tick() {
+      if (video.readyState >= 2 && video.videoWidth > 0) {
+        try {
+          sctx.drawImage(video, 0, 0, sampleW, sampleH);
+          const { data } = sctx.getImageData(0, 0, sampleW, sampleH);
+          const gray = new Float32Array(sampleW * sampleH);
+          for (let i = 0; i < sampleW * sampleH; i++) {
+            const o = i * 4;
+            gray[i] = 0.299 * data[o] + 0.587 * data[o + 1] + 0.114 * data[o + 2];
+          }
+          const sx = canvas.width / sampleW;
+          const sy = canvas.height / sampleH;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = 'rgba(255,255,255,0.8)';
+          for (let y = 1; y < sampleH - 1; y++) {
+            for (let x = 1; x < sampleW - 1; x++) {
+              const i = y * sampleW + x;
+              const gx = -gray[i - sampleW - 1] - 2 * gray[i - 1] - gray[i + sampleW - 1]
+                       + gray[i - sampleW + 1] + 2 * gray[i + 1] + gray[i + sampleW + 1];
+              const gy = -gray[i - sampleW - 1] - 2 * gray[i - sampleW] - gray[i - sampleW + 1]
+                       + gray[i + sampleW - 1] + 2 * gray[i + sampleW] + gray[i + sampleW + 1];
+              if (Math.sqrt(gx * gx + gy * gy) > 190) {
+                ctx.fillRect(x * sx, y * sy, 1.2, 1.2);
+              }
+            }
+          }
+        } catch (err) {
+          // Ignore transient decode errors (e.g. a frame not ready yet).
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
 </script>
 </body>
 </html>
