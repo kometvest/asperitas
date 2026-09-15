@@ -169,6 +169,7 @@
 <div class="narrow-pin-sticky">
 <section class="narrow-biology-section" id="narrow-biology">
 <div class="narrow-frame-stage" id="narrow-frame-stage">
+<div class="narrow-frame-ghost narrow-frame-ghost-3"></div>
 <div class="narrow-frame-ghost narrow-frame-ghost-2"></div>
 <div class="narrow-frame-ghost narrow-frame-ghost-1"></div>
 <div class="narrow-frame" id="narrow-frame">
@@ -201,7 +202,7 @@
 </div>
 <div class="narrow-copy" id="narrow-copy-c">
 <h2 class="narrow-side-heading">A closed loop platform for<br/>biodiversity-derived innovation</h2>
-<p class="narrow-side-sub">The Next One Hasn't Discovered Yet.</p>
+<p class="narrow-side-sub">The Next One Is Us.</p>
 </div>
 </section>
 </div>
@@ -464,6 +465,10 @@
     const frameStage = document.getElementById('narrow-frame-stage');
     const frame = document.getElementById('narrow-frame');
     const edgesCanvas = document.getElementById('narrow-frame-edges');
+    const ghost1 = frameStage ? frameStage.querySelector('.narrow-frame-ghost-1') : null;
+    const ghost2 = frameStage ? frameStage.querySelector('.narrow-frame-ghost-2') : null;
+    const ghost3 = frameStage ? frameStage.querySelector('.narrow-frame-ghost-3') : null;
+    const overlay = frameStage ? frameStage.querySelector('.narrow-frame-overlay') : null;
     const copyA = document.getElementById('narrow-copy-a');
     const copyB = document.getElementById('narrow-copy-b');
     const copyC = document.getElementById('narrow-copy-c');
@@ -564,6 +569,27 @@
       }
       const inStart = B_HOLD_END + (BC_END - B_HOLD_END) * 0.5;
       return fadeRamp(p, inStart, BC_END);
+    }
+
+    // The ghost frames + main border + dashed-line overlay fade in gradually
+    // as the hero video shrinks (not all at once the instant it docks), each
+    // starting a little later than the last - outermost ghost first, video's
+    // own border last - so the whole stack visibly assembles in step with
+    // the shrink instead of popping in as a disconnected, separate beat.
+    function applyFrameReveal(p) {
+      const g3 = fadeRamp(p, DOCK * 0.05, DOCK * 0.55);
+      const g2 = fadeRamp(p, DOCK * 0.20, DOCK * 0.68);
+      const g1 = fadeRamp(p, DOCK * 0.35, DOCK * 0.80);
+      const fr = fadeRamp(p, DOCK * 0.55, DOCK);
+      const ov = fadeRamp(p, DOCK * 0.65, DOCK * 1.05);
+      if (ghost3) ghost3.style.opacity = g3;
+      if (ghost2) ghost2.style.opacity = g2;
+      if (ghost1) ghost1.style.opacity = g1;
+      if (frame) {
+        frame.style.opacity = fr;
+        frame.style.transform = `scale(${lerp(0.82, 1, fr)}) rotate(${lerp(0, -1.5, fr)}deg)`;
+      }
+      if (overlay) overlay.style.opacity = ov;
     }
 
     function layoutCenteredCaption(el, layout) {
@@ -673,6 +699,18 @@
 
       const layout = computeLayout();
 
+      // The frame-stage's position and the ghost/border reveal are both pure
+      // functions of progress the whole time (stageRect already resolves to
+      // stage A for any progress up through A_HOLD_END, well past DOCK) - so
+      // they're kept in lockstep with the shrink from the very first frame,
+      // not just once "docked" flips true.
+      const rect = stageRect(layout, displayed);
+      frameStage.style.top = rect.top + 'px';
+      frameStage.style.left = rect.left + 'px';
+      frameStage.style.width = rect.width + 'px';
+      frameStage.style.height = rect.height + 'px';
+      applyFrameReveal(displayed);
+
       // Small hysteresis at the dock boundary so a value bouncing right
       // around it (scroll jitter, sub-pixel rounding) can't flap the video
       // in and out of the frame over and over.
@@ -683,11 +721,6 @@
       }
 
       if (docked) {
-        const rect = stageRect(layout, displayed);
-        frameStage.style.top = rect.top + 'px';
-        frameStage.style.left = rect.left + 'px';
-        frameStage.style.width = rect.width + 'px';
-        frameStage.style.height = rect.height + 'px';
         applyCaptions(layout, displayed);
       } else {
         applyVideoTransform(displayed, layout);
