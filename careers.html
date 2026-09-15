@@ -838,12 +838,16 @@
             const rimAngle = Math.atan2(rdy, rdx);
             // Two traveling waves at different crest-counts and speeds,
             // moving in the same direction around the rim - like a swell
-            // with smaller chop riding on top, so it reads as flowing water
-            // rather than a single pulsing ring.
+            // with smaller chop riding on top, so it flows rather than
+            // pulses uniformly. Sharpened (raised to a power) so it spends
+            // most of its time near zero - the sphere reads as a clean
+            // circle - and only occasionally flares up at a given spot,
+            // rather than constantly bulging the whole boundary.
             const swell = Math.sin(rimAngle * WAVE_CRESTS + flareTime);
             const chop = Math.sin(rimAngle * WAVE_CRESTS_2 + flareTime * 1.8 + p.phase * 0.3);
-            const flareWave = 0.5 + 0.5 * (swell * 0.7 + chop * 0.3);
-            const extend = rimProximity * flareWave * sphereR * 0.2;
+            const combined = swell * 0.7 + chop * 0.3;
+            const flareWave = Math.pow(Math.max(0, combined), 4);
+            const extend = rimProximity * flareWave * sphereR * 0.09;
             px += (rdx / centerDist0) * extend;
             py += (rdy / centerDist0) * extend;
             flareBoost = rimProximity * flareWave;
