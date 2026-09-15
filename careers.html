@@ -485,11 +485,11 @@
 <div class="how-panel-clip">
 <div class="how-panel-clip-inner" id="how-panel-clip-inner">
 <div class="how-panel-row">
-<div class="how-panel-number" id="how-panel-number">1</div>
+<div class="how-panel-number scramble-text" id="how-panel-number">1</div>
 <div>
-<div class="how-panel-index" id="how-panel-index">01 / 04</div>
-<div class="how-panel-label" id="how-panel-label">New</div>
-<p class="how-panel-text" id="how-panel-text">New biology starts with new biodiversity. Every organism we bring into the lab from an unexplored ecosystem is a chance to run research nobody else can — because nobody else has access to the same specimen.</p>
+<div class="how-panel-index scramble-text" id="how-panel-index">01 / 04</div>
+<div class="how-panel-label scramble-text" id="how-panel-label">New</div>
+<p class="how-panel-text scramble-text" id="how-panel-text">New biology starts with new biodiversity. Every organism we bring into the lab from an unexplored ecosystem is a chance to run research nobody else can — because nobody else has access to the same specimen.</p>
 </div>
 </div>
 </div>
@@ -512,7 +512,7 @@
 </div>
 </div>
 <div class="world-info">
-<div class="world-info-label" id="world-info-label">DELAWARE, UNITED STATES</div>
+<div class="world-info-label" id="world-info-label">NEWARK, UNITED STATES</div>
 <div class="world-info-photo" id="world-info-photo">No photo yet on file for this location</div>
 <p class="world-info-desc" id="world-info-desc">Established in Newark, Delaware, Asperitas HQ is our U.S. headquarters and the registered seat of Asperitas Inc., a Delaware C-Corporation. This office handles corporate governance, legal and regulatory filings, and financial operations for the company as a whole.</p>
 </div>
@@ -570,8 +570,8 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // How We Work - tabbed content. The panel's background/media never move;
-    // only the text column slides up-and-out, then in-from-below, clipped by
-    // its fixed-height wrapper - a real "ticker" swap rather than a whole-card fade.
+    // the text itself decodes letter-by-letter, the same scramble effect used
+    // by the header mega menus, instead of swapping as a whole block.
     const tabsData = [
       { label: 'New', index: '01 / 04', number: '1',
         text: "New biology starts with new biodiversity. Every organism we bring into the lab from an unexplored ecosystem is a chance to run research nobody else can — because nobody else has access to the same specimen." },
@@ -583,42 +583,30 @@
         text: 'From a single vivarium to a global sourcing network spanning 31+ countries, we build systems, teams, and pipelines that scale.' }
     ];
 
-    const clipInner = document.getElementById('how-panel-clip-inner');
     const numberEl = document.getElementById('how-panel-number');
     const indexEl = document.getElementById('how-panel-index');
     const labelEl = document.getElementById('how-panel-label');
     const textEl = document.getElementById('how-panel-text');
     const tabButtons = document.querySelectorAll('.how-tab');
+    const numberScramble = new window.TextScramble(numberEl);
+    const indexScramble = new window.TextScramble(indexEl);
+    const labelScramble = new window.TextScramble(labelEl);
+    const textScramble = new window.TextScramble(textEl);
     let activeTab = 0;
-    let animating = false;
-
-    function applyTab(i) {
-      const d = tabsData[i];
-      numberEl.textContent = d.number;
-      indexEl.textContent = d.index;
-      labelEl.textContent = d.label;
-      textEl.textContent = d.text;
-    }
 
     function switchTab(i) {
-      if (i === activeTab || animating) return;
-      animating = true;
+      if (i === activeTab) return;
+      activeTab = i;
+      const d = tabsData[i];
       tabButtons.forEach(btn => btn.classList.toggle('active', Number(btn.dataset.index) === i));
-      clipInner.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease';
-      clipInner.style.transform = 'translateY(-100%)';
-      clipInner.style.opacity = '0';
-      setTimeout(() => {
-        applyTab(i);
-        activeTab = i;
-        clipInner.style.transition = 'none';
-        clipInner.style.transform = 'translateY(100%)';
-        clipInner.style.opacity = '0';
-        void clipInner.offsetHeight; // force reflow so the next transition actually runs
-        clipInner.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease';
-        clipInner.style.transform = 'translateY(0)';
-        clipInner.style.opacity = '1';
-        animating = false;
-      }, 350);
+      numberScramble.setText(d.number);
+      indexScramble.setText(d.index);
+      labelScramble.setText(d.label);
+      textScramble.setText(d.text);
+      numberScramble.run();
+      indexScramble.run();
+      labelScramble.run();
+      textScramble.run();
     }
 
     tabButtons.forEach(btn => {
@@ -732,12 +720,17 @@
             lat: Math.asin(y) * 180 / Math.PI,
             lon: Math.atan2(z, x) * 180 / Math.PI,
             isLand: false,
+            // Per-point shimmer: independent phase/speed so the whole sphere
+            // reads as a living, flickering surface (like a solar flare)
+            // rather than a static dot field, even while otherwise at rest.
+            phase: Math.random() * Math.PI * 2,
+            speed: 0.5 + Math.random() * 1.1,
           });
         }
         return points;
       }
 
-      let dotPoints = fibonacciSphere(9000);
+      let dotPoints = fibonacciSphere(16000);
 
       // Idle auto-spin plus drag "momentum": dragging never snaps back - it
       // just changes rotX/rotY directly, and on release the last drag velocity
@@ -757,11 +750,11 @@
           spinVelocity += (IDLE_SPEED - spinVelocity) * 0.015;
         }
         projection.rotate([rotX, rotY]);
-        renderCanvas();
+        renderCanvas(elapsed);
         updateLocations(elapsed);
       });
 
-      function renderCanvas() {
+      function renderCanvas(elapsed) {
         ctx.clearRect(0, 0, S, S);
         ctx.fillStyle = '#050505';
         ctx.fillRect(0, 0, S, S);
@@ -792,32 +785,45 @@
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        // Batch all land dots into one path (and ocean dots into another) so
-        // we pay for two fill() calls total instead of one per point.
-        const landR = 1.15, oceanR = 0.65;
-        ctx.beginPath();
-        for (let i = 0; i < dotPoints.length; i++) {
-          const p = dotPoints[i];
-          if (!p.isLand) continue;
-          const proj = projection([p.lon, p.lat]);
-          if (!proj) continue;
-          ctx.moveTo(proj[0] + landR, proj[1]);
-          ctx.arc(proj[0], proj[1], landR, 0, Math.PI * 2);
-        }
-        ctx.fillStyle = 'rgba(255,255,255,0.92)';
-        ctx.fill();
+        // Each point's brightness shimmers independently over time (a slow
+        // sine per point, offset by its own phase/speed plus a slight
+        // dependence on latitude so a loose "flare" wave drifts across the
+        // surface). To keep this cheap at 16k points, brightness is quantized
+        // into a handful of buckets per land/ocean group, so the whole frame
+        // still costs only ~2 x BUCKETS fill() calls, not one per point.
+        const BUCKETS = 6;
+        const landBuckets = Array.from({ length: BUCKETS }, () => []);
+        const oceanBuckets = Array.from({ length: BUCKETS }, () => []);
+        const landBaseR = 1.15, oceanBaseR = 0.65;
 
-        ctx.beginPath();
         for (let i = 0; i < dotPoints.length; i++) {
           const p = dotPoints[i];
-          if (p.isLand) continue;
           const proj = projection([p.lon, p.lat]);
           if (!proj) continue;
-          ctx.moveTo(proj[0] + oceanR, proj[1]);
-          ctx.arc(proj[0], proj[1], oceanR, 0, Math.PI * 2);
+          const flare = 0.5 + 0.5 * Math.sin(elapsed / 900 * p.speed + p.phase + p.lat * 0.05);
+          const bucket = Math.min(BUCKETS - 1, Math.floor(flare * BUCKETS));
+          const r = (p.isLand ? landBaseR : oceanBaseR) * (0.75 + 0.55 * flare);
+          (p.isLand ? landBuckets : oceanBuckets)[bucket].push([proj[0], proj[1], r]);
         }
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        ctx.fill();
+
+        for (let b = 0; b < BUCKETS; b++) {
+          const alpha = 0.55 + (b / (BUCKETS - 1)) * 0.45;
+          if (landBuckets[b].length) {
+            ctx.beginPath();
+            for (const [x, y, r] of landBuckets[b]) { ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, Math.PI * 2); }
+            ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+            ctx.fill();
+          }
+        }
+        for (let b = 0; b < BUCKETS; b++) {
+          const alpha = 0.12 + (b / (BUCKETS - 1)) * 0.35;
+          if (oceanBuckets[b].length) {
+            ctx.beginPath();
+            for (const [x, y, r] of oceanBuckets[b]) { ctx.moveTo(x + r, y); ctx.arc(x, y, r, 0, Math.PI * 2); }
+            ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+            ctx.fill();
+          }
+        }
       }
 
       function updateLocations(elapsed) {
@@ -863,7 +869,17 @@
             .attr('fill', '#c8ff4d')
             .attr('stroke', '#050505')
             .attr('stroke-width', isActive ? 1.5 : 0.5)
+            .style('pointer-events', 'none');
+
+          // Invisible, larger hit target layered on top - the visible dot is
+          // only ~3px, far too small to reliably click/tap on its own. The
+          // whole SVG defaults to pointer-events:none (so it never blocks
+          // dragging the canvas underneath); this circle opts back in.
+          locG.append('circle')
+            .attr('cx', px).attr('cy', py).attr('r', 14)
+            .attr('fill', 'transparent')
             .style('cursor', 'pointer')
+            .style('pointer-events', 'auto')
             .on('click', () => selectLocation(i));
         });
       }

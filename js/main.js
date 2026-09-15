@@ -14,7 +14,7 @@ window.TextScramble = class TextScramble {
     this.frame = 0;
     this.frameRequest = null;
     this.queue = [];
-    this.ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    this.ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     this.TOTAL_FRAMES = Math.round(500 / (1000 / 60)); // ~0.5s at 60fps
   }
   setText(text) {
@@ -39,7 +39,9 @@ window.TextScramble = class TextScramble {
     let complete = 0;
     for (let i = 0; i < this.queue.length; i++) {
       const { to, end } = this.queue[i];
-      if (this.frame >= end || to === ' ') {
+      // Only letters/digits actually scramble; spaces, slashes, punctuation
+      // etc. settle immediately so things like "01 / 04" don't flicker oddly.
+      if (this.frame >= end || !/[A-Za-z0-9]/.test(to)) {
         complete++;
         output += to;
       } else {

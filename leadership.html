@@ -41,6 +41,18 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
+  .leadership-grid.members-grid {
+    padding-top: 0;
+  }
+  .leadership-section-header {
+    font-family: var(--font-title);
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #0a0a0a;
+    padding-top: 20px;
+    margin-bottom: 20px;
+  }
   .leader-card {
     cursor: pointer;
     background: none;
@@ -372,6 +384,32 @@
 </div>
 </button>
 </section>
+
+<section class="container">
+<h2 class="leadership-section-header">Members</h2>
+</section>
+<section class="container leadership-grid members-grid">
+<button class="leader-card" data-leader="eunseong" type="button">
+<div class="leader-photo"><img alt="Eunseong Lee" src="assets/eunseong.jpeg"/></div>
+<div class="leader-caption">
+<div>
+<div class="leader-name">Eunseong Lee</div>
+<div class="leader-role">Interim CFO</div>
+</div>
+<span class="leader-plus">+</span>
+</div>
+</button>
+<button class="leader-card" data-leader="beomseok" type="button">
+<div class="leader-photo"><img alt="Beomseok Oh" src="assets/beomseok.png"/></div>
+<div class="leader-caption">
+<div>
+<div class="leader-name">Beomseok Oh</div>
+<div class="leader-role">AI Manager</div>
+</div>
+<span class="leader-plus">+</span>
+</div>
+</button>
+</section>
 </div>
 
 <div class="leader-overlay" id="leader-overlay">
@@ -454,6 +492,20 @@
         img: 'assets/junsoo.jpeg',
         bio: 'Senior at Gyeonggi Science High School for the Gifted specializing in biology. Korea National Representative, 37th International Biology Olympiad Gold Medalist.',
         linkedin: 'https://www.linkedin.com/in/junsoo-bae-5a5b22413/?isSelfProfile=true'
+      },
+      eunseong: {
+        name: 'Eunseong Lee',
+        role: 'Interim CFO',
+        img: 'assets/eunseong.jpeg',
+        bio: 'Senior at Korea Science Academy of KAIST specializing in Numerical Analysis & Computational Physics (Simulation).',
+        linkedin: 'https://www.linkedin.com/in/caustic/'
+      },
+      beomseok: {
+        name: 'Beomseok Oh',
+        role: 'AI Manager',
+        img: 'assets/beomseok.png',
+        bio: 'Freshman at Harbin Institute of Technology specializing in AI, and Electrical & Information Engineering.',
+        linkedin: 'https://www.linkedin.com/in/범석-오-66154340a/'
       }
     };
 
