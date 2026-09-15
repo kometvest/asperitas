@@ -826,9 +826,10 @@ body.page-home .logo-img {
 
 /* Slider Section (Edge-to-Edge) */
 .slider-section {
-  background-color: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
+  /* Black, no border - the section above and below are both the exact same
+     #0a0a0a (not just a visually-close shade), so there is no color step at
+     all for the eye to catch as a seam between sections. */
+  background-color: #0a0a0a;
   padding: 0;
 }
 
@@ -836,7 +837,7 @@ body.page-home .logo-img {
   position: relative;
   overflow: hidden;
   border-radius: 0;
-  background: var(--bg-card);
+  background: #0a0a0a;
   border: none;
   box-shadow: none;
 }
@@ -850,7 +851,7 @@ body.page-home .logo-img {
   min-width: 100%;
   position: relative;
   height: 75vh;
-  background-color: #000000;
+  background-color: #0a0a0a;
 }
 
 .slide-img-wrapper {
@@ -860,7 +861,7 @@ body.page-home .logo-img {
   width: 100%;
   height: 100%;
   z-index: 1;
-  background-color: #000000;
+  background-color: #0a0a0a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -884,6 +885,15 @@ body.page-home .logo-img {
   height: 100%;
   background: transparent;
   z-index: 2;
+}
+
+.slide-deco {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
 }
 
 /* Glassmorphic Slide Caption on Top-Left (Pretendard Font style) */
@@ -994,7 +1004,7 @@ body.page-home .logo-img {
 
 .narrow-biology-section {
   position: relative;
-  background: #050505;
+  background: #0a0a0a;
   width: 100%;
   height: 100%;
 }
@@ -1155,17 +1165,35 @@ body.page-home .logo-img {
 }
 
 .reveal-section {
-  background: #050505;
+  position: relative;
+  background: #0a0a0a;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+}
+
+/* Fills the space the card leaves open on the left, at roughly the card's
+   own vertical position, so the two feel like one composition. */
+.reveal-deco {
+  position: absolute;
+  left: 6%;
+  bottom: 12%;
+  width: 34%;
+  height: 62%;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .reveal-card {
-  width: min(1100px, 88vw);
-  padding: 72px;
+  position: absolute;
+  right: min(72px, 6vw);
+  bottom: min(72px, 8vh);
+  /* Sized to its own content (each line held to one row by .reveal-text's
+     white-space: nowrap below) rather than a fixed width, so the card is
+     always exactly as wide as the two lines need - capped for narrow
+     viewports, where the mobile override switches back to normal wrapping. */
+  width: max-content;
+  max-width: min(900px, 74vw);
+  padding: 48px 56px;
   border-radius: 28px;
   background: linear-gradient(160deg, #1a3a26 0%, #0e2116 100%);
   box-shadow: 0 60px 140px rgba(0, 0, 0, 0.55);
@@ -1174,11 +1202,11 @@ body.page-home .logo-img {
 
 .reveal-text {
   font-family: var(--font-title);
-  font-size: 52px;
+  font-size: 27px;
   font-weight: 500;
   letter-spacing: -0.02em;
-  line-height: 1.35;
-  max-width: 880px;
+  line-height: 1.5;
+  white-space: nowrap;
 }
 
 .reveal-word {
@@ -1186,18 +1214,21 @@ body.page-home .logo-img {
 }
 
 @media (max-width: 900px) {
+  .reveal-deco {
+    display: none;
+  }
   .reveal-card {
-    padding: 44px 32px;
+    right: 24px;
+    left: 24px;
+    bottom: 5vh;
+    width: auto;
+    max-width: none;
+    padding: 36px 28px;
     border-radius: 20px;
   }
   .reveal-text {
-    font-size: 32px;
-  }
-}
-
-@media (max-width: 600px) {
-  .reveal-text {
-    font-size: 24px;
+    font-size: 22px;
+    white-space: normal;
   }
 }
 
