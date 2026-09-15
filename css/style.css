@@ -978,27 +978,62 @@ body.page-home .logo-img {
 }
 
 /* Scroll-reveal: shrunk, tilted framed video + wireframe overlay + headline */
+/* Tall pin wrapper: its height (minus one viewport) is exactly how much
+   scrolling the shrink takes to play out - however long the page's other
+   content is, the frame stays on-screen for the whole scrub because the
+   inner .narrow-pin-sticky is position:sticky, not because of a guessed
+   pixel distance. */
+.narrow-pin-wrap {
+  position: relative;
+  height: 220vh;
+}
+
+.narrow-pin-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .narrow-biology-section {
   background: #050505;
-  padding: 140px 0 150px;
-  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.narrow-biology-copy-section {
+  background: #050505;
+  padding: 20px 0 150px;
 }
 
 .narrow-frame-stage {
   position: relative;
-  width: min(880px, 86vw);
+  width: min(780px, 74vw);
   aspect-ratio: 16/10.5;
-  margin: 0 auto 64px;
+  margin: 0 auto;
 }
 
+/* Decorative "stacked card" outlines, offset away from the video itself
+   (to its left/above) rather than hugging its edges - three overlapping
+   rounded-rect frames in total once combined with .narrow-frame. */
 .narrow-frame-ghost {
   position: absolute;
-  inset: 5% 3%;
+  inset: 0;
   border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 18px;
   opacity: 0;
-  transform: rotate(2deg) translate(10px, -8px);
   transition: opacity 1s ease, transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.narrow-frame-ghost-1 {
+  transform: translate(-8%, -6%) scale(0.96) rotate(1deg);
+}
+
+.narrow-frame-ghost-2 {
+  border-color: rgba(255, 255, 255, 0.14);
+  transform: translate(-15%, -11%) scale(0.9) rotate(2deg);
 }
 
 .narrow-frame {
@@ -1084,8 +1119,8 @@ body.page-home .logo-img {
   transition-delay: 0.8s;
 }
 
-.narrow-biology-section.in-view .narrow-biology-heading,
-.narrow-biology-section.in-view .narrow-biology-sub {
+#narrow-biology-copy-section.in-view .narrow-biology-heading,
+#narrow-biology-copy-section.in-view .narrow-biology-sub {
   opacity: 1;
   transform: translateY(0);
 }
@@ -1093,7 +1128,6 @@ body.page-home .logo-img {
 @media (max-width: 768px) {
   .narrow-frame-stage {
     width: 92vw;
-    margin-bottom: 44px;
   }
   .narrow-biology-heading {
     font-size: 26px;

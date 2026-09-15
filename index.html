@@ -161,12 +161,15 @@
 </div>
 </div>
 </section>
-<!-- Scroll reveal: the hero video reappears smaller and tilted inside a
-     framed card with a decorative wireframe overlay, then the headline
-     rises up underneath it. -->
+<!-- Scroll-pinned reveal: a tall wrapper + a position:sticky inner keep the
+     framed video on-screen for the whole shrink, however tall the page's
+     other content is - no guessed pixel distance to get out of sync with. -->
+<div class="narrow-pin-wrap" id="narrow-pin-wrap">
+<div class="narrow-pin-sticky">
 <section class="narrow-biology-section" id="narrow-biology">
 <div class="narrow-frame-stage">
-<div class="narrow-frame-ghost"></div>
+<div class="narrow-frame-ghost narrow-frame-ghost-2"></div>
+<div class="narrow-frame-ghost narrow-frame-ghost-1"></div>
 <div class="narrow-frame" id="narrow-frame">
 <!-- The persistent hero video is moved in here by JS once scrolled into
      view - never a second/duplicate video element. -->
@@ -187,6 +190,10 @@
 <text fill="rgba(255,255,255,0.5)" font-family="var(--font-mono)" font-size="13" x="20" y="530">111</text>
 </svg>
 </div>
+</section>
+</div>
+</div>
+<section class="narrow-biology-copy-section" id="narrow-biology-copy-section">
 <div class="container narrow-biology-copy">
 <h2 class="narrow-biology-heading">Biotechnology keeps engineering<br/>the same narrow biology.</h2>
 <p class="narrow-biology-sub">Nature already solved billions of years of chemistry. We keep studying only a tiny fraction.</p>
@@ -432,50 +439,107 @@
     });
   });
 
-  // Scroll reveal for the shrunk/tilted framed video section - triggers once
-  // when scrolled into view, then stays revealed. The SAME <video> element
-  // used by the hero is moved (not cloned) into the frame at that moment, so
-  // playback never restarts or drops a frame; a live edge-detection pass on
-  // the video's own pixels then traces a white outline of whatever the video
-  // is actually showing, redrawn continuously so it tracks the footage.
+  // Scroll-scrubbed video: the SAME <video> element used by the hero (never
+  // cloned or reloaded, so playback never restarts or drops a frame) stays
+  // pinned full-bleed while you scroll past the hero, then continuously
+  // shrinks/tilts in lockstep with scroll position - not a one-time trigger -
+  // until it reaches the framed card's slot, where it docks into the normal
+  // page flow. Scrolling back up reverses the same interpolation. A live
+  // edge-detection pass on the video's own pixels then traces a white
+  // outline of whatever it's actually showing, redrawn continuously.
   document.addEventListener('DOMContentLoaded', () => {
     const video = document.getElementById('persistent-hero-video');
+    const heroBgWrapper = document.querySelector('.hero-bg-wrapper');
+    const pinWrap = document.getElementById('narrow-pin-wrap');
     const section = document.getElementById('narrow-biology');
+    const copySection = document.getElementById('narrow-biology-copy-section');
     const frame = document.getElementById('narrow-frame');
     const edgesCanvas = document.getElementById('narrow-frame-edges');
+    if (!video || !heroBgWrapper || !pinWrap || !section || !frame) return;
 
     // "Can't be stopped": nothing in this page exposes a pause control, but
     // guard against anything external (a browser gesture, an extension)
     // pausing it anyway by immediately resuming playback.
-    if (video) {
-      video.addEventListener('pause', () => {
-        video.play().catch(() => {});
-      });
-    }
+    video.addEventListener('pause', () => {
+      video.play().catch(() => {});
+    });
+
+    const lerp = (a, b, t) => a + (b - a) * t;
+    let docked = false;
+    let edgeTracingStarted = false;
 
     function dockVideoInFrame() {
-      if (!video || !frame) return;
       video.classList.remove('hero-bg');
       video.classList.add('narrow-frame-video');
+      video.style.cssText = ''; // drop every inline override, let the CSS class take over
       frame.insertBefore(video, edgesCanvas);
-      startEdgeTracing(video, edgesCanvas);
+      docked = true;
+      section.classList.add('in-view');
+      if (copySection) copySection.classList.add('in-view');
+      if (!edgeTracingStarted) {
+        edgeTracingStarted = true;
+        startEdgeTracing(video, edgesCanvas);
+      }
     }
 
-    if (!section || !('IntersectionObserver' in window)) {
-      if (section) section.classList.add('in-view');
-      dockVideoInFrame();
-      return;
+    function undockVideoToHero() {
+      video.classList.remove('narrow-frame-video');
+      video.classList.add('hero-bg');
+      heroBgWrapper.insertBefore(video, heroBgWrapper.firstChild);
+      docked = false;
+      section.classList.remove('in-view');
+      if (copySection) copySection.classList.remove('in-view');
     }
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          section.classList.add('in-view');
-          dockVideoInFrame();
-          observer.unobserve(section);
-        }
+
+    function update() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const pinTop = pinWrap.offsetTop;
+      const scrollRange = Math.max(1, pinWrap.offsetHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, (scrollY - pinTop) / scrollRange));
+
+      if (progress >= 1) {
+        if (!docked) dockVideoInFrame();
+        return;
+      }
+      if (docked) undockVideoToHero();
+
+      const frameRect = frame.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      const width = lerp(vw, frameRect.width, progress);
+      const height = lerp(vh, frameRect.height, progress);
+      const top = lerp(0, frameRect.top, progress);
+      const left = lerp(0, frameRect.left, progress);
+      const radius = lerp(0, 18, progress);
+      const rotate = lerp(0, -1.5, progress);
+
+      video.style.position = 'fixed';
+      video.style.top = top + 'px';
+      video.style.left = left + 'px';
+      video.style.width = width + 'px';
+      video.style.height = height + 'px';
+      video.style.borderRadius = radius + 'px';
+      video.style.transform = `rotate(${rotate}deg)`;
+      video.style.objectFit = 'cover';
+      video.style.zIndex = '2';
+      // The frame's own border/shadow, the ghost cards, the decorative
+      // overlay and the copy below still use their existing .in-view CSS
+      // transition, triggered the moment the video finishes docking.
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
       });
-    }, { threshold: 0.35 });
-    observer.observe(section);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
   });
 
   // Downsamples the live video to a small offscreen canvas, runs a Sobel
