@@ -202,28 +202,28 @@
   }
 
   .world-section {
-    background: var(--bg-primary);
+    background: #0a0a0a;
+    color: #ffffff;
     padding: 100px 0 140px;
-    border-top: 1px solid var(--border-color);
   }
   .world-heading {
     font-family: var(--font-title);
     font-size: 34px;
     font-weight: 500;
     letter-spacing: -0.02em;
-    color: var(--text-primary);
+    color: #ffffff;
     margin-bottom: 36px;
   }
   .world-grid {
     display: grid;
     grid-template-columns: 1fr 340px;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
   }
   .world-globe-wrap {
     position: relative;
     aspect-ratio: 16/10;
-    background: #f2f1ec;
-    border-right: 1px solid var(--border-color);
+    background: #050505;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
     overflow: hidden;
   }
   .world-globe-wrap svg { width: 100%; height: 100%; cursor: grab; display: block; }
@@ -238,36 +238,37 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    border: 1px solid var(--border-color);
-    background: var(--bg-primary);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 16px;
-    color: var(--text-primary);
+    color: #ffffff;
   }
-  .world-nav-arrow:hover { background: var(--text-primary); color: #fff; }
+  .world-nav-arrow:hover { background: #ffffff; color: #0a0a0a; }
   .world-info {
     padding: 30px;
     display: flex;
     flex-direction: column;
   }
   .world-info-label {
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     padding: 14px 16px;
     font-family: var(--font-title);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-primary);
+    color: #ffffff;
     margin-bottom: 20px;
   }
   .world-info-photo {
     aspect-ratio: 16/9;
-    background: #0a0a0a;
-    color: rgba(255, 255, 255, 0.7);
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.5);
     border-radius: 2px;
     margin-bottom: 20px;
     display: flex;
@@ -277,12 +278,19 @@
     padding: 16px;
     font-family: var(--font-body);
     font-size: 13px;
+    overflow: hidden;
+  }
+  .world-info-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
   .world-info-desc {
     font-family: var(--font-body);
     font-size: 14px;
     line-height: 1.7;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
     flex: 1;
   }
   @media (max-width: 900px) {
@@ -419,7 +427,7 @@
 <span class="careers-eyebrow">Careers</span>
 <h1 class="careers-hero-title">Make Future with Asperitas</h1>
 <div class="careers-hero-cta-row">
-<a class="careers-open-roles-btn" href="https://www.asperitas.bio/company.html#careers">Explore Open Roles</a>
+<a class="careers-open-roles-btn" href="https://bca87jmu.ninehire.site/?lang=en" rel="noopener noreferrer" target="_blank">Explore Open Roles</a>
 </div>
 </div>
 <div class="careers-hero-media">
@@ -435,7 +443,7 @@
 <div>
 <h2 class="who-we-are-title">Asperitas is not a traditional biotech company.</h2>
 <p class="who-we-are-desc">This is hard work, on hard problems, sourced from parts of the natural world most labs never touch. If that isn't for you, then that's OK. But if you're ready to turn overlooked biodiversity into programmable biology, if you want ownership over real research from day one, if you value working in the lab as much as in the field — then we want to hear from you.</p>
-<a class="who-we-are-link" href="https://www.asperitas.bio/company.html#careers">Explore Open Roles →</a>
+<a class="who-we-are-link" href="https://bca87jmu.ninehire.site/?lang=en" rel="noopener noreferrer" target="_blank">Explore Open Roles →</a>
 </div>
 </div>
 </section>
@@ -477,7 +485,7 @@
 <div class="world-info">
 <div class="world-info-label" id="world-info-label">DELAWARE, UNITED STATES</div>
 <div class="world-info-photo" id="world-info-photo">No photo yet on file for this location</div>
-<p class="world-info-desc" id="world-info-desc">Located in Newark, Delaware, Asperitas HQ — our U.S. headquarters, handling corporate operations and administrative filings.</p>
+<p class="world-info-desc" id="world-info-desc">Established in Newark, Delaware, Asperitas HQ is our U.S. headquarters and the registered seat of Asperitas Inc., a Delaware C-Corporation. This office handles corporate governance, legal and regulatory filings, and financial operations for the company as a whole.</p>
 </div>
 </div>
 </div>
@@ -595,14 +603,14 @@
       if (!svgEl || !container || typeof d3 === 'undefined') return;
 
       const locations = [
-        { key: 'busan', city: 'Busan', country: 'South Korea', lat: 35.1796, lon: 129.0756, isHQ: false,
-          desc: 'Located in Korea Science Academy of KAIST, Busan, Asperitas office — our primary research site.' },
-        { key: 'goyang', city: 'Goyang', country: 'South Korea', lat: 37.6584, lon: 126.8320, isHQ: false,
-          desc: 'Located in KINTEX, Goyang, Asperitas office — our Korean branch office.' },
-        { key: 'daejeon', city: 'Daejeon', country: 'South Korea', lat: 36.3504, lon: 127.3845, isHQ: false,
-          desc: 'Located in Wolpyeong, Daejeon, Asperitas office — a 60-pyeong facility for biological husbandry operations.' },
-        { key: 'delaware', city: 'Newark', country: 'United States', lat: 39.6837, lon: -75.7497, isHQ: true,
-          desc: 'Located in Newark, Delaware, Asperitas HQ — our U.S. headquarters, handling corporate operations and administrative filings.' }
+        { key: 'busan', city: 'Busan', country: 'South Korea', lat: 35.1796, lon: 129.0756, isHQ: false, photo: null,
+          desc: "Located inside the Korea Science Academy of KAIST in Busan, this Asperitas office is our primary research site. Our founding research team works directly out of this campus, running the genomic sequencing, protein modeling, and synthetic pathway design that feed every downstream program. It's where a new specimen first becomes a dataset." },
+        { key: 'goyang', city: 'Goyang', country: 'South Korea', lat: 37.6584, lon: 126.8320, isHQ: false, photo: null,
+          desc: 'Located at KINTEX in Goyang, this is our Korean branch office, supporting exhibitions, partnership meetings, and coordination with domestic research institutions and government programs. It anchors our presence in the greater Seoul metropolitan area alongside our research and husbandry sites.' },
+        { key: 'daejeon', city: 'Daejeon', country: 'South Korea', lat: 36.3504, lon: 127.3845, isHQ: false, photo: 'assets/dajeon.jpg',
+          desc: 'Located in Wolpyeong-dong, Daejeon, this roughly 60-pyeong (about 200 m²) facility houses our biological husbandry operations — climate-controlled shelving, tissue culture vessels, and terrarium systems that keep specimens sourced from the field alive, healthy, and ready for downstream research.' },
+        { key: 'delaware', city: 'Newark', country: 'United States', lat: 39.6837, lon: -75.7497, isHQ: true, photo: null,
+          desc: 'Established in Newark, Delaware, Asperitas HQ is our U.S. headquarters and the registered seat of Asperitas Inc., a Delaware C-Corporation. This office handles corporate governance, legal and regulatory filings, and financial operations for the company as a whole.' }
       ];
       let activeIndex = 3; // Delaware HQ shown by default, matching the info panel's initial text
 
@@ -617,8 +625,8 @@
         const loc = locations[i];
         labelScramble.setText(`${loc.city.toUpperCase()}, ${loc.country.toUpperCase()}`);
         descScramble.setText(loc.desc);
-        photoEl.textContent = loc.key === 'daejeon'
-          ? 'Photo of the Daejeon facility pending'
+        photoEl.innerHTML = loc.photo
+          ? `<img alt="${loc.city} office" src="${loc.photo}"/>`
           : 'No photo yet on file for this location';
         labelScramble.run();
         descScramble.run();
@@ -639,24 +647,66 @@
         .attr('width', S)
         .attr('height', S);
 
+      const defs = svg.append('defs');
+      defs.append('filter').attr('id', 'world-rim-blur').attr('x', '-60%').attr('y', '-60%').attr('width', '220%').attr('height', '220%')
+        .append('feGaussianBlur').attr('stdDeviation', 5);
+
       const projection = d3.geoOrthographic()
         .scale(S / 2.1)
         .translate([S / 2, S / 2])
         .clipAngle(90)
         .rotate([0, -20]);
 
-      const pathGen = d3.geoPath().projection(projection);
+      // Background: solid black + a static starfield scattered behind the globe
+      const bgRect = svg.append('rect').attr('class', 'world-bg-rect').attr('x', 0).attr('y', 0).attr('width', S).attr('height', S).attr('fill', '#050505');
 
-      svg.append('circle')
-        .attr('cx', S / 2).attr('cy', S / 2)
-        .attr('r', S / 2.1)
-        .attr('fill', '#f5f5f0')
-        .attr('stroke', 'rgba(0,0,0,0.08)')
-        .attr('stroke-width', 1);
+      const starG = svg.append('g');
+      const starData = Array.from({ length: 140 }, () => ({
+        fx: Math.random(), fy: Math.random(), r: Math.random() * 1.1 + 0.2, o: Math.random() * 0.5 + 0.15,
+      }));
+      function drawStars() {
+        starG.selectAll('circle').data(starData).join('circle')
+          .attr('cx', d => d.fx * S).attr('cy', d => d.fy * S)
+          .attr('r', d => d.r).attr('fill', d => `rgba(255,255,255,${d.o})`);
+      }
+      drawStars();
 
-      const landG = svg.append('g');
-      const borderG = svg.append('g');
+      // Soft glow ring around the sphere's silhouette (rim light)
+      const glowRing = svg.append('circle').attr('class', 'world-glow-ring')
+        .attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1)
+        .attr('fill', 'none').attr('stroke', 'rgba(255,255,255,0.5)').attr('stroke-width', 4)
+        .attr('opacity', 0.35).attr('filter', 'url(#world-rim-blur)');
+
+      const outlineRing = svg.append('circle').attr('class', 'world-outline-ring')
+        .attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1)
+        .attr('fill', 'none').attr('stroke', 'rgba(255,255,255,0.25)').attr('stroke-width', 1);
+
+      const dotG = svg.append('g');
       const locG = svg.append('g');
+
+      // A dense, evenly-distributed field of points over the sphere (Fibonacci
+      // sphere sampling), later classified as land/ocean so continents read as
+      // denser, brighter clusters of dots - the Anduril "point-cloud globe" look.
+      function fibonacciSphere(samples) {
+        const points = [];
+        const phi = Math.PI * (3 - Math.sqrt(5));
+        for (let i = 0; i < samples; i++) {
+          const y = 1 - (i / (samples - 1)) * 2;
+          const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
+          const theta = phi * i;
+          const x = Math.cos(theta) * radiusAtY;
+          const z = Math.sin(theta) * radiusAtY;
+          points.push({
+            id: i,
+            lat: Math.asin(y) * 180 / Math.PI,
+            lon: Math.atan2(z, x) * 180 / Math.PI,
+            isLand: false,
+          });
+        }
+        return points;
+      }
+
+      let dotPoints = fibonacciSphere(2400);
 
       let autoRotX = 0;
       let rotX = 0;
@@ -672,10 +722,23 @@
           rotX = autoRotX;
         }
         projection.rotate([rotX, rotY]);
-        landG.selectAll('path').attr('d', pathGen);
-        borderG.selectAll('path').attr('d', pathGen);
+        updateDots();
         updateLocations(elapsed);
       });
+
+      function updateDots() {
+        const visible = [];
+        for (let i = 0; i < dotPoints.length; i++) {
+          const p = dotPoints[i];
+          const proj = projection([p.lon, p.lat]);
+          if (!proj) continue;
+          visible.push({ id: p.id, isLand: p.isLand, x: proj[0], y: proj[1] });
+        }
+        dotG.selectAll('circle').data(visible, d => d.id).join('circle')
+          .attr('cx', d => d.x).attr('cy', d => d.y)
+          .attr('r', d => d.isLand ? 1.3 : 0.75)
+          .attr('fill', d => d.isLand ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.32)');
+      }
 
       function updateLocations(elapsed) {
         locG.selectAll('*').remove();
@@ -687,43 +750,41 @@
           const geo = d3.geoDistance(coords, [-projection.rotate()[0], -projection.rotate()[1]]);
           if (geo > Math.PI / 2) return;
           const [px, py] = projected;
+          const isActive = i === activeIndex;
 
-          const pulse = 5 + 2.4 * Math.sin(elapsed / 380 + i * 1.3);
-          locG.append('circle')
-            .attr('cx', px).attr('cy', py).attr('r', pulse)
-            .attr('fill', 'none')
-            .attr('stroke', '#9fe83a')
-            .attr('stroke-width', 1.4)
-            .attr('opacity', 0.55);
-
-          if (loc.isHQ) {
+          if (isActive) {
+            const pulse = 6 + 2.6 * Math.sin(elapsed / 380);
+            locG.append('circle')
+              .attr('cx', px).attr('cy', py).attr('r', pulse)
+              .attr('fill', 'none').attr('stroke', '#c8ff4d').attr('stroke-width', 1.4).attr('opacity', 0.6);
             locG.append('circle')
               .attr('cx', px).attr('cy', py).attr('r', 11)
-              .attr('fill', 'none')
-              .attr('stroke', '#9fe83a')
-              .attr('stroke-width', 1.5);
+              .attr('fill', 'none').attr('stroke', '#c8ff4d').attr('stroke-width', 1.4);
+
+            const lineEndX = Math.min(px + 130, S - 12);
+            locG.append('line')
+              .attr('x1', px + 12).attr('y1', py).attr('x2', lineEndX).attr('y2', py)
+              .attr('stroke', '#c8ff4d').attr('stroke-width', 1);
+            locG.append('text')
+              .attr('x', lineEndX + 8).attr('y', py - 4)
+              .attr('font-family', 'var(--font-body)').attr('font-size', '13px').attr('font-weight', '500')
+              .attr('fill', '#c8ff4d').style('pointer-events', 'none')
+              .text(loc.city + (loc.isHQ ? ' (HQ)' : ''));
+            locG.append('text')
+              .attr('x', lineEndX + 8).attr('y', py + 12)
+              .attr('font-family', 'var(--font-title)').attr('font-size', '10px').attr('font-weight', '700')
+              .attr('letter-spacing', '0.08em')
+              .attr('fill', '#c8ff4d').style('pointer-events', 'none')
+              .text(loc.country.toUpperCase());
           }
 
           locG.append('circle')
-            .attr('cx', px).attr('cy', py).attr('r', i === activeIndex ? 4.5 : 3.5)
-            .attr('fill', '#9fe83a')
-            .attr('stroke', '#0a0a0a')
-            .attr('stroke-width', i === activeIndex ? 1.5 : 0)
+            .attr('cx', px).attr('cy', py).attr('r', isActive ? 4.5 : 3)
+            .attr('fill', '#c8ff4d')
+            .attr('stroke', '#050505')
+            .attr('stroke-width', isActive ? 1.5 : 0.5)
             .style('cursor', 'pointer')
             .on('click', () => selectLocation(i));
-
-          // Busan/Goyang/Daejeon sit close together on the globe at this scale,
-          // so their labels get a small manual offset to keep them legible
-          // instead of stacking on top of each other.
-          const labelOffset = { busan: [10, 16], goyang: [-58, -10], daejeon: [10, -6], delaware: [10, 4] }[loc.key] || [10, 4];
-          locG.append('text')
-            .attr('x', px + labelOffset[0]).attr('y', py + labelOffset[1])
-            .attr('font-family', 'var(--font-body)')
-            .attr('font-size', '11px')
-            .attr('font-weight', i === activeIndex ? '700' : '500')
-            .attr('fill', 'rgba(10,10,10,0.85)')
-            .style('pointer-events', 'none')
-            .text(loc.city + (loc.isHQ ? ' (HQ)' : ''));
         });
       }
 
@@ -749,22 +810,10 @@
       }
 
       d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
-        const countries = topojson.feature(world, world.objects.countries);
-        const borders = topojson.mesh(world, world.objects.countries, (a, b) => a !== b);
-
-        landG.selectAll('path')
-          .data(countries.features)
-          .enter().append('path')
-          .attr('d', pathGen)
-          .attr('fill', '#d8d8d0')
-          .attr('stroke', 'none');
-
-        borderG.append('path')
-          .datum(borders)
-          .attr('d', pathGen)
-          .attr('fill', 'none')
-          .attr('stroke', 'rgba(255,255,255,0.7)')
-          .attr('stroke-width', 0.5);
+        const land = topojson.merge(world, world.objects.countries.geometries);
+        dotPoints.forEach(p => { p.isLand = d3.geoContains(land, [p.lon, p.lat]); });
+        // Thin out ocean points so continents read as visibly denser clusters.
+        dotPoints = dotPoints.filter(p => p.isLand || Math.random() < 0.32);
       });
 
       const drag = d3.drag()
@@ -800,7 +849,10 @@
         S = size();
         svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
         projection.scale(S / 2.1).translate([S / 2, S / 2]);
-        svg.select('circle').attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1);
+        bgRect.attr('width', S).attr('height', S);
+        glowRing.attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1);
+        outlineRing.attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1);
+        drawStars();
       });
       ro.observe(container);
     })();
