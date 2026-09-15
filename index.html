@@ -207,16 +207,22 @@
 </section>
 </div>
 </div>
-<!-- Typewriter Animation Section -->
-<section class="typing-section" id="featured">
-<div class="container typing-container">
-<h2 class="typing-text" id="typing-target"></h2>
-<span class="typing-cursor"></span>
+<!-- Scroll-reveal stat: a dark card rises into place, then its sentence
+     sweeps word-by-word from dim gray to full white as you keep scrolling -
+     the same tall-pin-wrapper + sticky-inner pattern used above, so the card
+     stays on-screen for the whole reveal regardless of page length. -->
+<div class="reveal-pin-wrap" id="reveal-pin-wrap">
+<div class="reveal-pin-sticky">
+<section class="reveal-section">
+<div class="reveal-card" id="reveal-card">
+<p class="reveal-text" id="reveal-text"><span class="reveal-word">99%</span> <span class="reveal-word">of</span> <span class="reveal-word">the</span> <span class="reveal-word">world's</span> <span class="reveal-word">biodiversity</span> <span class="reveal-word">remains</span> <span class="reveal-word">unexplored.</span> <span class="reveal-word">Asperitas</span> <span class="reveal-word">exists</span> <span class="reveal-word">to</span> <span class="reveal-word">change</span> <span class="reveal-word">that.</span></p>
 </div>
 </section>
+</div>
+</div>
 <!-- Featured Slider Section (Edge-to-Edge) -->
 <section class="slider-section">
-<div class="slider-container">
+<div class="slider-container animate-on-scroll">
 <div class="slider-track" id="slider-track">
 <!-- Slide 1: Purple Autoluminescent Flower -->
 <div class="slide active">
@@ -244,76 +250,20 @@
 <button aria-label="Next slide" class="slider-arrow slider-arrow-right" id="next-slide">→</button>
 </div>
 </section>
-<!-- Our Platform Section -->
-<section class="platform-section section-padding">
-<div class="platform-list">
-<!-- Row 1: Biodiversity -->
-<div class="platform-row animate-on-scroll">
-<div class="container" style="display: contents;">
-<div class="platform-info" style="padding-left: 40px;">
-<span class="platform-num">/0.1</span>
-<p class="platform-desc">Sourcing genomic, metabolic, and structural profiles of specialized organism adaptations through global sourcing networks and localized hubs.</p>
-</div>
-<div class="platform-title-wrapper" style="padding-right: 40px;">
-<h3 class="platform-title">Biodiversity</h3>
-</div>
-</div>
-</div>
-<!-- Row 2: Bio AI -->
-<div class="platform-row animate-on-scroll">
-<div class="container" style="display: contents;">
-<div class="platform-info" style="padding-left: 40px;">
-<span class="platform-num">/0.2</span>
-<p class="platform-desc">Applying protein language models and a Biological Knowledge Graph to predict phenotypic functions and optimize gene synthesis constructs in silico.</p>
-</div>
-<div class="platform-title-wrapper" style="padding-right: 40px;">
-<h3 class="platform-title">Bio AI</h3>
-</div>
-</div>
-</div>
-<!-- Row 3: Synthetic Bio -->
-<div class="platform-row animate-on-scroll">
-<div class="container" style="display: contents;">
-<div class="platform-info" style="padding-left: 40px;">
-<span class="platform-num">/0.3</span>
-<p class="platform-desc">Validating AI models with high-throughput wet lab assays. Engineering cell-free systems, base-edited microbes, and chloroplast integrations.</p>
-</div>
-<div class="platform-title-wrapper" style="padding-right: 40px;">
-<h3 class="platform-title">Synthetic Bio</h3>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Split Card Section with glowing blue plant image -->
-<section class="card-split-section section-padding">
-<div class="container">
-<div class="card-split-grid">
-<div class="card-split-media animate-on-scroll">
-<img alt="Glowing Blue Luminescent Plant" src="assets/plant-blue.jpg"/>
-</div>
-<div class="card-split-text animate-on-scroll">
-<h2 class="card-split-title">There is so much left to build</h2>
-<p class="card-split-desc">Asperitas translates genes, pathways, and functions from natural diversity into scalable assets across therapeutics, agriculture, materials, and living design.</p>
-<a class="btn-secondary" href="technology.html">LEARN MORE</a>
-</div>
-</div>
-</div>
-</section>
 <!-- Partnership Section -->
 <style>
   .partnership-section {
-    padding: 80px 0;
-    background-color: var(--bg-primary);
+    padding: 100px 0;
+    background-color: #0a0a0a;
     overflow: hidden;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
   .partnership-header {
     text-align: center;
     font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 24px;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.75);
     margin-bottom: 40px;
     letter-spacing: -0.02em;
   }
@@ -334,11 +284,14 @@
     height: 50px;
     object-fit: contain;
     margin: 0 40px;
-    filter: grayscale(100%) opacity(0.6);
+    /* Source logos are dark line-art on transparent backgrounds, so on the
+       new black section they need inverting (not just grayscale) to read at
+       all - hovering drops the invert to reveal their true colors. */
+    filter: grayscale(100%) invert(1) opacity(0.6);
     transition: filter 0.3s ease;
   }
   .marquee-content img:hover {
-    filter: grayscale(0%) opacity(1);
+    filter: grayscale(0%) invert(0) opacity(1);
   }
   @keyframes scroll-left {
     from {
@@ -350,10 +303,10 @@
   }
 </style>
 <section class="partnership-section">
-<div class="container">
+<div class="container animate-on-scroll">
 <h2 class="partnership-header">Partnership</h2>
 </div>
-<div class="marquee-wrapper">
+<div class="marquee-wrapper animate-on-scroll">
 <div class="marquee-content">
 <img alt="Partner Logo" src="assets/logo01.png"/>
 <img alt="Partner Logo" src="assets/logo02.png"/>
@@ -371,17 +324,6 @@
 <img alt="Partner Logo" src="assets/logo03.png"/>
 </div>
 </div>
-</section>
-<!-- Dual Bottom CTA Section -->
-<section class="cta-dual-section">
-<a class="cta-box light" href="mailto:business@asperitas.bio">
-<span class="cta-title">Request a Demo</span>
-<span class="cta-arrow">→</span>
-</a>
-<a class="cta-box dark" href="technology.html">
-<span class="cta-title">Start Building</span>
-<span class="cta-arrow">→</span>
-</a>
 </section>
 <!-- Footer -->
 <footer class="footer">
@@ -789,6 +731,57 @@
     }
     tick();
   }
+
+  // Scroll-reveal stat card: the card rises + fades in over the first part
+  // of this section's pin range, then its sentence sweeps word-by-word from
+  // dim gray to full white over the rest - a continuous rAF easing loop tied
+  // to scroll progress, same pattern as the staged video sequence above, so
+  // it stays smooth regardless of how the scroll itself arrives.
+  document.addEventListener('DOMContentLoaded', () => {
+    const pinWrap = document.getElementById('reveal-pin-wrap');
+    const card = document.getElementById('reveal-card');
+    const words = document.querySelectorAll('#reveal-text .reveal-word');
+    if (!pinWrap || !card || !words.length) return;
+
+    const lerp = (a, b, t) => a + (b - a) * t;
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
+    const easeOut = (t) => 1 - Math.pow(1 - t, 3);
+    function fadeRamp(p, start, end) {
+      if (end <= start) return p >= end ? 1 : 0;
+      return clamp01((p - start) / (end - start));
+    }
+
+    const RISE_END = 0.32;
+
+    function targetProgress() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const pinTop = pinWrap.offsetTop;
+      const scrollRange = Math.max(1, pinWrap.offsetHeight - window.innerHeight);
+      return clamp01((scrollY - pinTop) / scrollRange);
+    }
+
+    let displayed = targetProgress();
+    function loop() {
+      const target = targetProgress();
+      displayed += (target - displayed) * 0.2;
+      if (Math.abs(target - displayed) < 0.0015) displayed = target;
+
+      const riseT = easeOut(clamp01(displayed / RISE_END));
+      card.style.opacity = riseT;
+      card.style.transform = `translateY(${lerp(90, 0, riseT)}px)`;
+
+      const n = words.length;
+      words.forEach((el, i) => {
+        const start = RISE_END + (i / n) * (1 - RISE_END) * 0.8;
+        const end = start + (1 - RISE_END) * 0.4;
+        const t = fadeRamp(displayed, start, Math.min(1, end));
+        el.style.color = `rgba(255, 255, 255, ${lerp(0.3, 1, t)})`;
+      });
+
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  });
 </script>
 </body>
 </html>
