@@ -137,7 +137,7 @@
 <!-- This exact video element is never re-created: it's later moved (not
      cloned) into the framed card below, so it plays continuously start to
      finish and never restarts or gets interrupted. -->
-<video autoplay="" class="hero-bg" id="persistent-hero-video" loop="" muted="" oncontextmenu="return false" playsinline="">
+<video autoplay="" class="hero-bg" controlslist="nodownload nofullscreen noremoteplayback nopictureinpicture" disablepictureinpicture="" disableremoteplayback="" id="persistent-hero-video" loop="" muted="" oncontextmenu="return false" playsinline="">
 <source src="assets/hero-video.mp4" type="video/mp4"/>
 <!-- Fallback to our generated image -->
 <img alt="Bioluminescent Rainforest Background" src="assets/hero-bg.png"/>
@@ -457,9 +457,12 @@
     const edgesCanvas = document.getElementById('narrow-frame-edges');
     if (!video || !heroBgWrapper || !pinWrap || !section || !frame) return;
 
-    // "Can't be stopped": nothing in this page exposes a pause control, but
-    // guard against anything external (a browser gesture, an extension)
-    // pausing it anyway by immediately resuming playback.
+    // "Can't be stopped": no visible control ever exists (no `controls`
+    // attribute, context menu disabled, picture-in-picture/remote-playback
+    // UI disabled below), and if anything external still pauses it, resume
+    // immediately.
+    video.removeAttribute('controls');
+    video.disablePictureInPicture = true;
     video.addEventListener('pause', () => {
       video.play().catch(() => {});
     });
@@ -491,55 +494,55 @@
       if (copySection) copySection.classList.remove('in-view');
     }
 
-    function update() {
+    function targetProgress() {
       const scrollY = window.scrollY || window.pageYOffset;
       const pinTop = pinWrap.offsetTop;
       const scrollRange = Math.max(1, pinWrap.offsetHeight - window.innerHeight);
-      const progress = Math.min(1, Math.max(0, (scrollY - pinTop) / scrollRange));
+      return Math.min(1, Math.max(0, (scrollY - pinTop) / scrollRange));
+    }
 
-      if (progress >= 1) {
-        if (!docked) dockVideoInFrame();
-        return;
-      }
-      if (docked) undockVideoToHero();
-
+    function applyVideoTransform(progress) {
       const frameRect = frame.getBoundingClientRect();
       const vw = window.innerWidth;
       const vh = window.innerHeight;
 
-      const width = lerp(vw, frameRect.width, progress);
-      const height = lerp(vh, frameRect.height, progress);
-      const top = lerp(0, frameRect.top, progress);
-      const left = lerp(0, frameRect.left, progress);
-      const radius = lerp(0, 18, progress);
-      const rotate = lerp(0, -1.5, progress);
-
       video.style.position = 'fixed';
-      video.style.top = top + 'px';
-      video.style.left = left + 'px';
-      video.style.width = width + 'px';
-      video.style.height = height + 'px';
-      video.style.borderRadius = radius + 'px';
-      video.style.transform = `rotate(${rotate}deg)`;
+      video.style.top = lerp(0, frameRect.top, progress) + 'px';
+      video.style.left = lerp(0, frameRect.left, progress) + 'px';
+      video.style.width = lerp(vw, frameRect.width, progress) + 'px';
+      video.style.height = lerp(vh, frameRect.height, progress) + 'px';
+      video.style.borderRadius = lerp(0, 18, progress) + 'px';
+      video.style.transform = `rotate(${lerp(0, -1.5, progress)}deg)`;
       video.style.objectFit = 'cover';
       video.style.zIndex = '2';
-      // The frame's own border/shadow, the ghost cards, the decorative
-      // overlay and the copy below still use their existing .in-view CSS
-      // transition, triggered the moment the video finishes docking.
     }
 
-    let ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        update();
-        ticking = false;
-      });
+    // A continuous rAF loop - not a per-scroll-event handler - samples the
+    // real scroll position every rendered frame and eases the displayed
+    // shrink toward it. Relying on scroll events alone would let a fast
+    // trackpad flick or a wheel jump land on a single big scroll delta with
+    // no frames rendered in between, which reads as a sudden jump/stutter
+    // rather than a shrink; this makes the motion smooth no matter how the
+    // scroll itself arrives.
+    let displayed = targetProgress();
+    function loop() {
+      const target = targetProgress();
+      displayed += (target - displayed) * 0.2;
+      if (Math.abs(target - displayed) < 0.0015) displayed = target;
+
+      // Small hysteresis at the boundary so a value bouncing right around 1
+      // (scroll jitter, sub-pixel rounding) can't flap the video in and out
+      // of the frame over and over.
+      if (target >= 1 && displayed > 0.995) {
+        if (!docked) dockVideoInFrame();
+      } else {
+        if (docked && target < 0.995) undockVideoToHero();
+        if (!docked) applyVideoTransform(displayed);
+      }
+      requestAnimationFrame(loop);
     }
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
+    requestAnimationFrame(loop);
+    window.addEventListener('resize', () => { displayed = targetProgress(); });
   });
 
   // Downsamples the live video to a small offscreen canvas, runs a Sobel

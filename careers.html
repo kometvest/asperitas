@@ -694,7 +694,7 @@
       fitCanvas();
 
       const projection = d3.geoOrthographic()
-        .scale(S / 2.9)
+        .scale(S / 3.4)
         .translate([S / 2, S / 2])
         .clipAngle(90)
         .rotate([0, -20]);
@@ -785,7 +785,7 @@
         }
         ctx.globalAlpha = 1;
 
-        const cx = S / 2, cy = S / 2, sphereR = S / 2.9;
+        const cx = S / 2, cy = S / 2, sphereR = S / 3.4;
 
         // No separate circle/ring is drawn here by design - the sphere's
         // shape and glow both come entirely from the dot cloud itself.
@@ -1026,7 +1026,7 @@
       const ro = new ResizeObserver(() => {
         S = size();
         svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
-        projection.scale(S / 2.9).translate([S / 2, S / 2]);
+        projection.scale(S / 3.4).translate([S / 2, S / 2]);
         fitCanvas();
       });
       ro.observe(container);
