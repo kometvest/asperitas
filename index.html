@@ -142,14 +142,17 @@
 <div class="hero-overlay"></div>
 </div>
 <div class="hero-content">
-<h1 class="hero-title">Asperitas Bioscience Unlocking Biodiversity for Biotechnologies</h1>
+<div class="hero-lockup">
+<div class="hero-lockup-headline">
+<div class="hero-title-line" id="hero-line-1">© ASPERITAS BIOSCIENCE</div>
+<div class="hero-title-line" id="hero-line-2">UNLOCKING BIODIVERSITY</div>
+<div class="hero-title-line" id="hero-line-3">FOR BIOTECHNOLOGIES</div>
 </div>
-<div class="hero-bottom-row">
-<div></div>
-<div class="hero-bottom-logo"><img alt="Asperitas" src="assets/logo-square-white.png"/></div>
-<div class="hero-bottom-right">
-<span class="hero-est">EST. 2026</span>
-<span class="hero-future">→ FUTURE</span>
+<div class="hero-lockup-logo" id="hero-lockup-logo"><img alt="Asperitas" src="assets/logo-square-white.png"/></div>
+<div class="hero-lockup-est">
+<div class="hero-est-line" id="hero-line-est">EST. 2026</div>
+<div class="hero-est-line" id="hero-line-future">→ FUTURE</div>
+</div>
 </div>
 </div>
 </section>
@@ -375,5 +378,33 @@
 </div>
 </footer>
 <script src="js/main.js"></script>
+<script>
+  // Hero lockup reveal: each line/logo pops in and scramble-decodes in turn,
+  // ordered top-left to bottom-right across the whole composition (headline
+  // column, then the logo, then the EST/Future column), finishing inside 3s.
+  document.addEventListener('DOMContentLoaded', () => {
+    const steps = [
+      { id: 'hero-line-1', delay: 0 },
+      { id: 'hero-line-2', delay: 500 },
+      { id: 'hero-lockup-logo', delay: 900, isLogo: true },
+      { id: 'hero-line-est', delay: 1200 },
+      { id: 'hero-line-3', delay: 1700 },
+      { id: 'hero-line-future', delay: 2300 },
+    ];
+    steps.forEach(({ id, delay, isLogo }) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (isLogo) {
+        setTimeout(() => { el.style.opacity = '1'; }, delay);
+        return;
+      }
+      const scrambler = new window.TextScramble(el);
+      setTimeout(() => {
+        el.style.opacity = '1';
+        scrambler.run();
+      }, delay);
+    });
+  });
+</script>
 </body>
 </html>
