@@ -149,10 +149,26 @@
   .how-panel {
     background: #b2b3a3;
     display: grid;
-    grid-template-columns: 90px 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
     gap: 30px;
     padding: 50px;
+  }
+  .how-panel-clip {
+    position: relative;
+    height: 230px;
+    overflow: hidden;
+  }
+  .how-panel-clip-inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .how-panel-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
   }
   .how-panel-number {
     font-family: var(--font-title);
@@ -160,6 +176,8 @@
     font-weight: 700;
     color: #0a0a0a;
     line-height: 1;
+    width: 90px;
+    flex-shrink: 0;
   }
   .how-panel-index {
     font-family: var(--font-title);
@@ -188,16 +206,12 @@
   .how-panel-media {
     aspect-ratio: 16/9;
     overflow: hidden;
-  }
-  .how-panel-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    background: #000000;
   }
   @media (max-width: 900px) {
     .how-panel { grid-template-columns: 1fr; gap: 16px; padding: 34px; }
-    .how-panel-number { font-size: 40px; }
+    .how-panel-clip { height: 280px; }
+    .how-panel-number { font-size: 40px; width: 56px; }
     .how-tabs { flex-wrap: wrap; gap: 24px; }
   }
 
@@ -226,7 +240,17 @@
     border-right: 1px solid rgba(255, 255, 255, 0.15);
     overflow: hidden;
   }
-  .world-globe-wrap svg { width: 100%; height: 100%; cursor: grab; display: block; }
+  .world-globe-wrap canvas,
+  .world-globe-wrap svg {
+    /* Sized and positioned in JS (an explicit S x S box, centered in the
+       container) so the canvas dot-sphere and the SVG marker overlay share
+       exactly the same coordinate system - do not set width/height here. */
+    position: absolute;
+    display: block;
+  }
+  .world-globe-wrap canvas { cursor: grab; }
+  .world-globe-wrap canvas:active { cursor: grabbing; }
+  .world-globe-wrap svg { pointer-events: none; }
   .world-nav-arrows {
     position: absolute;
     left: 24px;
@@ -458,15 +482,19 @@
 <button class="how-tab" data-index="3" type="button">Scale</button>
 </div>
 <div class="how-panel" id="how-panel">
+<div class="how-panel-clip">
+<div class="how-panel-clip-inner" id="how-panel-clip-inner">
+<div class="how-panel-row">
 <div class="how-panel-number" id="how-panel-number">1</div>
 <div>
 <div class="how-panel-index" id="how-panel-index">01 / 04</div>
 <div class="how-panel-label" id="how-panel-label">New</div>
 <p class="how-panel-text" id="how-panel-text">New biology starts with new biodiversity. Every organism we bring into the lab from an unexplored ecosystem is a chance to run research nobody else can — because nobody else has access to the same specimen.</p>
 </div>
-<div class="how-panel-media">
-<img alt="" id="how-panel-img" src="assets/flower-purple.jpg"/>
 </div>
+</div>
+</div>
+<div class="how-panel-media" id="how-panel-media"></div>
 </div>
 </div>
 </section>
@@ -476,6 +504,7 @@
 <h2 class="world-heading">Asperitas All Around the World</h2>
 <div class="world-grid">
 <div class="world-globe-wrap">
+<canvas id="world-globe-canvas"></canvas>
 <svg id="world-globe-svg"></svg>
 <div class="world-nav-arrows">
 <button class="world-nav-arrow" id="world-prev" type="button">←</button>
@@ -540,24 +569,25 @@
 <script src="https://cdn.jsdelivr.net/npm/topojson@3/dist/topojson.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    // How We Work - tabbed content with an "upward" swap animation
+    // How We Work - tabbed content. The panel's background/media never move;
+    // only the text column slides up-and-out, then in-from-below, clipped by
+    // its fixed-height wrapper - a real "ticker" swap rather than a whole-card fade.
     const tabsData = [
-      { label: 'New', index: '01 / 04', number: '1', img: 'assets/flower-purple.jpg',
+      { label: 'New', index: '01 / 04', number: '1',
         text: "New biology starts with new biodiversity. Every organism we bring into the lab from an unexplored ecosystem is a chance to run research nobody else can — because nobody else has access to the same specimen." },
-      { label: 'Autonomy', index: '02 / 04', number: '2', img: 'assets/ai-structure.png',
+      { label: 'Autonomy', index: '02 / 04', number: '2',
         text: "We're building automated lab facilities so routine experiments run themselves. Own your research end-to-end, then let automation take over the parts that don't need a human in the loop." },
-      { label: 'Speed', index: '03 / 04', number: '3', img: 'assets/cell-plate.jpg',
+      { label: 'Speed', index: '03 / 04', number: '3',
         text: "There's no time for business as usual. We move fast — in the lab, in communication, and in how quickly an idea becomes a validated result." },
-      { label: 'Scale', index: '04 / 04', number: '4', img: 'assets/platform-biodiversity.png',
+      { label: 'Scale', index: '04 / 04', number: '4',
         text: 'From a single vivarium to a global sourcing network spanning 31+ countries, we build systems, teams, and pipelines that scale.' }
     ];
 
-    const panel = document.getElementById('how-panel');
+    const clipInner = document.getElementById('how-panel-clip-inner');
     const numberEl = document.getElementById('how-panel-number');
     const indexEl = document.getElementById('how-panel-index');
     const labelEl = document.getElementById('how-panel-label');
     const textEl = document.getElementById('how-panel-text');
-    const imgEl = document.getElementById('how-panel-img');
     const tabButtons = document.querySelectorAll('.how-tab');
     let activeTab = 0;
     let animating = false;
@@ -568,28 +598,27 @@
       indexEl.textContent = d.index;
       labelEl.textContent = d.label;
       textEl.textContent = d.text;
-      imgEl.src = d.img;
     }
 
     function switchTab(i) {
       if (i === activeTab || animating) return;
       animating = true;
       tabButtons.forEach(btn => btn.classList.toggle('active', Number(btn.dataset.index) === i));
-      panel.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-      panel.style.transform = 'translateY(-24px)';
-      panel.style.opacity = '0';
+      clipInner.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease';
+      clipInner.style.transform = 'translateY(-100%)';
+      clipInner.style.opacity = '0';
       setTimeout(() => {
         applyTab(i);
         activeTab = i;
-        panel.style.transition = 'none';
-        panel.style.transform = 'translateY(24px)';
-        panel.style.opacity = '0';
-        void panel.offsetHeight; // force reflow so the next transition actually runs
-        panel.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-        panel.style.transform = 'translateY(0)';
-        panel.style.opacity = '1';
+        clipInner.style.transition = 'none';
+        clipInner.style.transform = 'translateY(100%)';
+        clipInner.style.opacity = '0';
+        void clipInner.offsetHeight; // force reflow so the next transition actually runs
+        clipInner.style.transition = 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease';
+        clipInner.style.transform = 'translateY(0)';
+        clipInner.style.opacity = '1';
         animating = false;
-      }, 300);
+      }, 350);
     }
 
     tabButtons.forEach(btn => {
@@ -600,7 +629,8 @@
     (function () {
       const container = document.querySelector('.world-globe-wrap');
       const svgEl = document.getElementById('world-globe-svg');
-      if (!svgEl || !container || typeof d3 === 'undefined') return;
+      const canvasEl = document.getElementById('world-globe-canvas');
+      if (!svgEl || !canvasEl || !container || typeof d3 === 'undefined') return;
 
       const locations = [
         { key: 'busan', city: 'Busan', country: 'South Korea', lat: 35.1796, lon: 129.0756, isHQ: false, photo: null,
@@ -643,13 +673,31 @@
       const size = () => Math.min(container.clientWidth, container.clientHeight) || 420;
       let S = size();
       const svg = d3.select(svgEl)
-        .attr('viewBox', `0 0 ${S} ${S}`)
-        .attr('width', S)
-        .attr('height', S);
+        .attr('viewBox', `0 0 ${S} ${S}`);
 
-      const defs = svg.append('defs');
-      defs.append('filter').attr('id', 'world-rim-blur').attr('x', '-60%').attr('y', '-60%').attr('width', '220%').attr('height', '220%')
-        .append('feGaussianBlur').attr('stdDeviation', 5);
+      const ctx = canvasEl.getContext('2d');
+      // Canvas and SVG must occupy the exact same S x S box (centered in a
+      // container that may be wider or taller than it is), or the two layers'
+      // coordinate systems drift apart and markers detach from the sphere.
+      function positionLayers() {
+        const offsetX = (container.clientWidth - S) / 2;
+        const offsetY = (container.clientHeight - S) / 2;
+        [canvasEl, svgEl].forEach(el => {
+          el.style.left = offsetX + 'px';
+          el.style.top = offsetY + 'px';
+          el.style.width = S + 'px';
+          el.style.height = S + 'px';
+        });
+        svg.attr('width', S).attr('height', S);
+      }
+      function fitCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        canvasEl.width = S * dpr;
+        canvasEl.height = S * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        positionLayers();
+      }
+      fitCanvas();
 
       const projection = d3.geoOrthographic()
         .scale(S / 2.1)
@@ -657,36 +705,19 @@
         .clipAngle(90)
         .rotate([0, -20]);
 
-      // Background: solid black + a static starfield scattered behind the globe
-      const bgRect = svg.append('rect').attr('class', 'world-bg-rect').attr('x', 0).attr('y', 0).attr('width', S).attr('height', S).attr('fill', '#050505');
-
-      const starG = svg.append('g');
-      const starData = Array.from({ length: 140 }, () => ({
+      // Starfield scattered behind the globe - fixed positions (as fractions of
+      // the canvas size so they stay put across resizes), redrawn every frame.
+      const starData = Array.from({ length: 220 }, () => ({
         fx: Math.random(), fy: Math.random(), r: Math.random() * 1.1 + 0.2, o: Math.random() * 0.5 + 0.15,
       }));
-      function drawStars() {
-        starG.selectAll('circle').data(starData).join('circle')
-          .attr('cx', d => d.fx * S).attr('cy', d => d.fy * S)
-          .attr('r', d => d.r).attr('fill', d => `rgba(255,255,255,${d.o})`);
-      }
-      drawStars();
 
-      // Soft glow ring around the sphere's silhouette (rim light)
-      const glowRing = svg.append('circle').attr('class', 'world-glow-ring')
-        .attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1)
-        .attr('fill', 'none').attr('stroke', 'rgba(255,255,255,0.5)').attr('stroke-width', 4)
-        .attr('opacity', 0.35).attr('filter', 'url(#world-rim-blur)');
-
-      const outlineRing = svg.append('circle').attr('class', 'world-outline-ring')
-        .attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1)
-        .attr('fill', 'none').attr('stroke', 'rgba(255,255,255,0.25)').attr('stroke-width', 1);
-
-      const dotG = svg.append('g');
       const locG = svg.append('g');
 
       // A dense, evenly-distributed field of points over the sphere (Fibonacci
       // sphere sampling), later classified as land/ocean so continents read as
       // denser, brighter clusters of dots - the Anduril "point-cloud globe" look.
+      // Rendered on <canvas> (not SVG) since we need several thousand of them
+      // redrawn every frame while rotating.
       function fibonacciSphere(samples) {
         const points = [];
         const phi = Math.PI * (3 - Math.sqrt(5));
@@ -706,38 +737,87 @@
         return points;
       }
 
-      let dotPoints = fibonacciSphere(2400);
+      let dotPoints = fibonacciSphere(9000);
 
-      let autoRotX = 0;
+      // Idle auto-spin plus drag "momentum": dragging never snaps back - it
+      // just changes rotX/rotY directly, and on release the last drag velocity
+      // becomes the new spin speed, which eases back toward the gentle idle
+      // speed over time (a flick keeps spinning, a slow drag settles quickly).
+      const IDLE_SPEED = -0.06;
+      let spinVelocity = IDLE_SPEED;
       let rotX = 0;
       let rotY = -20;
       let isDragging = false;
       let dragStart = null;
-      let snapAnim = null;
       let focusAnim = null;
 
       const timer = d3.timer(elapsed => {
-        autoRotX = (autoRotX - 0.06) % 360;
-        if (!isDragging && !snapAnim && !focusAnim) {
-          rotX = autoRotX;
+        if (!isDragging && !focusAnim) {
+          rotX += spinVelocity;
+          spinVelocity += (IDLE_SPEED - spinVelocity) * 0.015;
         }
         projection.rotate([rotX, rotY]);
-        updateDots();
+        renderCanvas();
         updateLocations(elapsed);
       });
 
-      function updateDots() {
-        const visible = [];
+      function renderCanvas() {
+        ctx.clearRect(0, 0, S, S);
+        ctx.fillStyle = '#050505';
+        ctx.fillRect(0, 0, S, S);
+
+        ctx.fillStyle = 'rgba(255,255,255,1)';
+        for (const s of starData) {
+          ctx.globalAlpha = s.o;
+          ctx.beginPath();
+          ctx.arc(s.fx * S, s.fy * S, s.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+
+        const cx = S / 2, cy = S / 2, r = S / 2.1;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+        ctx.lineWidth = 3;
+        ctx.shadowColor = 'rgba(255,255,255,0.9)';
+        ctx.shadowBlur = 14;
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Batch all land dots into one path (and ocean dots into another) so
+        // we pay for two fill() calls total instead of one per point.
+        const landR = 1.15, oceanR = 0.65;
+        ctx.beginPath();
         for (let i = 0; i < dotPoints.length; i++) {
           const p = dotPoints[i];
+          if (!p.isLand) continue;
           const proj = projection([p.lon, p.lat]);
           if (!proj) continue;
-          visible.push({ id: p.id, isLand: p.isLand, x: proj[0], y: proj[1] });
+          ctx.moveTo(proj[0] + landR, proj[1]);
+          ctx.arc(proj[0], proj[1], landR, 0, Math.PI * 2);
         }
-        dotG.selectAll('circle').data(visible, d => d.id).join('circle')
-          .attr('cx', d => d.x).attr('cy', d => d.y)
-          .attr('r', d => d.isLand ? 1.3 : 0.75)
-          .attr('fill', d => d.isLand ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.32)');
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.fill();
+
+        ctx.beginPath();
+        for (let i = 0; i < dotPoints.length; i++) {
+          const p = dotPoints[i];
+          if (p.isLand) continue;
+          const proj = projection([p.lon, p.lat]);
+          if (!proj) continue;
+          ctx.moveTo(proj[0] + oceanR, proj[1]);
+          ctx.arc(proj[0], proj[1], oceanR, 0, Math.PI * 2);
+        }
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fill();
       }
 
       function updateLocations(elapsed) {
@@ -795,6 +875,7 @@
         const duration = 700;
         const startTime = performance.now();
         focusAnim = true;
+        spinVelocity = 0;
         function step(now) {
           const t = Math.min(1, (now - startTime) / duration);
           const eased = 1 - Math.pow(1 - t, 3);
@@ -802,7 +883,6 @@
           if (t < 1) {
             requestAnimationFrame(step);
           } else {
-            autoRotX = rotX;
             focusAnim = null;
           }
         }
@@ -812,47 +892,54 @@
       d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
         const land = topojson.merge(world, world.objects.countries.geometries);
         dotPoints.forEach(p => { p.isLand = d3.geoContains(land, [p.lon, p.lat]); });
-        // Thin out ocean points so continents read as visibly denser clusters.
-        dotPoints = dotPoints.filter(p => p.isLand || Math.random() < 0.32);
+        // Thin out ocean points a little so continents still read as denser
+        // clusters, while keeping the field overall much richer than before.
+        dotPoints = dotPoints.filter(p => p.isLand || Math.random() < 0.55);
       });
+
+      // Dragging always follows the pointer 1:1 and never snaps back. On
+      // release, the last measured drag speed becomes the new spin velocity
+      // (a flick keeps the globe spinning briskly; a slow drag settles back
+      // to the idle speed quickly), giving it a tactile, momentum-driven feel.
+      let lastSampleTime = 0;
+      let lastSampleRotX = 0;
 
       const drag = d3.drag()
         .on('start', (event) => {
           isDragging = true;
-          if (snapAnim) { cancelAnimationFrame(snapAnim); snapAnim = null; }
+          spinVelocity = 0;
           dragStart = { x: event.x, y: event.y, rotX, rotY };
+          lastSampleTime = performance.now();
+          lastSampleRotX = rotX;
         })
         .on('drag', (event) => {
           const dx = event.x - dragStart.x;
           const dy = event.y - dragStart.y;
-          rotX = dragStart.rotX + dx * 0.35;
-          rotY = Math.max(-35, Math.min(-5, dragStart.rotY - dy * 0.25));
+          rotX = dragStart.rotX + dx * 0.4;
+          rotY = Math.max(-75, Math.min(75, dragStart.rotY - dy * 0.4));
+          const now = performance.now();
+          const dt = now - lastSampleTime;
+          if (dt > 30) {
+            spinVelocity = ((rotX - lastSampleRotX) / dt) * 16.7; // degrees per ~frame
+            lastSampleTime = now;
+            lastSampleRotX = rotX;
+          }
         })
         .on('end', () => {
           isDragging = false;
           dragStart = null;
-          function snapBack() {
-            const diffY = rotY - (-20);
-            let diffX = rotX - autoRotX;
-            diffX = ((diffX % 360) + 540) % 360 - 180;
-            if (Math.abs(diffY) < 0.3 && Math.abs(diffX) < 0.3) { snapAnim = null; return; }
-            rotY -= diffY * 0.08;
-            rotX -= diffX * 0.08;
-            snapAnim = requestAnimationFrame(snapBack);
-          }
-          snapBack();
+          const flicked = Math.abs(spinVelocity) > 0.05;
+          spinVelocity = Math.max(-8, Math.min(8, spinVelocity));
+          if (!flicked) spinVelocity = IDLE_SPEED;
         });
 
-      d3.select(svgEl).call(drag).style('cursor', 'grab');
+      d3.select(canvasEl).call(drag);
 
       const ro = new ResizeObserver(() => {
         S = size();
         svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
         projection.scale(S / 2.1).translate([S / 2, S / 2]);
-        bgRect.attr('width', S).attr('height', S);
-        glowRing.attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1);
-        outlineRing.attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1);
-        drawStars();
+        fitCanvas();
       });
       ro.observe(container);
     })();
