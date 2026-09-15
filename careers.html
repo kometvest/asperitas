@@ -56,6 +56,7 @@
     width: 100%;
     aspect-ratio: 16/6;
     overflow: hidden;
+    background: #000000;
   }
   .careers-hero-media img {
     width: 100%;
@@ -454,9 +455,7 @@
 <a class="careers-open-roles-btn" href="https://bca87jmu.ninehire.site/?lang=en" rel="noopener noreferrer" target="_blank">Explore Open Roles</a>
 </div>
 </div>
-<div class="careers-hero-media">
-<img alt="Asperitas lab" src="assets/plant-blue.jpg"/>
-</div>
+<div class="careers-hero-media"></div>
 </section>
 
 <section class="who-we-are">
@@ -695,7 +694,7 @@
       fitCanvas();
 
       const projection = d3.geoOrthographic()
-        .scale(S / 2.6)
+        .scale(S / 2.2)
         .translate([S / 2, S / 2])
         .clipAngle(90)
         .rotate([0, -20]);
@@ -742,7 +741,7 @@
         return points;
       }
 
-      let dotPoints = fibonacciSphere(24000);
+      let dotPoints = fibonacciSphere(36000);
 
       // Mouse position (canvas-local px) while hovering the globe, or null -
       // used to bend the point cloud's surface toward the cursor, like a
@@ -801,21 +800,10 @@
         }
         ctx.globalAlpha = 1;
 
-        const cx = S / 2, cy = S / 2, sphereR = S / 2.6;
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(cx, cy, sphereR, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-        ctx.lineWidth = 3;
-        ctx.shadowColor = 'rgba(255,255,255,0.85)';
-        ctx.shadowBlur = 18;
-        ctx.stroke();
-        ctx.restore();
+        const cx = S / 2, cy = S / 2, sphereR = S / 2.2;
 
-        // The silhouette is no longer a perfect circle (see the displacement
-        // below), so there is no separate crisp outline stroke here - just
-        // this soft ambient glow behind the dots, like a corona the flare
-        // points erupt through.
+        // No separate circle/ring is drawn here by design - the sphere's
+        // shape and glow both come entirely from the dot cloud itself.
 
         // Each point's brightness shimmers independently over time (a slow
         // sine per point, offset by its own phase/speed plus a slight
@@ -842,14 +830,14 @@
           if (!proj) continue;
 
           const dx = proj[0] - cx, dy = proj[1] - cy;
-          const dist = Math.hypot(dx, dy) || 0.0001;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 0.0001;
           let disp = flareNoise(p.lat, p.lon, t) * p.flareMult * baseFlareAmp * breathe;
           if (mouseAngle !== null) {
             const pointAngle = Math.atan2(dy, dx);
             let diff = Math.abs(pointAngle - mouseAngle);
             if (diff > Math.PI) diff = Math.PI * 2 - diff;
-            const falloff = Math.max(0, 1 - diff / (Math.PI * 0.45));
-            disp += falloff * falloff * sphereR * 0.4;
+            const falloff = Math.max(0, 1 - diff / (Math.PI * 0.22));
+            disp += falloff * falloff * sphereR * 0.05;
           }
           const scale = 1 + disp / dist;
           const px = cx + dx * scale, py = cy + dy * scale;
@@ -1009,7 +997,7 @@
       const ro = new ResizeObserver(() => {
         S = size();
         svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
-        projection.scale(S / 2.6).translate([S / 2, S / 2]);
+        projection.scale(S / 2.2).translate([S / 2, S / 2]);
         fitCanvas();
       });
       ro.observe(container);
