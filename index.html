@@ -158,6 +158,42 @@
 </div>
 </div>
 </section>
+<!-- Scroll reveal: the hero video reappears smaller and tilted inside a
+     framed card with a decorative wireframe overlay, then the headline
+     rises up underneath it. -->
+<section class="narrow-biology-section" id="narrow-biology">
+<div class="narrow-frame-stage">
+<div class="narrow-frame-ghost"></div>
+<div class="narrow-frame">
+<video autoplay="" class="narrow-frame-video" loop="" muted="" playsinline="">
+<source src="assets/hero-video.mp4" type="video/mp4"/>
+<img alt="Asperitas lab" src="assets/hero-bg.png"/>
+</video>
+</div>
+<svg class="narrow-frame-overlay" fill="none" viewbox="0 0 1000 700" xmlns="http://www.w3.org/2000/svg">
+<path d="M30,150 C55,175 45,200 65,220 C88,243 58,265 78,292 C100,318 68,340 88,368 C110,395 76,415 96,442 C118,468 84,488 104,515" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"></path>
+<path d="M60,110 C95,130 85,158 112,168 C140,178 122,208 150,220 C178,232 156,262 184,278 C210,292 190,318 216,335" stroke="rgba(255,255,255,0.28)" stroke-width="1"></path>
+<path d="M905,140 C930,168 908,192 930,220 C952,248 922,272 946,300 C968,326 938,352 960,380 C982,406 950,430 972,458" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"></path>
+<path d="M860,470 C888,486 878,510 906,522 C932,534 918,560 946,570" stroke="rgba(255,255,255,0.25)" stroke-width="1"></path>
+<line stroke="rgba(255,255,255,0.4)" stroke-dasharray="4 6" stroke-width="1" x1="10" x2="230" y1="245" y2="245"></line>
+<polygon fill="rgba(255,255,255,0.55)" points="222,240 238,245 222,250"></polygon>
+<line stroke="rgba(255,255,255,0.3)" stroke-dasharray="4 6" stroke-width="1" x1="10" x2="200" y1="400" y2="400"></line>
+<polygon fill="rgba(255,255,255,0.5)" points="192,395 208,400 192,405"></polygon>
+<line stroke="rgba(255,255,255,0.35)" stroke-dasharray="4 6" stroke-width="1" x1="770" x2="990" y1="210" y2="210"></line>
+<polygon fill="rgba(255,255,255,0.5)" points="778,205 762,210 778,215"></polygon>
+<line stroke="rgba(255,255,255,0.3)" stroke-dasharray="4 6" stroke-width="1" x1="800" x2="990" y1="490" y2="490"></line>
+<polygon fill="rgba(255,255,255,0.5)" points="808,485 792,490 808,495"></polygon>
+<text fill="rgba(255,255,255,0.5)" font-family="var(--font-mono)" font-size="13" x="20" y="115">01</text>
+<text fill="rgba(255,255,255,0.5)" font-family="var(--font-mono)" font-size="13" x="945" y="130">1110</text>
+<text fill="rgba(255,255,255,0.5)" font-family="var(--font-mono)" font-size="13" x="945" y="345">1011</text>
+<text fill="rgba(255,255,255,0.5)" font-family="var(--font-mono)" font-size="13" x="20" y="530">111</text>
+</svg>
+</div>
+<div class="container narrow-biology-copy">
+<h2 class="narrow-biology-heading">Biotechnology keeps engineering<br/>the same narrow biology.</h2>
+<p class="narrow-biology-sub">Nature already solved billions of years of chemistry. We keep studying only a tiny fraction.</p>
+</div>
+</section>
 <!-- Typewriter Animation Section -->
 <section class="typing-section" id="featured">
 <div class="container typing-container">
@@ -380,5 +416,42 @@
 </div>
 </footer>
 <script src="js/main.js"></script>
+<script>
+  // Hero headline reveal: each line scramble-decodes into place (same effect
+  // as the header mega menus), staggered so line 1 starts first - characters
+  // within a line already resolve left-to-right on their own, so the whole
+  // thing reads as "appearing" left-to-right rather than popping in at once.
+  document.addEventListener('DOMContentLoaded', () => {
+    const lineIds = ['hero-line-1', 'hero-line-2', 'hero-line-3'];
+    lineIds.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const scrambler = new window.TextScramble(el);
+      setTimeout(() => {
+        el.style.opacity = '1';
+        scrambler.run();
+      }, i * 400);
+    });
+  });
+
+  // Scroll reveal for the shrunk/tilted framed video section - triggers once
+  // when scrolled into view, then stays revealed.
+  document.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('narrow-biology');
+    if (!section || !('IntersectionObserver' in window)) {
+      if (section) section.classList.add('in-view');
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          section.classList.add('in-view');
+          observer.unobserve(section);
+        }
+      });
+    }, { threshold: 0.35 });
+    observer.observe(section);
+  });
+</script>
 </body>
 </html>
