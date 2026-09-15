@@ -9,17 +9,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const header = document.querySelector('.header');
   const isIndexPage = document.querySelector('.hero') !== null;
 
+  if (isIndexPage) {
+    // Home page: header (and footer) are solid black from the start, see body.page-home in CSS
+    document.body.classList.add('page-home');
+  } else {
+    // Subpages: transparent header with dark text over the page content until scrolled
+    header.classList.add('light-nav');
+  }
+
   const handleHeaderStyle = () => {
-    if (!isIndexPage) {
-      // Subpages always stay light-nav
-      header.classList.add('light-nav');
+    if (window.scrollY > 80) {
+      header.classList.add('scrolled');
     } else {
-      // Index page transitions on scroll
-      if (window.scrollY > 80) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
+      header.classList.remove('scrolled');
     }
   };
 
@@ -41,6 +43,62 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileToggle.classList.remove('open');
         navMenu.classList.remove('open');
       });
+    });
+  }
+
+  // 2b. Company Mega Menu - letter-scramble reveal on hover
+  const companyItem = document.querySelector('.company-item');
+  if (companyItem) {
+    const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const DURATION_MS = 500;
+    const FRAME_MS = 1000 / 60;
+    const TOTAL_FRAMES = Math.round(DURATION_MS / FRAME_MS);
+
+    class TextScramble {
+      constructor(el) {
+        this.el = el;
+        this.finalText = el.textContent;
+        this.frame = 0;
+        this.frameRequest = null;
+        this.queue = [];
+      }
+      run() {
+        const text = this.finalText;
+        this.queue = [];
+        for (let i = 0; i < text.length; i++) {
+          // Stagger only when each letter locks in, so the whole word decodes left-to-right within ~0.5s
+          const end = Math.floor((i / text.length) * TOTAL_FRAMES * 0.6) + Math.floor(Math.random() * (TOTAL_FRAMES * 0.4));
+          this.queue.push({ to: text[i], end });
+        }
+        cancelAnimationFrame(this.frameRequest);
+        this.frame = 0;
+        this.update();
+      }
+      update = () => {
+        let output = '';
+        let complete = 0;
+        for (let i = 0; i < this.queue.length; i++) {
+          const { to, end } = this.queue[i];
+          if (this.frame >= end || to === ' ') {
+            complete++;
+            output += to;
+          } else {
+            output += ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+          }
+        }
+        this.el.textContent = output;
+        if (complete === this.queue.length) {
+          this.el.textContent = this.finalText;
+          return;
+        }
+        this.frame++;
+        this.frameRequest = requestAnimationFrame(this.update);
+      };
+    }
+
+    const scramblers = Array.from(companyItem.querySelectorAll('.scramble-text')).map(el => new TextScramble(el));
+    companyItem.addEventListener('mouseenter', () => {
+      scramblers.forEach(s => s.run());
     });
   }
 

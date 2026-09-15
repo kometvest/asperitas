@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Leadership | Asperitas Inc.</title>
+<meta content="Meet the leadership team of Asperitas Inc." name="description"/>
+<link href="css/style.css" rel="stylesheet"/>
+<link href="assets/logo-square-white.png" rel="icon" type="image/png"/>
+<style>
+  .leadership-bg { background: #a8a99a; }
+
+  .leadership-hero {
+    padding: calc(var(--header-height) + 90px) 0 60px;
+  }
+  .leadership-eyebrow {
+    display: block;
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(10, 10, 10, 0.6);
+    margin-bottom: 20px;
+  }
+  .leadership-title {
+    font-family: var(--font-title);
+    font-size: 72px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: #0a0a0a;
+    line-height: 1;
+  }
+  @media (max-width: 768px) {
+    .leadership-title { font-size: 44px; }
+  }
+
+  .leadership-grid {
+    padding: 0 0 120px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .leader-card {
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    font-family: inherit;
+    color: inherit;
+  }
+  .leader-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #1a1a1a;
+    margin-bottom: 20px;
+  }
+  .leader-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .leader-card:hover .leader-photo img {
+    transform: scale(1.04);
+  }
+  .leader-caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .leader-name {
+    font-family: var(--font-title);
+    font-size: 22px;
+    font-weight: 500;
+    color: #0a0a0a;
+    margin-bottom: 4px;
+  }
+  .leader-role {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: rgba(10, 10, 10, 0.65);
+  }
+  .leader-plus {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(10, 10, 10, 0.12);
+    color: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: var(--transition-fast);
+  }
+  .leader-card:hover .leader-plus {
+    background: #0a0a0a;
+    color: #ffffff;
+  }
+
+  @media (max-width: 900px) {
+    .leadership-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Slide-in bio panel */
+  .leader-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    z-index: 1200;
+  }
+  .leader-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .leader-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: min(720px, 100%);
+    background: #a8a99a;
+    transform: translateX(100%);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+    z-index: 1201;
+    padding: 80px 60px 60px;
+  }
+  .leader-overlay.open .leader-panel {
+    transform: translateX(0);
+  }
+  .leader-panel-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(10, 10, 10, 0.12);
+    color: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .leader-panel-photo {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 3/4;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #1a1a1a;
+    margin-bottom: 30px;
+  }
+  .leader-panel-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .leader-panel-name {
+    font-family: var(--font-title);
+    font-size: 36px;
+    font-weight: 500;
+    color: #0a0a0a;
+    margin-bottom: 6px;
+  }
+  .leader-panel-role {
+    font-family: var(--font-body);
+    font-size: 16px;
+    color: rgba(10, 10, 10, 0.65);
+    margin-bottom: 30px;
+  }
+  .leader-panel-bio {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.7;
+    color: #0a0a0a;
+    max-width: 520px;
+    margin-bottom: 18px;
+  }
+  .leader-panel-note {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-style: italic;
+    color: rgba(10, 10, 10, 0.55);
+    max-width: 520px;
+    margin-bottom: 24px;
+  }
+  .leader-panel-linkedin {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: #0a0a0a;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>
+</head>
+<body>
+<header class="header">
+<div class="container header-container">
+<a class="logo-link" href="index.html">
+<img alt="Asperitas Logo" class="logo-img" src="assets/logo-horizontal-white.png"/>
+</a>
+<button aria-label="Toggle navigation" class="mobile-nav-toggle" id="mobile-toggle">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<ul class="nav-menu" id="nav-menu">
+<li><a class="nav-link" href="technology-biodiversity.html">Biodiversity</a></li>
+<li><a class="nav-link" href="research-therapeutics.html">Pharma</a></li>
+<li><a class="nav-link" href="research-environment.html">Environment</a></li>
+<li><a class="nav-link" href="research-food.html">Food</a></li>
+<li><a class="nav-link" href="research-agriculture.html">Agriculture</a></li>
+<li><a class="nav-link" href="research-industrial.html">Industrial</a></li>
+</ul>
+<div class="nav-item-dropdown company-item">
+<a class="nav-link company-trigger active" href="company.html">Company <span class="company-plus">+</span></a>
+<div class="company-panel">
+<div class="container company-panel-inner">
+<div class="company-panel-col company-panel-brand">
+<span class="company-panel-heading scramble-text">Asperitas Bioscience</span>
+<p class="company-panel-desc">Asperitas Inc. is a synthetic biology company that discovers novel biological intelligence from the world's biodiversity and converts it into programmable products.</p>
+<div class="company-panel-contact">
+<span class="company-panel-label scramble-text">Contact</span>
+<a href="mailto:business@asperitas.bio">business@asperitas.bio</a>
+</div>
+<div class="company-panel-social">
+<span class="company-panel-label scramble-text">Social</span>
+<div class="company-social-links">
+<a href="https://x.com/asperitasbio" rel="noopener noreferrer" target="_blank">X</a>
+<a href="https://www.youtube.com/@asperitasbio" rel="noopener noreferrer" target="_blank">YT</a>
+<a href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">IG</a>
+<a href="https://www.linkedin.com/company/asperitasbio/" rel="noopener noreferrer" target="_blank">LI</a>
+</div>
+</div>
+</div>
+<div class="company-panel-col">
+<span class="company-panel-label scramble-text">Company</span>
+<ul class="company-panel-list">
+<li><a href="company.html#overview">Mission</a></li>
+<li><a href="newsroom.html">Newsroom</a></li>
+<li><a href="leadership.html">Leadership</a></li>
+<li><a href="store.html">Store</a></li>
+</ul>
+</div>
+<div class="company-panel-col">
+<span class="company-panel-label scramble-text">Work with us</span>
+<ul class="company-panel-list">
+<li><a href="company.html#careers">Careers</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+<div class="leadership-bg">
+<section class="leadership-hero">
+<div class="container">
+<span class="leadership-eyebrow">Asperitas</span>
+<h1 class="leadership-title">Leadership</h1>
+</div>
+</section>
+
+<section class="container leadership-grid">
+<button class="leader-card" data-leader="minseo" type="button">
+<div class="leader-photo"><img alt="Minseo Kim" src="assets/minseo.jpeg"/></div>
+<div class="leader-caption">
+<div>
+<div class="leader-name">Minseo Kim</div>
+<div class="leader-role">Founder &amp; CEO</div>
+</div>
+<span class="leader-plus">+</span>
+</div>
+</button>
+<button class="leader-card" data-leader="minjae" type="button">
+<div class="leader-photo"><img alt="Minjae Kim" src="assets/minjae.jpeg"/></div>
+<div class="leader-caption">
+<div>
+<div class="leader-name">Minjae Kim</div>
+<div class="leader-role">CTO</div>
+</div>
+<span class="leader-plus">+</span>
+</div>
+</button>
+<button class="leader-card" data-leader="junsoo" type="button">
+<div class="leader-photo"><img alt="Junsoo Bae" src="assets/junsoo.jpeg"/></div>
+<div class="leader-caption">
+<div>
+<div class="leader-name">Junsoo Bae</div>
+<div class="leader-role">CSO</div>
+</div>
+<span class="leader-plus">+</span>
+</div>
+</button>
+</section>
+</div>
+
+<div class="leader-overlay" id="leader-overlay">
+<div class="leader-panel">
+<div class="leader-panel-close" id="leader-panel-close">&times;</div>
+<div class="leader-panel-photo"><img alt="" id="leader-panel-img" src=""/></div>
+<h2 class="leader-panel-name" id="leader-panel-name"></h2>
+<p class="leader-panel-role" id="leader-panel-role"></p>
+<p class="leader-panel-bio" id="leader-panel-bio"></p>
+<p class="leader-panel-note">Full biography coming soon — this page will be updated with more detailed background information.</p>
+<a class="leader-panel-linkedin" href="#" id="leader-panel-linkedin" rel="noopener noreferrer" target="_blank">LinkedIn Profile →</a>
+</div>
+</div>
+
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-logo-col">
+<img alt="Asperitas Logo" class="footer-logo" src="assets/logo-horizontal-white.png"/>
+</div>
+<div class="footer-company-col">
+<span class="footer-col-title">Company</span>
+<ul class="footer-link-list">
+<li><a href="company.html#overview">Mission</a></li>
+<li><a href="newsroom.html">Newsroom</a></li>
+<li><a href="leadership.html">Leadership</a></li>
+<li><a href="store.html">Store</a></li>
+</ul>
+</div>
+<div class="footer-work-col">
+<span class="footer-col-title">Work With Us</span>
+<ul class="footer-link-list">
+<li><a href="company.html#careers">Careers</a></li>
+</ul>
+</div>
+<div class="footer-social-col">
+<span class="footer-col-title">Social</span>
+<ul class="footer-link-list">
+<li><a href="https://x.com/asperitasbio" rel="noopener noreferrer" target="_blank">X</a></li>
+<li><a href="https://www.youtube.com/@asperitasbio" rel="noopener noreferrer" target="_blank">YouTube</a></li>
+<li><a href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">Instagram</a></li>
+<li><a href="https://www.facebook.com/asperitasbio" rel="noopener noreferrer" target="_blank">Facebook</a></li>
+<li><a href="https://www.linkedin.com/company/asperitasbio/" rel="noopener noreferrer" target="_blank">LinkedIn</a></li>
+</ul>
+</div>
+<div class="footer-contact-col">
+<span class="footer-col-title">Contact</span>
+<a href="mailto:business@asperitas.bio">business@asperitas.bio</a>
+</div>
+<div class="footer-bottom-col">
+<p class="footer-copyright">COPYRIGHT &copy; 2026 ASPERITAS</p>
+<div class="footer-legal-links">
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms Of Use</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script src="js/main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const leaders = {
+      minseo: {
+        name: 'Minseo Kim',
+        role: 'Founder & CEO',
+        img: 'assets/minseo.jpeg',
+        bio: 'Senior at Korea Science Academy of KAIST, specializing in synthetic biology.',
+        linkedin: 'https://www.linkedin.com/in/piloesnim/'
+      },
+      minjae: {
+        name: 'Minjae Kim',
+        role: 'CTO',
+        img: 'assets/minjae.jpeg',
+        bio: 'Senior at Seoul Science High School specializing in biology & engineering. President of student community. 37th International Biology Olympiad Gold Medalist.',
+        linkedin: 'https://www.linkedin.com/in/rninjae-kim/'
+      },
+      junsoo: {
+        name: 'Junsoo Bae',
+        role: 'CSO',
+        img: 'assets/junsoo.jpeg',
+        bio: 'Senior at Gyeonggi Science High School for the Gifted specializing in biology. Korea National Representative, 37th International Biology Olympiad Gold Medalist.',
+        linkedin: 'https://www.linkedin.com/in/junsoo-bae-5a5b22413/?isSelfProfile=true'
+      }
+    };
+
+    const overlay = document.getElementById('leader-overlay');
+    const closeBtn = document.getElementById('leader-panel-close');
+    const imgEl = document.getElementById('leader-panel-img');
+    const nameEl = document.getElementById('leader-panel-name');
+    const roleEl = document.getElementById('leader-panel-role');
+    const bioEl = document.getElementById('leader-panel-bio');
+    const linkedinEl = document.getElementById('leader-panel-linkedin');
+
+    const openLeader = (key) => {
+      const l = leaders[key];
+      if (!l) return;
+      imgEl.src = l.img;
+      imgEl.alt = l.name;
+      nameEl.textContent = l.name;
+      roleEl.textContent = l.role;
+      bioEl.textContent = l.bio;
+      linkedinEl.href = l.linkedin;
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeLeader = () => {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    document.querySelectorAll('.leader-card').forEach(card => {
+      card.addEventListener('click', () => openLeader(card.dataset.leader));
+    });
+    closeBtn.addEventListener('click', closeLeader);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeLeader();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLeader();
+    });
+  });
+</script>
+</body>
+</html>

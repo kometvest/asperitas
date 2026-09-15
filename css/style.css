@@ -1,38 +1,38 @@
-/* 
- * Asperitas Inc. - Premium Light Design System (Updated)
- * Inspired by Palantir & Ginkgo Bioworks (Light Theme)
- * Core Fonts: Pretendard & Alliance 2 (substituted by Outfit)
+/*
+ * Asperitas Inc. - Anduril-inspired Design System
+ * Core Font: Helvetica Now (falls back to Helvetica Neue / Arial where the
+ * licensed Helvetica Now font files are not installed on the viewer's system,
+ * since it cannot be legally hosted from a public CDN).
  */
-
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard-dynamic-subset.css");
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap");
 
 :root {
   /* Colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f4f5f7;
+  --bg-primary: #f0efe9; /* Warm off-white page background */
+  --bg-secondary: #e7e5db;
   --bg-card: #ffffff;
-  --accent-green: #0a7e54; /* Premium botanical dark green for contrast */
+  --accent-green: #0a7e54; /* Asperitas brand accent, kept from prior system */
   --accent-green-light: #e6f6f0;
   --accent-blue: #0052cc;
   --accent-blue-light: #ebf2ff;
-  --text-primary: #111827; /* Dark slate black */
-  --text-secondary: #4b5563; /* Medium slate gray */
-  --text-muted: #9ca3af; /* Light gray for mute */
-  --border-color: #e5e7eb; /* Subtle light gray border */
-  
+  --text-primary: #0a0a0a; /* Near-black */
+  --text-secondary: #4a4a46;
+  --text-muted: #8a8a84;
+  --border-color: #dedcd2;
+
+  --header-footer-bg: #0a0a0a; /* Anduril-style solid black header/footer */
+
   --glass-bg: rgba(255, 255, 255, 0.35); /* Translucent, no solid base color */
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-blur: 20px; /* High blur */
-  
+
   /* Fonts */
-  --font-title: 'Alliance2', 'Alliance 2', 'Outfit', 'Pretendard', -apple-system, sans-serif;
-  --font-body: 'Pretendard', -apple-system, sans-serif;
-  
+  --font-title: 'Helvetica Now Display', 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
   /* Layout */
   --max-width: 1400px;
   --header-height: 80px;
-  
+
   /* Animation */
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -149,28 +149,37 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
 }
 
-/* Header Component (Translucent Sheet) */
+/* Header Component (Anduril-style: transparent-over-content until scrolled, then solid black) */
 .header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: var(--header-height);
-  background: rgba(255, 255, 255, 0.08); /* Transparent glass base */
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  border-bottom: 1px solid transparent;
   color: #ffffff;
   z-index: 1000;
   transition: var(--transition-smooth);
 }
 
-/* Scrolled/Light states only alter text Legibility and slightly opacity - NO solid color base */
-.header.scrolled,
+/* Subpages (light page background) default to dark text over the transparent header */
 .header.light-nav {
-  background: rgba(255, 255, 255, 0.35); /* Translucent slightly frosted */
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   color: var(--text-primary);
+}
+
+/* Scrolled: header commits to a solid black bar, white text, regardless of page */
+.header.scrolled {
+  background: var(--header-footer-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+/* Home page: header (and footer, see .footer rules) are solid black from the start */
+body.page-home .header {
+  background: var(--header-footer-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #ffffff;
 }
 
 .header-container {
@@ -193,9 +202,13 @@ h1, h2, h3, h4, h5, h6 {
   transition: filter var(--transition-fast);
 }
 
-.header.scrolled .logo-img,
 .header.light-nav .logo-img {
-  filter: brightness(0); /* Converts white logo to pure black logo on scroll */
+  filter: brightness(0); /* Converts white logo to pure black logo over light page content */
+}
+
+.header.scrolled .logo-img,
+body.page-home .logo-img {
+  filter: none; /* Solid black header bar always keeps the white logo */
 }
 
 .nav-menu {
@@ -429,18 +442,24 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
 }
 
-.header.scrolled .nav-link,
 .header.light-nav .nav-link {
   color: var(--text-secondary);
+}
+
+.header.scrolled .nav-link {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .nav-link:hover {
   color: #ffffff;
 }
 
-.header.scrolled .nav-link:hover,
 .header.light-nav .nav-link:hover {
   color: var(--text-primary);
+}
+
+.header.scrolled .nav-link:hover {
+  color: #ffffff;
 }
 
 .nav-link::after {
@@ -600,7 +619,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-title {
-  font-family: 'Alliance2', 'Alliance 2', 'Outfit', sans-serif !important; /* Force Alliance 2 */
+  font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; /* Force Alliance 2 */
   font-size: 72px;
   line-height: 1.15;
   font-weight: 300;
@@ -720,7 +739,7 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 8px;
   color: #ffffff;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  font-family: 'Pretendard', sans-serif !important; /* Force Pretendard */
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; /* Force Pretendard */
 }
 
 @media (max-width: 768px) {
@@ -733,7 +752,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .slide-meta {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 11px;
   font-weight: 600;
   color: var(--accent-green);
@@ -743,7 +762,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .slide-title {
-  font-family: 'Alliance2', 'Alliance 2', 'Outfit', sans-serif !important; /* Large, Thin Font Stack for Slider Titles */
+  font-family: 'Helvetica Now Display', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; /* Large, Thin Font Stack for Slider Titles */
   font-size: 40px;
   font-weight: 300;
   margin-bottom: 0;
@@ -807,7 +826,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .typing-text {
-  font-family: 'Pretendard', sans-serif !important; /* Force Pretendard */
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; /* Force Pretendard */
   font-size: 42px;
   line-height: 1.35;
   font-weight: 600;
@@ -902,7 +921,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .platform-title {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 72px;
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -969,11 +988,11 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-family: 'Pretendard', sans-serif !important; /* Force Pretendard */
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; /* Force Pretendard */
 }
 
 .card-split-title {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 36px;
   font-weight: 600;
   margin-bottom: 16px;
@@ -982,7 +1001,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card-split-desc {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   color: var(--text-secondary);
   font-size: 16px;
   line-height: 1.6;
@@ -999,7 +1018,7 @@ h1, h2, h3, h4, h5, h6 {
   background: transparent;
   padding: 12px 28px;
   border-radius: 4px;
-  font-family: 'Pretendard', sans-serif !important; /* Force Pretendard */
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; /* Force Pretendard */
   font-weight: 600;
   font-size: 14px;
   transition: var(--transition-fast);
@@ -1150,127 +1169,104 @@ h1, h2, h3, h4, h5, h6 {
   100% { transform: translateX(-50%); }
 }
 
-/* Footer Section */
+/* Footer Section (Anduril-style: solid black, always) */
 .footer {
-  background: var(--bg-secondary);
-  padding: 80px 0 40px 0;
+  background: var(--header-footer-bg);
+  color: #ffffff;
+  padding: 90px 0 40px;
   font-size: 14px;
 }
 
-.footer-top {
+.footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 0.5fr 1fr;
-  gap: 80px;
-  margin-bottom: 60px;
-}
-
-@media (max-width: 1024px) {
-  .footer-top {
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-  }
-}
-
-@media (max-width: 768px) {
-  .footer-top {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-}
-
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  grid-template-columns: 1fr;
+  row-gap: 44px;
+  margin-bottom: 50px;
 }
 
 .footer-logo {
-  height: 32px;
+  height: 26px;
   width: auto;
-  align-self: flex-start;
-  filter: brightness(0);
-}
-
-.footer-socials {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.social-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-  width: fit-content;
-}
-
-.social-btn:hover {
-  color: var(--accent-green);
-}
-
-.footer-links-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 40px;
-}
-
-.footer-links-col {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .footer-col-title {
+  display: block;
   font-family: var(--font-title);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-primary);
-  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 16px;
 }
 
-.footer-links-col ul {
+.footer-link-list {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.footer-links-col a {
-  color: var(--text-secondary);
+.footer-link-list a {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: #ffffff;
 }
 
-.footer-links-col a:hover {
-  color: var(--accent-green);
+.footer-link-list a:hover {
+  color: var(--accent-green-light);
 }
 
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 40px;
-  border-top: 1px solid var(--border-color);
-  color: var(--text-secondary);
+.footer-contact-col a {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.footer-contact-col a:hover {
+  color: var(--accent-green-light);
+}
+
+.footer-bottom-col {
+  align-self: end;
+}
+
+.footer-copyright {
+  font-family: var(--font-body);
   font-size: 13px;
-}
-
-@media (max-width: 768px) {
-  .footer-bottom {
-    flex-direction: column;
-    gap: 20px;
-    align-items: flex-start;
-  }
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 10px;
 }
 
 .footer-legal-links {
   display: flex;
-  gap: 24px;
+  gap: 18px;
+}
+
+.footer-legal-links a {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .footer-legal-links a:hover {
-  color: var(--text-primary);
+  color: #ffffff;
+}
+
+@media (min-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    column-gap: 40px;
+    row-gap: 70px;
+  }
+  .footer-logo-col { grid-column: 1; grid-row: 1; }
+  .footer-company-col { grid-column: 2; grid-row: 1; }
+  .footer-work-col { grid-column: 3; grid-row: 1; }
+  .footer-social-col { grid-column: 4; grid-row: 1; }
+  .footer-contact-col { grid-column: 4; grid-row: 2; }
+  .footer-bottom-col { grid-column: 1; grid-row: 2; }
 }
 
 /* Animations */
@@ -1482,7 +1478,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .team-name {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 17px;
   font-weight: 600;
   color: var(--text-primary);
@@ -1490,7 +1486,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .team-role {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 12px;
   color: var(--text-secondary);
   font-weight: 400;
@@ -1500,7 +1496,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .team-bio-link {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 12px;
   color: var(--accent-green);
   font-weight: 600;
@@ -1590,7 +1586,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-name {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 44px;
   font-weight: 700;
   color: var(--text-primary);
@@ -1599,7 +1595,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-title-role {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 18px;
   color: var(--accent-green);
   font-weight: 600;
@@ -1607,7 +1603,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-bio-content {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 16px;
   line-height: 1.7;
   color: var(--text-secondary);
@@ -1624,7 +1620,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-sub-title {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
@@ -1639,7 +1635,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .profile-list-items li {
-  font-family: 'Pretendard', sans-serif !important;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
   font-size: 14px;
   color: var(--text-secondary);
   line-height: 1.5;
@@ -2059,19 +2055,6 @@ h1, h2, h3, h4, h5, h6 {
 .btn-careers-apply:hover {
   background-color: #000000;
   transform: translateY(-2px);
-}
-
-/* Footer Force Pretendard Font */
-.footer {
-  font-family: var(--font-body) !important;
-}
-
-.footer-col-title {
-  font-family: var(--font-body) !important;
-}
-
-.footer-links-col ul li a {
-  font-family: var(--font-body) !important;
 }
 
 /* Technology Page "Our Platform" Layout */
@@ -2525,7 +2508,7 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateX(-50%) translateY(4px);
   background: var(--text-primary);
   color: #fff;
-  font-family: 'Pretendard', sans-serif;
+  font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 11px;
   font-weight: 500;
   padding: 6px 12px;

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Newsroom | Asperitas Inc.</title>
+<meta content="News and press coverage from Asperitas Inc." name="description"/>
+<link href="css/style.css" rel="stylesheet"/>
+<link href="assets/logo-square-white.png" rel="icon" type="image/png"/>
+<style>
+  .newsroom-hero {
+    padding: calc(var(--header-height) + 100px) 0 60px;
+    background: var(--bg-primary);
+  }
+  .newsroom-eyebrow {
+    display: block;
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+  .newsroom-title {
+    font-family: var(--font-title);
+    font-size: 72px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+  @media (max-width: 768px) {
+    .newsroom-title { font-size: 44px; }
+  }
+
+  .newsroom-featured {
+    padding: 0 0 100px;
+    background: var(--bg-primary);
+  }
+  .newsroom-featured-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+  .newsroom-featured-date {
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    display: block;
+  }
+  .newsroom-featured-title {
+    font-family: var(--font-title);
+    font-size: 38px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+  }
+  .newsroom-featured-desc {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .newsroom-readmore {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .newsroom-readmore:hover { color: var(--accent-green); }
+
+  .newsroom-featured-media {
+    aspect-ratio: 16/11;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  /* Shared "outlet card" thumbnail treatment used in place of licensed press photography */
+  .outlet-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    background: #0a0a0a;
+    color: #ffffff;
+  }
+  .outlet-card span {
+    font-family: var(--font-title);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .newsroom-featured-media .outlet-card span { font-size: 30px; }
+  .news-row-media .outlet-card span { font-size: 15px; }
+  .outlet-card.tone-1 { background: #0a0a0a; }
+  .outlet-card.tone-2 { background: #14231c; }
+  .outlet-card.tone-3 { background: #16181c; }
+  .outlet-card.tone-4 { background: #1c1610; }
+  .outlet-card.tone-5 { background: #11161c; }
+
+  .newsroom-all {
+    padding: 100px 0 140px;
+    background: var(--bg-primary);
+  }
+  .newsroom-all-heading {
+    font-family: var(--font-title);
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 30px;
+  }
+  .newsroom-search-wrapper {
+    position: relative;
+    background: #0a0a0a;
+    border-radius: 4px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .newsroom-search-wrapper svg {
+    width: 18px;
+    height: 18px;
+    stroke: rgba(255, 255, 255, 0.5);
+    flex-shrink: 0;
+  }
+  #newsroom-search {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: var(--font-title);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  #newsroom-search::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  .news-row {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 40px;
+    align-items: center;
+    padding: 32px 0;
+    border-top: 1px solid var(--border-color);
+    text-decoration: none;
+    color: inherit;
+  }
+  .news-row:last-child { border-bottom: 1px solid var(--border-color); }
+  .news-row-date {
+    display: block;
+    font-family: var(--font-title);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+  }
+  .news-row-title {
+    font-family: var(--font-title);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+  }
+  .news-row-media {
+    aspect-ratio: 16/10;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  @media (max-width: 768px) {
+    .newsroom-featured-grid { grid-template-columns: 1fr; }
+    .news-row { grid-template-columns: 1fr; }
+    .news-row-media { order: -1; }
+  }
+  .newsroom-empty {
+    display: none;
+    padding: 60px 0;
+    text-align: center;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+    font-size: 15px;
+  }
+</style>
+</head>
+<body>
+<header class="header">
+<div class="container header-container">
+<a class="logo-link" href="index.html">
+<img alt="Asperitas Logo" class="logo-img" src="assets/logo-horizontal-white.png"/>
+</a>
+<button aria-label="Toggle navigation" class="mobile-nav-toggle" id="mobile-toggle">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<ul class="nav-menu" id="nav-menu">
+<li><a class="nav-link" href="technology-biodiversity.html">Biodiversity</a></li>
+<li><a class="nav-link" href="research-therapeutics.html">Pharma</a></li>
+<li><a class="nav-link" href="research-environment.html">Environment</a></li>
+<li><a class="nav-link" href="research-food.html">Food</a></li>
+<li><a class="nav-link" href="research-agriculture.html">Agriculture</a></li>
+<li><a class="nav-link" href="research-industrial.html">Industrial</a></li>
+</ul>
+<div class="nav-item-dropdown company-item">
+<a class="nav-link company-trigger active" href="company.html">Company <span class="company-plus">+</span></a>
+<div class="company-panel">
+<div class="container company-panel-inner">
+<div class="company-panel-col company-panel-brand">
+<span class="company-panel-heading scramble-text">Asperitas Bioscience</span>
+<p class="company-panel-desc">Asperitas Inc. is a synthetic biology company that discovers novel biological intelligence from the world's biodiversity and converts it into programmable products.</p>
+<div class="company-panel-contact">
+<span class="company-panel-label scramble-text">Contact</span>
+<a href="mailto:business@asperitas.bio">business@asperitas.bio</a>
+</div>
+<div class="company-panel-social">
+<span class="company-panel-label scramble-text">Social</span>
+<div class="company-social-links">
+<a href="https://x.com/asperitasbio" rel="noopener noreferrer" target="_blank">X</a>
+<a href="https://www.youtube.com/@asperitasbio" rel="noopener noreferrer" target="_blank">YT</a>
+<a href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">IG</a>
+<a href="https://www.linkedin.com/company/asperitasbio/" rel="noopener noreferrer" target="_blank">LI</a>
+</div>
+</div>
+</div>
+<div class="company-panel-col">
+<span class="company-panel-label scramble-text">Company</span>
+<ul class="company-panel-list">
+<li><a href="company.html#overview">Mission</a></li>
+<li><a href="newsroom.html">Newsroom</a></li>
+<li><a href="leadership.html">Leadership</a></li>
+<li><a href="store.html">Store</a></li>
+</ul>
+</div>
+<div class="company-panel-col">
+<span class="company-panel-label scramble-text">Work with us</span>
+<ul class="company-panel-list">
+<li><a href="company.html#careers">Careers</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+<section class="newsroom-hero">
+<div class="container">
+<span class="newsroom-eyebrow">Newsroom</span>
+<h1 class="newsroom-title">News &amp; Insights</h1>
+</div>
+</section>
+
+<section class="newsroom-featured">
+<div class="container">
+<div class="newsroom-featured-grid">
+<div>
+<span class="newsroom-featured-date">07/21/2026</span>
+<h2 class="newsroom-featured-title">국제생물올림피아드 전원 금메달…한국 과학영재 저력</h2>
+<p class="newsroom-featured-desc">Yonhap News reports that Korea's four representatives at the International Biology Olympiad, including Asperitas team members, swept all four gold medals — a showcase of the scientific talent behind the company's research team.</p>
+<a class="newsroom-readmore" href="https://www.yna.co.kr/view/AKR20260721047700017" rel="noopener noreferrer" target="_blank">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a>
+</div>
+<div class="newsroom-featured-media">
+<div class="outlet-card tone-2"><span>연합뉴스<br/>Yonhap News</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="newsroom-all">
+<div class="container">
+<h2 class="newsroom-all-heading">All Articles</h2>
+<div class="newsroom-search-wrapper">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<input id="newsroom-search" placeholder="Search" type="text"/>
+</div>
+<div id="news-list">
+<a class="news-row" data-title="국제생물올림피아드 전원 금메달…한국 과학영재 저력" href="https://www.yna.co.kr/view/AKR20260721047700017" rel="noopener noreferrer" target="_blank">
+<div>
+<span class="news-row-date">07/21/2026 &middot; Yonhap News</span>
+<h3 class="news-row-title">국제생물올림피아드 전원 금메달…한국 과학영재 저력</h3>
+<span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+</div>
+<div class="news-row-media"><div class="outlet-card tone-2"><span>연합뉴스</span></div></div>
+</a>
+<a class="news-row" data-title="韓 과학영재에 세계가 깜짝…생물올림피아드 출전 4명 전원 금메달" href="https://www.donga.com/news/It/article/all/20260721/134336191/1" rel="noopener noreferrer" target="_blank">
+<div>
+<span class="news-row-date">07/21/2026 &middot; Dong-A Ilbo</span>
+<h3 class="news-row-title">韓 과학영재에 세계가 깜짝…생물올림피아드 출전 4명 전원 금메달</h3>
+<span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+</div>
+<div class="news-row-media"><div class="outlet-card tone-3"><span>동아일보</span></div></div>
+</a>
+<a class="news-row" data-title="韓 과학영재, 물리 이어 생물올림피아드서도 전원 金" href="https://www.hankyung.com/article/2026072176751" rel="noopener noreferrer" target="_blank">
+<div>
+<span class="news-row-date">07/21/2026 &middot; Hankyung</span>
+<h3 class="news-row-title">韓 과학영재, 물리 이어 생물올림피아드서도 전원 金</h3>
+<span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+</div>
+<div class="news-row-media"><div class="outlet-card tone-5"><span>한국경제</span></div></div>
+</a>
+<a class="news-row" data-title="국제생물올림피아드 한국 대표 전원 금메달 쾌거" href="https://www.chosun.com/economy/science/2026/07/21/OQN7LLECXJEJLKXXWLRJIOJRHI/" rel="noopener noreferrer" target="_blank">
+<div>
+<span class="news-row-date">07/21/2026 &middot; Chosun Ilbo</span>
+<h3 class="news-row-title">국제생물올림피아드 한국 대표 전원 금메달 쾌거</h3>
+<span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+</div>
+<div class="news-row-media"><div class="outlet-card tone-4"><span>조선일보</span></div></div>
+</a>
+<a class="news-row" data-title="한 과학영재의 자체 발광 식물 연구 일기" href="https://www.dongascience.com/ko/news/64950" rel="noopener noreferrer" target="_blank">
+<div>
+<span class="news-row-date">04/20/2024 &middot; Dongascience</span>
+<h3 class="news-row-title">한 과학영재의 자체 발광 식물 연구 일기</h3>
+<span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
+</div>
+<div class="news-row-media"><div class="outlet-card tone-1"><span>동아사이언스</span></div></div>
+</a>
+</div>
+<p class="newsroom-empty" id="newsroom-empty">No articles match your search.</p>
+</div>
+</section>
+
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-logo-col">
+<img alt="Asperitas Logo" class="footer-logo" src="assets/logo-horizontal-white.png"/>
+</div>
+<div class="footer-company-col">
+<span class="footer-col-title">Company</span>
+<ul class="footer-link-list">
+<li><a href="company.html#overview">Mission</a></li>
+<li><a href="newsroom.html">Newsroom</a></li>
+<li><a href="leadership.html">Leadership</a></li>
+<li><a href="store.html">Store</a></li>
+</ul>
+</div>
+<div class="footer-work-col">
+<span class="footer-col-title">Work With Us</span>
+<ul class="footer-link-list">
+<li><a href="company.html#careers">Careers</a></li>
+</ul>
+</div>
+<div class="footer-social-col">
+<span class="footer-col-title">Social</span>
+<ul class="footer-link-list">
+<li><a href="https://x.com/asperitasbio" rel="noopener noreferrer" target="_blank">X</a></li>
+<li><a href="https://www.youtube.com/@asperitasbio" rel="noopener noreferrer" target="_blank">YouTube</a></li>
+<li><a href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">Instagram</a></li>
+<li><a href="https://www.facebook.com/asperitasbio" rel="noopener noreferrer" target="_blank">Facebook</a></li>
+<li><a href="https://www.linkedin.com/company/asperitasbio/" rel="noopener noreferrer" target="_blank">LinkedIn</a></li>
+</ul>
+</div>
+<div class="footer-contact-col">
+<span class="footer-col-title">Contact</span>
+<a href="mailto:business@asperitas.bio">business@asperitas.bio</a>
+</div>
+<div class="footer-bottom-col">
+<p class="footer-copyright">COPYRIGHT &copy; 2026 ASPERITAS</p>
+<div class="footer-legal-links">
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms Of Use</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script src="js/main.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const search = document.getElementById('newsroom-search');
+    const rows = document.querySelectorAll('.news-row');
+    const empty = document.getElementById('newsroom-empty');
+    if (!search) return;
+    search.addEventListener('input', () => {
+      const term = search.value.toLowerCase();
+      let visible = 0;
+      rows.forEach(row => {
+        const match = row.dataset.title.toLowerCase().includes(term);
+        row.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      empty.style.display = visible === 0 ? 'block' : 'none';
+    });
+  });
+</script>
+</body>
+</html>
