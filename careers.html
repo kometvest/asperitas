@@ -766,6 +766,7 @@
       // Binding to the shared ancestor instead keeps receiving mousemove via
       // bubbling no matter which layer the event actually targets.
       let mouseX = null, mouseY = null;
+      let overMarker = false;
       container.addEventListener('mousemove', (e) => {
         const rect = canvasEl.getBoundingClientRect();
         mouseX = e.clientX - rect.left;
@@ -881,7 +882,7 @@
           // cursor position (screen-space distance to this point), not an
           // angular wedge from the globe's center - so it follows the cursor
           // itself around the surface rather than sweeping like a radar.
-          if (mouseX !== null) {
+          if (mouseX !== null && !overMarker) {
             const mdx = px - mouseX, mdy = py - mouseY;
             const mdist = Math.sqrt(mdx * mdx + mdy * mdy) || 0.0001;
             const influenceR = sphereR * 0.3;
@@ -975,7 +976,14 @@
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .style('pointer-events', 'auto')
-            .on('mouseenter', () => previewLocation(i))
+            // Sitting exactly on a marker put the cursor at the closest
+            // possible distance to that patch of the point-cloud, so the
+            // magnetic bulge below hit its maximum push right there - read
+            // as the whole globe suddenly "bouncing" in size. Hovering a
+            // marker now just suppresses that distortion entirely instead;
+            // the marker itself still highlights and previews normally.
+            .on('mouseenter', () => { previewLocation(i); overMarker = true; })
+            .on('mouseleave', () => { overMarker = false; })
             .on('click', () => selectLocation(i));
         });
       }

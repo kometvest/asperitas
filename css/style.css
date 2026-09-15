@@ -1176,25 +1176,25 @@ body.page-home .logo-img {
 .reveal-deco {
   position: absolute;
   left: 6%;
-  bottom: 12%;
-  width: 34%;
-  height: 62%;
+  bottom: 14%;
+  width: 24%;
+  height: 44%;
   pointer-events: none;
   opacity: 0;
 }
 
 .reveal-card {
   position: absolute;
-  right: min(72px, 6vw);
-  bottom: min(72px, 8vh);
+  right: min(80px, 6vw);
+  bottom: min(80px, 8vh);
   /* Sized to its own content (each line held to one row by .reveal-text's
      white-space: nowrap below) rather than a fixed width, so the card is
      always exactly as wide as the two lines need - capped for narrow
      viewports, where the mobile override switches back to normal wrapping. */
   width: max-content;
-  max-width: min(900px, 74vw);
-  padding: 48px 56px;
-  border-radius: 28px;
+  max-width: min(1150px, 86vw);
+  padding: 64px 72px;
+  border-radius: 32px;
   background: linear-gradient(160deg, #1a3a26 0%, #0e2116 100%);
   box-shadow: 0 60px 140px rgba(0, 0, 0, 0.55);
   opacity: 0;
@@ -1202,7 +1202,7 @@ body.page-home .logo-img {
 
 .reveal-text {
   font-family: var(--font-title);
-  font-size: 27px;
+  font-size: 38px;
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.5;
@@ -1227,7 +1227,7 @@ body.page-home .logo-img {
     border-radius: 20px;
   }
   .reveal-text {
-    font-size: 22px;
+    font-size: 25px;
     white-space: normal;
   }
 }
