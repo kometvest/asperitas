@@ -220,11 +220,18 @@ body.page-home .logo-img {
 
 @media (min-width: 769px) {
   .nav-menu {
+    /* Centered without `transform`: a transformed ancestor would create a
+       containing block for any `position: fixed` mega-panel inside its
+       .vertical-item children, shrinking that panel to the nav-menu's own
+       width instead of the full viewport. */
     position: absolute;
-    left: 50%;
+    left: 0;
+    right: 0;
     top: 0;
     height: 100%;
-    transform: translateX(-50%);
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: 0 auto;
   }
 }
 
@@ -383,6 +390,103 @@ body.page-home .logo-img {
   .company-item {
     margin-left: 0;
   }
+}
+
+/* Vertical mega menus (Pharma / Environment / Industrial) - same panel chrome
+   as the Company menu, with a nested "technology -> products" reveal. */
+.vertical-panel {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 999;
+}
+
+@media (min-width: 769px) {
+  .vertical-item:hover .vertical-panel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .vertical-panel {
+    display: none;
+  }
+}
+
+.vertical-panel-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 60px;
+  padding: 60px 0;
+}
+
+.vertical-panel-inner.vertical-panel-inner-2col {
+  grid-template-columns: 1fr 1fr;
+}
+
+.vertical-panel-desc {
+  max-width: 380px;
+}
+
+.vertical-tech-list {
+  list-style: none;
+}
+
+.vertical-tech-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.vertical-tech-list li::before {
+  content: '+';
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.vertical-tech-list li.tech-item-has-products {
+  cursor: default;
+}
+
+.vertical-tech-list li:hover,
+.vertical-tech-list li:hover::before {
+  color: var(--accent-green-light);
+}
+
+.vertical-products-list {
+  list-style: none;
+}
+
+.vertical-products-list li {
+  padding: 6px 0;
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.vertical-products-col {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.vertical-products-col.static-visible,
+.vertical-products-col.visible {
+  opacity: 1;
 }
 
 .dropdown-menu {

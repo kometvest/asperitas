@@ -3,16 +3,73 @@
  * Handles Navigation, Slider, Scroll Animations, and SVG Interactive Graph
  */
 
+// Letter-scramble reveal effect, shared by the header mega menus and any page
+// that wants the same "decode into place" text animation (e.g. the Leadership
+// bio panel). Exposed on window so inline page scripts loaded after this file
+// can reuse it without duplicating the logic.
+window.TextScramble = class TextScramble {
+  constructor(el) {
+    this.el = el;
+    this.finalText = el.textContent;
+    this.frame = 0;
+    this.frameRequest = null;
+    this.queue = [];
+    this.ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    this.TOTAL_FRAMES = Math.round(500 / (1000 / 60)); // ~0.5s at 60fps
+  }
+  setText(text) {
+    // Allows reusing one scrambler instance for content that changes (e.g. a
+    // detail panel that loads a different person/place each time it opens).
+    this.finalText = text;
+  }
+  run() {
+    const text = this.finalText;
+    this.queue = [];
+    for (let i = 0; i < text.length; i++) {
+      // Stagger only when each letter locks in, so the whole word decodes left-to-right within ~0.5s
+      const end = Math.floor((i / text.length) * this.TOTAL_FRAMES * 0.6) + Math.floor(Math.random() * (this.TOTAL_FRAMES * 0.4));
+      this.queue.push({ to: text[i], end });
+    }
+    cancelAnimationFrame(this.frameRequest);
+    this.frame = 0;
+    this.update();
+  }
+  update = () => {
+    let output = '';
+    let complete = 0;
+    for (let i = 0; i < this.queue.length; i++) {
+      const { to, end } = this.queue[i];
+      if (this.frame >= end || to === ' ') {
+        complete++;
+        output += to;
+      } else {
+        output += this.ALPHABET[Math.floor(Math.random() * this.ALPHABET.length)];
+      }
+    }
+    this.el.textContent = output;
+    if (complete === this.queue.length) {
+      this.el.textContent = this.finalText;
+      return;
+    }
+    this.frame++;
+    this.frameRequest = requestAnimationFrame(this.update);
+  };
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // 1. Sticky Header Scroll Effect & Subpage Logic
   const header = document.querySelector('.header');
   const isIndexPage = document.querySelector('.hero') !== null;
+  // Pages whose top section is already dark (e.g. careers.html's black hero)
+  // opt out of light-nav via body class, so the header text starts white
+  // instead of dark-on-dark.
+  const hasDarkTop = document.body.classList.contains('page-dark-header');
 
   if (isIndexPage) {
     // Home page: header (and footer) are solid black from the start, see body.page-home in CSS
     document.body.classList.add('page-home');
-  } else {
+  } else if (!hasDarkTop) {
     // Subpages: transparent header with dark text over the page content until scrolled
     header.classList.add('light-nav');
   }
@@ -46,61 +103,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2b. Company Mega Menu - letter-scramble reveal on hover
-  const companyItem = document.querySelector('.company-item');
-  if (companyItem) {
-    const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const DURATION_MS = 500;
-    const FRAME_MS = 1000 / 60;
-    const TOTAL_FRAMES = Math.round(DURATION_MS / FRAME_MS);
-
-    class TextScramble {
-      constructor(el) {
-        this.el = el;
-        this.finalText = el.textContent;
-        this.frame = 0;
-        this.frameRequest = null;
-        this.queue = [];
-      }
-      run() {
-        const text = this.finalText;
-        this.queue = [];
-        for (let i = 0; i < text.length; i++) {
-          // Stagger only when each letter locks in, so the whole word decodes left-to-right within ~0.5s
-          const end = Math.floor((i / text.length) * TOTAL_FRAMES * 0.6) + Math.floor(Math.random() * (TOTAL_FRAMES * 0.4));
-          this.queue.push({ to: text[i], end });
-        }
-        cancelAnimationFrame(this.frameRequest);
-        this.frame = 0;
-        this.update();
-      }
-      update = () => {
-        let output = '';
-        let complete = 0;
-        for (let i = 0; i < this.queue.length; i++) {
-          const { to, end } = this.queue[i];
-          if (this.frame >= end || to === ' ') {
-            complete++;
-            output += to;
-          } else {
-            output += ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
-          }
-        }
-        this.el.textContent = output;
-        if (complete === this.queue.length) {
-          this.el.textContent = this.finalText;
-          return;
-        }
-        this.frame++;
-        this.frameRequest = requestAnimationFrame(this.update);
-      };
-    }
-
-    const scramblers = Array.from(companyItem.querySelectorAll('.scramble-text')).map(el => new TextScramble(el));
-    companyItem.addEventListener('mouseenter', () => {
+  // 2b. Header Mega Menus (Company, and the Pharma/Environment/Industrial
+  // vertical panels) - letter-scramble reveal of each panel's static labels
+  // on hover, plus the nested "hover a technology -> reveal its Products" panel.
+  document.querySelectorAll('.nav-item-dropdown').forEach(item => {
+    const scramblers = Array.from(item.querySelectorAll(':scope > .company-panel .scramble-text, :scope > .vertical-panel .scramble-text'))
+      .map(el => new window.TextScramble(el));
+    item.addEventListener('mouseenter', () => {
       scramblers.forEach(s => s.run());
     });
-  }
+
+    item.querySelectorAll('.tech-item-has-products').forEach(techItem => {
+      const productsCol = item.querySelector('.vertical-products-col');
+      if (!productsCol) return;
+      const productScramblers = Array.from(productsCol.querySelectorAll('.scramble-text')).map(el => new window.TextScramble(el));
+      techItem.addEventListener('mouseenter', () => {
+        productsCol.classList.add('visible');
+        productScramblers.forEach(s => s.run());
+      });
+      techItem.addEventListener('mouseleave', () => {
+        productsCol.classList.remove('visible');
+      });
+    });
+  });
 
   // 3. Featured Slider (Landing Page - Full Width)
   const track = document.getElementById('slider-track');

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Careers | Asperitas Inc.</title>
+<meta content="Careers at Asperitas Inc. — join the team building a biodiversity-derived synthetic biology platform." name="description"/>
+<link href="css/style.css" rel="stylesheet"/>
+<link href="assets/logo-square-white.png" rel="icon" type="image/png"/>
+<style>
+  .careers-hero {
+    background: #0a0a0a;
+    color: #ffffff;
+    padding: calc(var(--header-height) + 90px) 0 60px;
+  }
+  .careers-eyebrow {
+    display: block;
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 24px;
+  }
+  .careers-hero-title {
+    font-family: var(--font-title);
+    font-size: 64px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    max-width: 900px;
+  }
+  @media (max-width: 768px) {
+    .careers-hero-title { font-size: 38px; }
+  }
+  .careers-hero-cta-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 40px 0;
+  }
+  .careers-open-roles-btn {
+    display: inline-block;
+    padding: 14px 26px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .careers-open-roles-btn:hover {
+    background: #ffffff;
+    color: #0a0a0a;
+  }
+  .careers-hero-media {
+    width: 100%;
+    aspect-ratio: 16/6;
+    overflow: hidden;
+  }
+  .careers-hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.75);
+  }
+
+  .who-we-are {
+    background: #0a0a0a;
+    color: #ffffff;
+    padding: 100px 0;
+  }
+  .who-we-are-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 60px;
+  }
+  .who-we-are-title {
+    font-family: var(--font-title);
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 24px;
+  }
+  .who-we-are-desc {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 30px;
+    max-width: 640px;
+  }
+  .who-we-are-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  .who-we-are-link:hover { color: var(--accent-green-light); }
+  @media (max-width: 900px) {
+    .who-we-are-grid { grid-template-columns: 1fr; }
+  }
+
+  .how-we-work {
+    background: var(--bg-primary);
+    padding: 100px 0 120px;
+  }
+  .how-we-work-heading {
+    font-family: var(--font-title);
+    font-size: 44px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 40px;
+  }
+  .how-tabs {
+    display: flex;
+    gap: 40px;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 0;
+  }
+  .how-tab {
+    background: none;
+    border: none;
+    padding: 0 0 16px;
+    font-family: var(--font-title);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    position: relative;
+  }
+  .how-tab.active { color: var(--text-primary); }
+  .how-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--text-primary);
+  }
+  .how-panel {
+    background: #b2b3a3;
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr;
+    align-items: center;
+    gap: 30px;
+    padding: 50px;
+  }
+  .how-panel-number {
+    font-family: var(--font-title);
+    font-size: 64px;
+    font-weight: 700;
+    color: #0a0a0a;
+    line-height: 1;
+  }
+  .how-panel-index {
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: rgba(10, 10, 10, 0.55);
+    margin-bottom: 10px;
+  }
+  .how-panel-label {
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(10, 10, 10, 0.55);
+    margin-bottom: 16px;
+  }
+  .how-panel-text {
+    font-family: var(--font-body);
+    font-size: 20px;
+    line-height: 1.5;
+    color: #0a0a0a;
+    max-width: 480px;
+  }
+  .how-panel-media {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  .how-panel-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  @media (max-width: 900px) {
+    .how-panel { grid-template-columns: 1fr; gap: 16px; padding: 34px; }
+    .how-panel-number { font-size: 40px; }
+    .how-tabs { flex-wrap: wrap; gap: 24px; }
+  }
+
+  .world-section {
+    background: var(--bg-primary);
+    padding: 100px 0 140px;
+    border-top: 1px solid var(--border-color);
+  }
+  .world-heading {
+    font-family: var(--font-title);
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 36px;
+  }
+  .world-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    border: 1px solid var(--border-color);
+  }
+  .world-globe-wrap {
+    position: relative;
+    aspect-ratio: 16/10;
+    background: #f2f1ec;
+    border-right: 1px solid var(--border-color);
+    overflow: hidden;
+  }
+  .world-globe-wrap svg { width: 100%; height: 100%; cursor: grab; display: block; }
+  .world-nav-arrows {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
+    display: flex;
+    gap: 10px;
+  }
+  .world-nav-arrow {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--text-primary);
+  }
+  .world-nav-arrow:hover { background: var(--text-primary); color: #fff; }
+  .world-info {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+  }
+  .world-info-label {
+    border: 1px solid var(--border-color);
+    padding: 14px 16px;
+    font-family: var(--font-title);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+  .world-info-photo {
+    aspect-ratio: 16/9;
+    background: #0a0a0a;
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 2px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+    font-family: var(--font-body);
+    font-size: 13px;
+  }
+  .world-info-desc {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    flex: 1;
+  }
+  @media (max-width: 900px) {
+    .world-grid { grid-template-columns: 1fr; }
+    .world-globe-wrap { border-right: none; border-bottom: 1px solid var(--border-color); }
+  }
+</style>
+</head>
+<body class="page-dark-header">
+<header class="header">
+<div class="container header-container">
+<a class="logo-link" href="index.html">
+<img alt="Asperitas Logo" class="logo-img" src="assets/logo-horizontal-white.png"/>
+</a>
+<button aria-label="Toggle navigation" class="mobile-nav-toggle" id="mobile-toggle">
+<span></span>
+<span></span>
+<span></span>
+</button>
+<ul class="nav-menu" id="nav-menu">
+<li><a class="nav-link" href="technology-biodiversity.html">Biodiversity</a></li>
+<li class="nav-item-dropdown vertical-item">
+<a class="nav-link" href="research-therapeutics.html">Pharma</a>
+<div class="vertical-panel">
+<div class="container vertical-panel-inner">
+<div class="vertical-panel-col vertical-panel-desc">
+<span class="company-panel-heading scramble-text">Pharma</span>
+<p class="company-panel-desc">Exploring novel biopharmaceutical applications derived from our extensive Biological Knowledge Graph.</p>
+</div>
+<div class="vertical-panel-col">
+<span class="company-panel-label scramble-text">Pharma</span>
+<ul class="vertical-tech-list">
+<li>Vaccine</li>
+<li class="tech-item-has-products">Epigenetic Therapy</li>
+</ul>
+</div>
+<div class="vertical-panel-col vertical-products-col">
+<span class="company-panel-label scramble-text">Products</span>
+<ul class="vertical-products-list">
+<li class="scramble-text">t-Degron Therapy</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+<li class="nav-item-dropdown vertical-item">
+<a class="nav-link" href="research-environment.html">Environment</a>
+<div class="vertical-panel">
+<div class="container vertical-panel-inner">
+<div class="vertical-panel-col vertical-panel-desc">
+<span class="company-panel-heading scramble-text">Environment</span>
+<p class="company-panel-desc">Engineering biological systems that remediate, monitor, and restore natural environments.</p>
+</div>
+<div class="vertical-panel-col">
+<span class="company-panel-label scramble-text">Environment</span>
+<ul class="vertical-tech-list">
+<li class="tech-item-has-products">Bioplastic</li>
+<li>Biofuel</li>
+</ul>
+</div>
+<div class="vertical-panel-col vertical-products-col">
+<span class="company-panel-label scramble-text">Products</span>
+<ul class="vertical-products-list">
+<li class="scramble-text">Biopatch</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+<li><a class="nav-link" href="research-food.html">Food</a></li>
+<li><a class="nav-link" href="research-agriculture.html">Agriculture</a></li>
+<li class="nav-item-dropdown vertical-item">
+<a class="nav-link" href="research-industrial.html">Industrial</a>
+<div class="vertical-panel">
+<div class="container vertical-panel-inner vertical-panel-inner-2col">
+<div class="vertical-panel-col vertical-panel-desc">
+<span class="company-panel-heading scramble-text">Industrial</span>
+<p class="company-panel-desc">Translating biodiversity-derived pathways into industrial biocatalysts and advanced biomaterials.</p>
+</div>
+<div class="vertical-panel-col vertical-products-col static-visible">
+<span class="company-panel-label scramble-text">Products</span>
+<ul class="vertical-products-list">
+<li>Bioluminescent Plant</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+</ul>
+<div class="nav-item-dropdown company-item">
+<a class="nav-link company-trigger active" href="company.html">Company <span class="company-plus">+</span></a>
+<div class="company-panel">
+<div class="container company-panel-inner">
+<div class="company-panel-col company-panel-brand">
+<span class="company-panel-heading scramble-text">Asperitas Bioscience</span>
+<p class="company-panel-desc">Asperitas Inc. is a synthetic biology company that discovers novel biological intelligence from the world's biodiversity and converts it into programmable products.</p>
+<div class="company-panel-contact">
+<span class="company-panel-label scramble-text">Contact</span>
+<a href="mailto:business@asperitas.bio">business@asperitas.bio</a>
+</div>
+<div class="company-panel-social">
+<span class="company-panel-label scramble-text">Social</span>
+<div class="company-social-links">
+<a href="https://x.com/asperitasbio" rel="noopener noreferrer" target="_blank">X</a>
+<a href="https://www.youtube.com/@asperitasbio" rel="noopener noreferrer" target="_blank">YT</a>
+<a href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">IG</a>
+<a href="https://www.linkedin.com/company/asperitasbio/" rel="noopener noreferrer" target="_blank">LI</a>
+</div>
+</div>
+</div>
+<div class="company-panel-col">
+<span class="company-panel-label scramble-text">Company</span>
+<ul class="company-panel-list">
+<li><a href="company.html#overview">Mission</a></li>
+<li><a href="newsroom.html">Newsroom</a></li>
+<li><a href="leadership.html">Leadership</a></li>
+<li><a href="store.html">Store</a></li>
+</ul>
+</div>
+<div class="company-panel-col">
+<span class="company-panel-label scramble-text">Work with us</span>
+<ul class="company-panel-list">
+<li><a href="careers.html">Careers</a></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+
+<section class="careers-hero">
+<div class="container">
+<span class="careers-eyebrow">Careers</span>
+<h1 class="careers-hero-title">Make Future with Asperitas</h1>
+<div class="careers-hero-cta-row">
+<a class="careers-open-roles-btn" href="https://www.asperitas.bio/company.html#careers">Explore Open Roles</a>
+</div>
+</div>
+<div class="careers-hero-media">
+<img alt="Asperitas lab" src="assets/plant-blue.jpg"/>
+</div>
+</section>
+
+<section class="who-we-are">
+<div class="container who-we-are-grid">
+<div>
+<span class="careers-eyebrow">Who We Are</span>
+</div>
+<div>
+<h2 class="who-we-are-title">Asperitas is not a traditional biotech company.</h2>
+<p class="who-we-are-desc">This is hard work, on hard problems, sourced from parts of the natural world most labs never touch. If that isn't for you, then that's OK. But if you're ready to turn overlooked biodiversity into programmable biology, if you want ownership over real research from day one, if you value working in the lab as much as in the field — then we want to hear from you.</p>
+<a class="who-we-are-link" href="https://www.asperitas.bio/company.html#careers">Explore Open Roles →</a>
+</div>
+</div>
+</section>
+
+<section class="how-we-work">
+<div class="container">
+<h2 class="how-we-work-heading">How We Work</h2>
+<div class="how-tabs" id="how-tabs">
+<button class="how-tab active" data-index="0" type="button">New</button>
+<button class="how-tab" data-index="1" type="button">Autonomy</button>
+<button class="how-tab" data-index="2" type="button">Speed</button>
+<button class="how-tab" data-index="3" type="button">Scale</button>
+</div>
+<div class="how-panel" id="how-panel">
+<div class="how-panel-number" id="how-panel-number">1</div>
+<div>
+<div class="how-panel-index" id="how-panel-index">01 / 04</div>
+<div class="how-panel-label" id="how-panel-label">New</div>
+<p class="how-panel-text" id="how-panel-text">New biology starts with new biodiversity. Every organism we bring into the lab from an unexplored ecosystem is a chance to run research nobody else can — because nobody else has access to the same specimen.</p>
+</div>
+<div class="how-panel-media">
+<img alt="" id="how-panel-img" src="assets/flower-purple.jpg"/>
+</div>
+</div>
+</div>
+</section>
+
+<section class="world-section">
+<div class="container">
+<h2 class="world-heading">Asperitas All Around the World</h2>
+<div class="world-grid">
+<div class="world-globe-wrap">
+<svg id="world-globe-svg"></svg>
+<div class="world-nav-arrows">
+<button class="world-nav-arrow" id="world-prev" type="button">←</button>
+<button class="world-nav-arrow" id="world-next" type="button">→</button>
+</div>
+</div>
+<div class="world-info">
+<div class="world-info-label" id="world-info-label">DELAWARE, UNITED STATES</div>
+<div class="world-info-photo" id="world-info-photo">No photo yet on file for this location</div>
+<p class="world-info-desc" id="world-info-desc">Located in Newark, Delaware, Asperitas HQ — our U.S. headquarters, handling corporate operations and administrative filings.</p>
+</div>
+</div>
+</div>
+</section>
+
+<footer class="footer">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-logo-col">
+<img alt="Asperitas Logo" class="footer-logo" src="assets/logo-horizontal-white.png"/>
+</div>
+<div class="footer-company-col">
+<span class="footer-col-title">Company</span>
+<ul class="footer-link-list">
+<li><a href="company.html#overview">Mission</a></li>
+<li><a href="newsroom.html">Newsroom</a></li>
+<li><a href="leadership.html">Leadership</a></li>
+<li><a href="store.html">Store</a></li>
+</ul>
+</div>
+<div class="footer-work-col">
+<span class="footer-col-title">Work With Us</span>
+<ul class="footer-link-list">
+<li><a href="careers.html">Careers</a></li>
+</ul>
+</div>
+<div class="footer-social-col">
+<span class="footer-col-title">Social</span>
+<ul class="footer-link-list">
+<li><a href="https://x.com/asperitasbio" rel="noopener noreferrer" target="_blank">X</a></li>
+<li><a href="https://www.youtube.com/@asperitasbio" rel="noopener noreferrer" target="_blank">YouTube</a></li>
+<li><a href="https://www.instagram.com/asperitasbio" rel="noopener noreferrer" target="_blank">Instagram</a></li>
+<li><a href="https://www.linkedin.com/company/asperitasbio/" rel="noopener noreferrer" target="_blank">LinkedIn</a></li>
+</ul>
+</div>
+<div class="footer-contact-col">
+<span class="footer-col-title">Contact</span>
+<a href="mailto:business@asperitas.bio">business@asperitas.bio</a>
+</div>
+<div class="footer-bottom-col">
+<p class="footer-copyright">COPYRIGHT &copy; 2026 ASPERITAS</p>
+<div class="footer-legal-links">
+<a href="privacy-policy.html">Privacy Policy</a>
+<a href="terms.html">Terms Of Use</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script src="js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson@3/dist/topojson.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // How We Work - tabbed content with an "upward" swap animation
+    const tabsData = [
+      { label: 'New', index: '01 / 04', number: '1', img: 'assets/flower-purple.jpg',
+        text: "New biology starts with new biodiversity. Every organism we bring into the lab from an unexplored ecosystem is a chance to run research nobody else can — because nobody else has access to the same specimen." },
+      { label: 'Autonomy', index: '02 / 04', number: '2', img: 'assets/ai-structure.png',
+        text: "We're building automated lab facilities so routine experiments run themselves. Own your research end-to-end, then let automation take over the parts that don't need a human in the loop." },
+      { label: 'Speed', index: '03 / 04', number: '3', img: 'assets/cell-plate.jpg',
+        text: "There's no time for business as usual. We move fast — in the lab, in communication, and in how quickly an idea becomes a validated result." },
+      { label: 'Scale', index: '04 / 04', number: '4', img: 'assets/platform-biodiversity.png',
+        text: 'From a single vivarium to a global sourcing network spanning 31+ countries, we build systems, teams, and pipelines that scale.' }
+    ];
+
+    const panel = document.getElementById('how-panel');
+    const numberEl = document.getElementById('how-panel-number');
+    const indexEl = document.getElementById('how-panel-index');
+    const labelEl = document.getElementById('how-panel-label');
+    const textEl = document.getElementById('how-panel-text');
+    const imgEl = document.getElementById('how-panel-img');
+    const tabButtons = document.querySelectorAll('.how-tab');
+    let activeTab = 0;
+    let animating = false;
+
+    function applyTab(i) {
+      const d = tabsData[i];
+      numberEl.textContent = d.number;
+      indexEl.textContent = d.index;
+      labelEl.textContent = d.label;
+      textEl.textContent = d.text;
+      imgEl.src = d.img;
+    }
+
+    function switchTab(i) {
+      if (i === activeTab || animating) return;
+      animating = true;
+      tabButtons.forEach(btn => btn.classList.toggle('active', Number(btn.dataset.index) === i));
+      panel.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+      panel.style.transform = 'translateY(-24px)';
+      panel.style.opacity = '0';
+      setTimeout(() => {
+        applyTab(i);
+        activeTab = i;
+        panel.style.transition = 'none';
+        panel.style.transform = 'translateY(24px)';
+        panel.style.opacity = '0';
+        void panel.offsetHeight; // force reflow so the next transition actually runs
+        panel.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+        panel.style.transform = 'translateY(0)';
+        panel.style.opacity = '1';
+        animating = false;
+      }, 300);
+    }
+
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => switchTab(Number(btn.dataset.index)));
+    });
+
+    // Asperitas All Around the World - interactive globe with office markers
+    (function () {
+      const container = document.querySelector('.world-globe-wrap');
+      const svgEl = document.getElementById('world-globe-svg');
+      if (!svgEl || !container || typeof d3 === 'undefined') return;
+
+      const locations = [
+        { key: 'busan', city: 'Busan', country: 'South Korea', lat: 35.1796, lon: 129.0756, isHQ: false,
+          desc: 'Located in Korea Science Academy of KAIST, Busan, Asperitas office — our primary research site.' },
+        { key: 'goyang', city: 'Goyang', country: 'South Korea', lat: 37.6584, lon: 126.8320, isHQ: false,
+          desc: 'Located in KINTEX, Goyang, Asperitas office — our Korean branch office.' },
+        { key: 'daejeon', city: 'Daejeon', country: 'South Korea', lat: 36.3504, lon: 127.3845, isHQ: false,
+          desc: 'Located in Wolpyeong, Daejeon, Asperitas office — a 60-pyeong facility for biological husbandry operations.' },
+        { key: 'delaware', city: 'Newark', country: 'United States', lat: 39.6837, lon: -75.7497, isHQ: true,
+          desc: 'Located in Newark, Delaware, Asperitas HQ — our U.S. headquarters, handling corporate operations and administrative filings.' }
+      ];
+      let activeIndex = 3; // Delaware HQ shown by default, matching the info panel's initial text
+
+      const labelEl = document.getElementById('world-info-label');
+      const descEl = document.getElementById('world-info-desc');
+      const photoEl = document.getElementById('world-info-photo');
+      const labelScramble = new window.TextScramble(labelEl);
+      const descScramble = new window.TextScramble(descEl);
+
+      function selectLocation(i) {
+        activeIndex = i;
+        const loc = locations[i];
+        labelScramble.setText(`${loc.city.toUpperCase()}, ${loc.country.toUpperCase()}`);
+        descScramble.setText(loc.desc);
+        photoEl.textContent = loc.key === 'daejeon'
+          ? 'Photo of the Daejeon facility pending'
+          : 'No photo yet on file for this location';
+        labelScramble.run();
+        descScramble.run();
+        focusLocation(loc);
+      }
+
+      document.getElementById('world-prev').addEventListener('click', () => {
+        selectLocation((activeIndex - 1 + locations.length) % locations.length);
+      });
+      document.getElementById('world-next').addEventListener('click', () => {
+        selectLocation((activeIndex + 1) % locations.length);
+      });
+
+      const size = () => Math.min(container.clientWidth, container.clientHeight) || 420;
+      let S = size();
+      const svg = d3.select(svgEl)
+        .attr('viewBox', `0 0 ${S} ${S}`)
+        .attr('width', S)
+        .attr('height', S);
+
+      const projection = d3.geoOrthographic()
+        .scale(S / 2.1)
+        .translate([S / 2, S / 2])
+        .clipAngle(90)
+        .rotate([0, -20]);
+
+      const pathGen = d3.geoPath().projection(projection);
+
+      svg.append('circle')
+        .attr('cx', S / 2).attr('cy', S / 2)
+        .attr('r', S / 2.1)
+        .attr('fill', '#f5f5f0')
+        .attr('stroke', 'rgba(0,0,0,0.08)')
+        .attr('stroke-width', 1);
+
+      const landG = svg.append('g');
+      const borderG = svg.append('g');
+      const locG = svg.append('g');
+
+      let autoRotX = 0;
+      let rotX = 0;
+      let rotY = -20;
+      let isDragging = false;
+      let dragStart = null;
+      let snapAnim = null;
+      let focusAnim = null;
+
+      const timer = d3.timer(elapsed => {
+        autoRotX = (autoRotX - 0.06) % 360;
+        if (!isDragging && !snapAnim && !focusAnim) {
+          rotX = autoRotX;
+        }
+        projection.rotate([rotX, rotY]);
+        landG.selectAll('path').attr('d', pathGen);
+        borderG.selectAll('path').attr('d', pathGen);
+        updateLocations(elapsed);
+      });
+
+      function updateLocations(elapsed) {
+        locG.selectAll('*').remove();
+
+        locations.forEach((loc, i) => {
+          const coords = [loc.lon, loc.lat];
+          const projected = projection(coords);
+          if (!projected) return;
+          const geo = d3.geoDistance(coords, [-projection.rotate()[0], -projection.rotate()[1]]);
+          if (geo > Math.PI / 2) return;
+          const [px, py] = projected;
+
+          const pulse = 5 + 2.4 * Math.sin(elapsed / 380 + i * 1.3);
+          locG.append('circle')
+            .attr('cx', px).attr('cy', py).attr('r', pulse)
+            .attr('fill', 'none')
+            .attr('stroke', '#9fe83a')
+            .attr('stroke-width', 1.4)
+            .attr('opacity', 0.55);
+
+          if (loc.isHQ) {
+            locG.append('circle')
+              .attr('cx', px).attr('cy', py).attr('r', 11)
+              .attr('fill', 'none')
+              .attr('stroke', '#9fe83a')
+              .attr('stroke-width', 1.5);
+          }
+
+          locG.append('circle')
+            .attr('cx', px).attr('cy', py).attr('r', i === activeIndex ? 4.5 : 3.5)
+            .attr('fill', '#9fe83a')
+            .attr('stroke', '#0a0a0a')
+            .attr('stroke-width', i === activeIndex ? 1.5 : 0)
+            .style('cursor', 'pointer')
+            .on('click', () => selectLocation(i));
+
+          // Busan/Goyang/Daejeon sit close together on the globe at this scale,
+          // so their labels get a small manual offset to keep them legible
+          // instead of stacking on top of each other.
+          const labelOffset = { busan: [10, 16], goyang: [-58, -10], daejeon: [10, -6], delaware: [10, 4] }[loc.key] || [10, 4];
+          locG.append('text')
+            .attr('x', px + labelOffset[0]).attr('y', py + labelOffset[1])
+            .attr('font-family', 'var(--font-body)')
+            .attr('font-size', '11px')
+            .attr('font-weight', i === activeIndex ? '700' : '500')
+            .attr('fill', 'rgba(10,10,10,0.85)')
+            .style('pointer-events', 'none')
+            .text(loc.city + (loc.isHQ ? ' (HQ)' : ''));
+        });
+      }
+
+      function focusLocation(loc) {
+        const targetRotX = -loc.lon;
+        const startRotX = rotX;
+        let diff = ((targetRotX - startRotX) % 360 + 540) % 360 - 180;
+        const duration = 700;
+        const startTime = performance.now();
+        focusAnim = true;
+        function step(now) {
+          const t = Math.min(1, (now - startTime) / duration);
+          const eased = 1 - Math.pow(1 - t, 3);
+          rotX = startRotX + diff * eased;
+          if (t < 1) {
+            requestAnimationFrame(step);
+          } else {
+            autoRotX = rotX;
+            focusAnim = null;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
+        const countries = topojson.feature(world, world.objects.countries);
+        const borders = topojson.mesh(world, world.objects.countries, (a, b) => a !== b);
+
+        landG.selectAll('path')
+          .data(countries.features)
+          .enter().append('path')
+          .attr('d', pathGen)
+          .attr('fill', '#d8d8d0')
+          .attr('stroke', 'none');
+
+        borderG.append('path')
+          .datum(borders)
+          .attr('d', pathGen)
+          .attr('fill', 'none')
+          .attr('stroke', 'rgba(255,255,255,0.7)')
+          .attr('stroke-width', 0.5);
+      });
+
+      const drag = d3.drag()
+        .on('start', (event) => {
+          isDragging = true;
+          if (snapAnim) { cancelAnimationFrame(snapAnim); snapAnim = null; }
+          dragStart = { x: event.x, y: event.y, rotX, rotY };
+        })
+        .on('drag', (event) => {
+          const dx = event.x - dragStart.x;
+          const dy = event.y - dragStart.y;
+          rotX = dragStart.rotX + dx * 0.35;
+          rotY = Math.max(-35, Math.min(-5, dragStart.rotY - dy * 0.25));
+        })
+        .on('end', () => {
+          isDragging = false;
+          dragStart = null;
+          function snapBack() {
+            const diffY = rotY - (-20);
+            let diffX = rotX - autoRotX;
+            diffX = ((diffX % 360) + 540) % 360 - 180;
+            if (Math.abs(diffY) < 0.3 && Math.abs(diffX) < 0.3) { snapAnim = null; return; }
+            rotY -= diffY * 0.08;
+            rotX -= diffX * 0.08;
+            snapAnim = requestAnimationFrame(snapBack);
+          }
+          snapBack();
+        });
+
+      d3.select(svgEl).call(drag).style('cursor', 'grab');
+
+      const ro = new ResizeObserver(() => {
+        S = size();
+        svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
+        projection.scale(S / 2.1).translate([S / 2, S / 2]);
+        svg.select('circle').attr('cx', S / 2).attr('cy', S / 2).attr('r', S / 2.1);
+      });
+      ro.observe(container);
+    })();
+  });
+</script>
+</body>
+</html>
