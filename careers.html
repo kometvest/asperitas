@@ -638,7 +638,10 @@
       const labelScramble = new window.TextScramble(labelEl);
       const descScramble = new window.TextScramble(descEl);
 
-      function selectLocation(i) {
+      // Hovering a marker previews its office (updates the panel only);
+      // clicking commits to it (same panel update, plus rotates it to center).
+      function previewLocation(i) {
+        if (i === activeIndex) return;
         activeIndex = i;
         const loc = locations[i];
         labelScramble.setText(`${loc.city.toUpperCase()}, ${loc.country.toUpperCase()}`);
@@ -648,7 +651,11 @@
           : 'No photo yet on file for this location';
         labelScramble.run();
         descScramble.run();
-        focusLocation(loc);
+      }
+
+      function selectLocation(i) {
+        previewLocation(i);
+        focusLocation(locations[i]);
       }
 
       document.getElementById('world-prev').addEventListener('click', () => {
@@ -688,7 +695,7 @@
       fitCanvas();
 
       const projection = d3.geoOrthographic()
-        .scale(S / 2.1)
+        .scale(S / 2.6)
         .translate([S / 2, S / 2])
         .clipAngle(90)
         .rotate([0, -20]);
@@ -725,12 +732,38 @@
             // rather than a static dot field, even while otherwise at rest.
             phase: Math.random() * Math.PI * 2,
             speed: 0.5 + Math.random() * 1.1,
+            // How strongly this point participates in the radial flare
+            // displacement - varying it (rather than a uniform push) keeps
+            // the deformed silhouette looking organic/jagged, not a smooth
+            // uniformly-scaled circle.
+            flareMult: 0.5 + Math.random() * 0.9,
           });
         }
         return points;
       }
 
-      let dotPoints = fibonacciSphere(16000);
+      let dotPoints = fibonacciSphere(24000);
+
+      // Mouse position (canvas-local px) while hovering the globe, or null -
+      // used to bend the point cloud's surface toward the cursor, like a
+      // magnetic/flare distortion reacting to touch.
+      let mouseX = null, mouseY = null;
+      canvasEl.addEventListener('mousemove', (e) => {
+        const rect = canvasEl.getBoundingClientRect();
+        mouseX = e.clientX - rect.left;
+        mouseY = e.clientY - rect.top;
+      });
+      canvasEl.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
+
+      // Organic, non-periodic-looking displacement field driving the flare
+      // shape - a couple of overlapping sine terms at different lat/lon
+      // frequencies and phase speeds, roughly in the range -1..1.
+      function flareNoise(lat, lon, t) {
+        return (
+          Math.sin(lat * 0.12 + t * 0.6) * Math.cos(lon * 0.10 - t * 0.4) * 0.6 +
+          Math.sin(lat * 0.35 - lon * 0.22 + t * 1.1) * 0.4
+        );
+      }
 
       // Idle auto-spin plus drag "momentum": dragging never snaps back - it
       // just changes rotX/rotY directly, and on release the last drag velocity
@@ -768,27 +801,26 @@
         }
         ctx.globalAlpha = 1;
 
-        const cx = S / 2, cy = S / 2, r = S / 2.1;
+        const cx = S / 2, cy = S / 2, sphereR = S / 2.6;
         ctx.save();
         ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+        ctx.arc(cx, cy, sphereR, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
         ctx.lineWidth = 3;
-        ctx.shadowColor = 'rgba(255,255,255,0.9)';
-        ctx.shadowBlur = 14;
+        ctx.shadowColor = 'rgba(255,255,255,0.85)';
+        ctx.shadowBlur = 18;
         ctx.stroke();
         ctx.restore();
 
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(255,255,255,0.25)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
+        // The silhouette is no longer a perfect circle (see the displacement
+        // below), so there is no separate crisp outline stroke here - just
+        // this soft ambient glow behind the dots, like a corona the flare
+        // points erupt through.
 
         // Each point's brightness shimmers independently over time (a slow
         // sine per point, offset by its own phase/speed plus a slight
         // dependence on latitude so a loose "flare" wave drifts across the
-        // surface). To keep this cheap at 16k points, brightness is quantized
+        // surface). To keep this cheap at 24k points, brightness is quantized
         // into a handful of buckets per land/ocean group, so the whole frame
         // still costs only ~2 x BUCKETS fill() calls, not one per point.
         const BUCKETS = 6;
@@ -796,14 +828,36 @@
         const oceanBuckets = Array.from({ length: BUCKETS }, () => []);
         const landBaseR = 1.15, oceanBaseR = 0.65;
 
+        // The whole flare pattern breathes in and out (its amplitude rises
+        // and falls slowly), and gets an extra directional bulge toward the
+        // mouse, like the surface reacting to the cursor.
+        const breathe = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(elapsed * 0.00035));
+        const baseFlareAmp = sphereR * 0.1;
+        const t = elapsed * 0.001;
+        const mouseAngle = mouseX !== null ? Math.atan2(mouseY - cy, mouseX - cx) : null;
+
         for (let i = 0; i < dotPoints.length; i++) {
           const p = dotPoints[i];
           const proj = projection([p.lon, p.lat]);
           if (!proj) continue;
+
+          const dx = proj[0] - cx, dy = proj[1] - cy;
+          const dist = Math.hypot(dx, dy) || 0.0001;
+          let disp = flareNoise(p.lat, p.lon, t) * p.flareMult * baseFlareAmp * breathe;
+          if (mouseAngle !== null) {
+            const pointAngle = Math.atan2(dy, dx);
+            let diff = Math.abs(pointAngle - mouseAngle);
+            if (diff > Math.PI) diff = Math.PI * 2 - diff;
+            const falloff = Math.max(0, 1 - diff / (Math.PI * 0.45));
+            disp += falloff * falloff * sphereR * 0.4;
+          }
+          const scale = 1 + disp / dist;
+          const px = cx + dx * scale, py = cy + dy * scale;
+
           const flare = 0.5 + 0.5 * Math.sin(elapsed / 900 * p.speed + p.phase + p.lat * 0.05);
           const bucket = Math.min(BUCKETS - 1, Math.floor(flare * BUCKETS));
           const r = (p.isLand ? landBaseR : oceanBaseR) * (0.75 + 0.55 * flare);
-          (p.isLand ? landBuckets : oceanBuckets)[bucket].push([proj[0], proj[1], r]);
+          (p.isLand ? landBuckets : oceanBuckets)[bucket].push([px, py, r]);
         }
 
         for (let b = 0; b < BUCKETS; b++) {
@@ -880,6 +934,7 @@
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .style('pointer-events', 'auto')
+            .on('mouseenter', () => previewLocation(i))
             .on('click', () => selectLocation(i));
         });
       }
@@ -954,7 +1009,7 @@
       const ro = new ResizeObserver(() => {
         S = size();
         svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
-        projection.scale(S / 2.1).translate([S / 2, S / 2]);
+        projection.scale(S / 2.6).translate([S / 2, S / 2]);
         fitCanvas();
       });
       ro.observe(container);

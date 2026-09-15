@@ -58,6 +58,36 @@ window.TextScramble = class TextScramble {
   };
 };
 
+// Page transition: the page loads hidden behind a solid black overlay (see
+// body::before in style.css, present from first paint so there's no flash of
+// unstyled content), fades in once this script runs, and fades back to black
+// before following any internal link, so navigation never feels like a hard cut.
+(function () {
+  requestAnimationFrame(() => {
+    document.body.classList.add('page-transition-hidden');
+  });
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href]');
+    if (!link || link.target === '_blank' || link.hasAttribute('download')) return;
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+    let url;
+    try {
+      url = new URL(href, window.location.href);
+    } catch (err) {
+      return;
+    }
+    if (url.origin !== window.location.origin) return; // external link, behave normally
+    if (url.pathname === window.location.pathname && url.hash) return; // same-page anchor jump
+    e.preventDefault();
+    document.body.classList.remove('page-transition-hidden');
+    setTimeout(() => {
+      window.location.href = url.href;
+    }, 420);
+  });
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // 1. Sticky Header Scroll Effect & Subpage Logic
