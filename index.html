@@ -380,33 +380,5 @@
 </div>
 </footer>
 <script src="js/main.js"></script>
-<script>
-  // Hero lockup reveal: each line/logo pops in and scramble-decodes in turn,
-  // ordered top-left to bottom-right across the whole composition (headline
-  // column, then the logo, then the EST/Future column), finishing inside 3s.
-  document.addEventListener('DOMContentLoaded', () => {
-    const steps = [
-      { id: 'hero-line-1', delay: 0 },
-      { id: 'hero-line-2', delay: 500 },
-      { id: 'hero-lockup-logo', delay: 900, isLogo: true },
-      { id: 'hero-line-est', delay: 1200 },
-      { id: 'hero-line-3', delay: 1700 },
-      { id: 'hero-line-future', delay: 2300 },
-    ];
-    steps.forEach(({ id, delay, isLogo }) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      if (isLogo) {
-        setTimeout(() => { el.style.opacity = '1'; }, delay);
-        return;
-      }
-      const scrambler = new window.TextScramble(el);
-      setTimeout(() => {
-        el.style.opacity = '1';
-        scrambler.run();
-      }, delay);
-    });
-  });
-</script>
 </body>
 </html>

@@ -731,11 +731,16 @@ body.page-home .logo-img {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 40px;
+  gap: 16px;
 }
 
 .hero-lockup-headline {
   text-align: center;
+}
+
+@keyframes hero-wipe-reveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
 }
 
 .hero-title-line {
@@ -747,19 +752,30 @@ body.page-home .logo-img {
   text-transform: uppercase;
   color: #ffffff;
   white-space: nowrap;
-  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  animation: hero-wipe-reveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.hero-title-line:nth-child(1) { animation-delay: 0s; }
+.hero-title-line:nth-child(2) { animation-delay: 0.22s; }
+.hero-title-line:nth-child(3) { animation-delay: 0.44s; }
+
+/* Logo is centered on the whole row (a 1fr/auto/1fr grid spanning the full
+   headline width, which is itself centered on screen) so it lands dead-center
+   of the page - EST./FUTURE sits after it and doesn't affect that centering. */
 .hero-lockup-bottom {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 36px;
+  width: 100%;
+  opacity: 0;
+  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.85s;
 }
 
 .hero-lockup-logo {
-  flex-shrink: 0;
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  grid-column: 2;
+  justify-self: center;
 }
 
 .hero-lockup-logo img {
@@ -769,7 +785,10 @@ body.page-home .logo-img {
 }
 
 .hero-lockup-est {
+  grid-column: 3;
+  justify-self: start;
   text-align: left;
+  padding-left: 24px;
 }
 
 .hero-est-line {
@@ -778,23 +797,28 @@ body.page-home .logo-img {
   letter-spacing: 0.03em;
   color: #ffffff;
   white-space: nowrap;
-  opacity: 0;
 }
 
 .hero-est-line + .hero-est-line {
-  margin-top: 12px;
+  margin-top: 6px;
 }
 
 @media (max-width: 900px) {
   .hero-lockup {
-    gap: 24px;
+    gap: 12px;
   }
   .hero-lockup-bottom {
-    flex-direction: column;
-    gap: 16px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 12px;
+  }
+  .hero-lockup-logo,
+  .hero-lockup-est {
+    grid-column: 1;
   }
   .hero-lockup-est {
     text-align: center;
+    padding-left: 0;
   }
   .hero-title-line {
     font-size: 30px;
