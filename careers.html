@@ -236,7 +236,7 @@
   }
   .world-globe-wrap {
     position: relative;
-    aspect-ratio: 16/10;
+    aspect-ratio: 1/1;
     background: #050505;
     border-right: 1px solid rgba(255, 255, 255, 0.15);
     overflow: hidden;
@@ -812,10 +812,14 @@
         // whose screen-space distance from center is close to sphereR - an
         // orthographic projection puts the limb exactly at that radius, so
         // this is a cheap stand-in for "angularly near the edge" without an
-        // extra geoDistance call per point). Each rim point flickers/extends
-        // outward on its own continuous, never-stopping cycle.
+        // extra geoDistance call per point). Driven by the point's angular
+        // position around that rim (not just its own random phase), so
+        // neighboring points rise and fall together - a real traveling wave
+        // that continuously sweeps around the edge, rather than independent
+        // per-point flicker.
         const RIM_BAND = 0.14;
-        const flareTime = elapsed * 0.0022;
+        const flareTime = elapsed * 0.00028;
+        const WAVE_CRESTS = 5; // how many wave peaks sit around the rim at once
 
         for (let i = 0; i < dotPoints.length; i++) {
           const p = dotPoints[i];
@@ -830,7 +834,8 @@
           const centerDist0 = Math.sqrt(rdx * rdx + rdy * rdy) || 0.0001;
           const rimProximity = Math.max(0, (centerDist0 / sphereR - (1 - RIM_BAND)) / RIM_BAND);
           if (rimProximity > 0) {
-            const flareWave = 0.5 + 0.5 * Math.sin(flareTime * p.speed + p.phase * 2.1);
+            const rimAngle = Math.atan2(rdy, rdx);
+            const flareWave = 0.5 + 0.5 * Math.sin(rimAngle * WAVE_CRESTS + flareTime + p.phase * 0.4);
             const extend = rimProximity * flareWave * sphereR * 0.16;
             px += (rdx / centerDist0) * extend;
             py += (rdy / centerDist0) * extend;
