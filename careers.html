@@ -694,7 +694,7 @@
       fitCanvas();
 
       const projection = d3.geoOrthographic()
-        .scale(S / 2.2)
+        .scale(S / 2.5)
         .translate([S / 2, S / 2])
         .clipAngle(90)
         .rotate([0, -20]);
@@ -785,7 +785,7 @@
         }
         ctx.globalAlpha = 1;
 
-        const cx = S / 2, cy = S / 2, sphereR = S / 2.2;
+        const cx = S / 2, cy = S / 2, sphereR = S / 2.5;
 
         // No separate circle/ring is drawn here by design - the sphere's
         // shape and glow both come entirely from the dot cloud itself.
@@ -818,8 +818,9 @@
         // that continuously sweeps around the edge, rather than independent
         // per-point flicker.
         const RIM_BAND = 0.14;
-        const flareTime = elapsed * 0.00028;
-        const WAVE_CRESTS = 5; // how many wave peaks sit around the rim at once
+        const flareTime = elapsed * 0.00055;
+        const WAVE_CRESTS = 4; // main swell: how many big waves sit around the rim at once
+        const WAVE_CRESTS_2 = 7; // a second, faster ripple layered on top for a chop/flow feel
 
         for (let i = 0; i < dotPoints.length; i++) {
           const p = dotPoints[i];
@@ -835,8 +836,14 @@
           const rimProximity = Math.max(0, (centerDist0 / sphereR - (1 - RIM_BAND)) / RIM_BAND);
           if (rimProximity > 0) {
             const rimAngle = Math.atan2(rdy, rdx);
-            const flareWave = 0.5 + 0.5 * Math.sin(rimAngle * WAVE_CRESTS + flareTime + p.phase * 0.4);
-            const extend = rimProximity * flareWave * sphereR * 0.16;
+            // Two traveling waves at different crest-counts and speeds,
+            // moving in the same direction around the rim - like a swell
+            // with smaller chop riding on top, so it reads as flowing water
+            // rather than a single pulsing ring.
+            const swell = Math.sin(rimAngle * WAVE_CRESTS + flareTime);
+            const chop = Math.sin(rimAngle * WAVE_CRESTS_2 + flareTime * 1.8 + p.phase * 0.3);
+            const flareWave = 0.5 + 0.5 * (swell * 0.7 + chop * 0.3);
+            const extend = rimProximity * flareWave * sphereR * 0.2;
             px += (rdx / centerDist0) * extend;
             py += (rdy / centerDist0) * extend;
             flareBoost = rimProximity * flareWave;
@@ -1015,7 +1022,7 @@
       const ro = new ResizeObserver(() => {
         S = size();
         svg.attr('viewBox', `0 0 ${S} ${S}`).attr('width', S).attr('height', S);
-        projection.scale(S / 2.2).translate([S / 2, S / 2]);
+        projection.scale(S / 2.5).translate([S / 2, S / 2]);
         fitCanvas();
       });
       ro.observe(container);
