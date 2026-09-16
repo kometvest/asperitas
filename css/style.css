@@ -1171,6 +1171,33 @@ body.page-home .logo-img {
   height: 100%;
 }
 
+/* Small hollow triangles drifting down through the section - a plain,
+   always-running CSS loop (not scroll-driven), so the otherwise empty
+   stretch before the card rises always has some quiet motion in it. */
+.reveal-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.reveal-particle {
+  position: absolute;
+  top: -30px;
+  animation-name: reveal-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes reveal-fall {
+  from {
+    transform: translateY(-5vh) rotate(var(--start-rotate, 0deg));
+  }
+  to {
+    transform: translateY(105vh) rotate(calc(var(--start-rotate, 0deg) + 360deg));
+  }
+}
+
 /* Fills the space the card leaves open on the left, at roughly the card's
    own vertical position, so the two feel like one composition. */
 .reveal-deco {
