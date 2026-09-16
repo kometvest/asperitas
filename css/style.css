@@ -1175,10 +1175,10 @@ body.page-home .logo-img {
    own vertical position, so the two feel like one composition. */
 .reveal-deco {
   position: absolute;
-  left: 6%;
-  bottom: 14%;
-  width: 24%;
-  height: 44%;
+  left: 7%;
+  bottom: 6%;
+  width: 22%;
+  height: 58%;
   pointer-events: none;
   opacity: 0;
 }
@@ -1190,10 +1190,16 @@ body.page-home .logo-img {
   /* Sized to its own content (each line held to one row by .reveal-text's
      white-space: nowrap below) rather than a fixed width, so the card is
      always exactly as wide as the two lines need - capped for narrow
-     viewports, where the mobile override switches back to normal wrapping. */
+     viewports, where the mobile override switches back to normal wrapping.
+     Height, by contrast, is NOT left to the text alone - min-height plus
+     flex-centering gives the card real vertical presence instead of just
+     hugging two lines of copy. */
   width: max-content;
   max-width: min(1150px, 86vw);
-  padding: 64px 72px;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  padding: 56px 72px;
   border-radius: 32px;
   background: linear-gradient(160deg, #1a3a26 0%, #0e2116 100%);
   box-shadow: 0 60px 140px rgba(0, 0, 0, 0.55);
@@ -1223,6 +1229,7 @@ body.page-home .logo-img {
     bottom: 5vh;
     width: auto;
     max-width: none;
+    min-height: 0;
     padding: 36px 28px;
     border-radius: 20px;
   }

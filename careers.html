@@ -787,7 +787,13 @@
       let focusAnim = null;
 
       const timer = d3.timer(elapsed => {
-        if (!isDragging && !focusAnim) {
+        // Hovering a marker holds the globe perfectly still (rotation was
+        // the actual source of the "bounce" - a marker's screen position
+        // drifting slightly every frame while the cursor sits still reads as
+        // the globe suddenly jumping/resizing right under the pointer).
+        // spinVelocity is left untouched while paused, so easing back toward
+        // idle speed simply continues from wherever it left off on release.
+        if (!isDragging && !focusAnim && !overMarker) {
           rotX += spinVelocity;
           spinVelocity += (IDLE_SPEED - spinVelocity) * 0.015;
         }
@@ -925,6 +931,29 @@
       function updateLocations(elapsed) {
         locG.selectAll('*').remove();
 
+        // Every marker's hit-circle is destroyed and recreated from scratch
+        // this same frame (see below), so native mouseenter/mouseleave on it
+        // is unreliable - the DOM node the browser fired "enter" on is gone
+        // by the next frame, and a mouseleave on a detached node was never
+        // guaranteed to fire at all (that's why overMarker could get stuck
+        // true forever once the globe paused - the fix here). Hover is
+        // instead computed directly from the last known cursor position
+        // against each marker's actual projected position, fresh every
+        // frame - simple distance math, no dependency on DOM event timing.
+        let hovered = -1;
+        if (mouseX !== null) {
+          for (let i = 0; i < locations.length; i++) {
+            const coords = [locations[i].lon, locations[i].lat];
+            const projected = projection(coords);
+            if (!projected) continue;
+            const geo = d3.geoDistance(coords, [-projection.rotate()[0], -projection.rotate()[1]]);
+            if (geo > Math.PI / 2) continue;
+            if (Math.hypot(projected[0] - mouseX, projected[1] - mouseY) < 14) { hovered = i; break; }
+          }
+        }
+        overMarker = hovered !== -1;
+        if (hovered !== -1) previewLocation(hovered);
+
         locations.forEach((loc, i) => {
           const coords = [loc.lon, loc.lat];
           const projected = projection(coords);
@@ -976,14 +1005,12 @@
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .style('pointer-events', 'auto')
-            // Sitting exactly on a marker put the cursor at the closest
-            // possible distance to that patch of the point-cloud, so the
-            // magnetic bulge below hit its maximum push right there - read
-            // as the whole globe suddenly "bouncing" in size. Hovering a
-            // marker now just suppresses that distortion entirely instead;
-            // the marker itself still highlights and previews normally.
-            .on('mouseenter', () => { previewLocation(i); overMarker = true; })
-            .on('mouseleave', () => { overMarker = false; })
+            // Hover preview/pause is computed above from real cursor
+            // distance every frame, not from this element's own events
+            // (see updateLocations) - only click needs a native listener,
+            // since a click is a single discrete event on whatever element
+            // happens to exist at that instant, not a state that needs to
+            // survive this circle being torn down and rebuilt every frame.
             .on('click', () => selectLocation(i));
         });
       }
