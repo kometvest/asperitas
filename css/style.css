@@ -1154,7 +1154,7 @@ body.page-home .logo-img {
    pattern as the staged video sequence above. */
 .reveal-pin-wrap {
   position: relative;
-  height: 220vh;
+  height: 160vh;
 }
 
 .reveal-pin-sticky {
@@ -1171,41 +1171,14 @@ body.page-home .logo-img {
   height: 100%;
 }
 
-/* Small hollow triangles drifting down through the section - a plain,
-   always-running CSS loop (not scroll-driven), so the otherwise empty
-   stretch before the card rises always has some quiet motion in it. */
-.reveal-particles {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.reveal-particle {
-  position: absolute;
-  top: -30px;
-  animation-name: reveal-fall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes reveal-fall {
-  from {
-    transform: translateY(-5vh) rotate(var(--start-rotate, 0deg));
-  }
-  to {
-    transform: translateY(105vh) rotate(calc(var(--start-rotate, 0deg) + 360deg));
-  }
-}
-
 /* Fills the space the card leaves open on the left, at roughly the card's
    own vertical position, so the two feel like one composition. */
 .reveal-deco {
   position: absolute;
-  left: 7%;
-  bottom: 6%;
-  width: 22%;
-  height: 58%;
+  left: 4%;
+  bottom: 8%;
+  width: 12%;
+  height: 32%;
   pointer-events: none;
   opacity: 0;
 }
@@ -1222,7 +1195,7 @@ body.page-home .logo-img {
      flex-centering gives the card real vertical presence instead of just
      hugging two lines of copy. */
   width: max-content;
-  max-width: min(1150px, 86vw);
+  max-width: min(1320px, 90vw);
   min-height: 420px;
   display: flex;
   align-items: center;
@@ -1235,7 +1208,7 @@ body.page-home .logo-img {
 
 .reveal-text {
   font-family: var(--font-title);
-  font-size: 38px;
+  font-size: 46px;
   font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.5;

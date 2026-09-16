@@ -194,7 +194,7 @@
 </div>
 <div class="narrow-copy narrow-copy-a" id="narrow-copy-a">
 <h2 class="narrow-biology-heading">Biotechnology keeps engineering<br/>the same narrow biology.</h2>
-<p class="narrow-biology-sub">Nature already solved billions of years of chemistry. We keep studying only a tiny fraction.</p>
+<p class="narrow-biology-sub">Nature already solved billions of years of chemistry.<br/>We keep studying only a tiny fraction.</p>
 </div>
 <div class="narrow-copy" id="narrow-copy-b">
 <h2 class="narrow-side-heading">One Species Can Change<br/>Entire Industry.</h2>
@@ -214,11 +214,6 @@
 <div class="reveal-pin-wrap" id="reveal-pin-wrap">
 <div class="reveal-pin-sticky">
 <section class="reveal-section">
-<!-- Small hollow (stroke-only), randomly colored triangles drifting down
-     continuously - fills the otherwise empty stretch of this section before
-     the card has risen into view. Populated by JS below; a plain CSS
-     animation loop once created, not tied to scroll progress. -->
-<div class="reveal-particles" id="reveal-particles"></div>
 <!-- A glowing, branching vein/dendrite structure - biological growth art
      rather than an abstract data-graph - rendered as a generational tree
      (trunk -> limbs -> twigs -> capillary tips), cool green at the base
@@ -806,42 +801,6 @@
     tick();
   }
 
-  // Ambient falling particles for the reveal section: small hollow (stroke-
-  // only), randomly colored triangles drifting down on an endless loop, to
-  // give the otherwise-empty stretch before the card rises some quiet life.
-  // Purely a CSS animation once created - no per-frame JS needed to run it.
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('reveal-particles');
-    if (!container) return;
-    const colors = ['#ffffff', '#c8ff4d', '#0a7e54', '#5fd9a0', '#839cb2', '#79648c'];
-    const svgNS = 'http://www.w3.org/2000/svg';
-    const COUNT = 46;
-    for (let i = 0; i < COUNT; i++) {
-      const size = 8 + Math.random() * 14;
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      const duration = 9 + Math.random() * 12;
-      const svg = document.createElementNS(svgNS, 'svg');
-      svg.setAttribute('viewBox', '0 0 20 20');
-      svg.setAttribute('class', 'reveal-particle');
-      svg.style.left = (Math.random() * 100) + '%';
-      svg.style.width = size + 'px';
-      svg.style.height = size + 'px';
-      svg.style.opacity = 0.35 + Math.random() * 0.45;
-      svg.style.animationDuration = duration + 's';
-      // Negative delay starts each particle already mid-fall, so they don't
-      // all begin stacked at the top together on first load.
-      svg.style.animationDelay = (-Math.random() * duration) + 's';
-      svg.style.setProperty('--start-rotate', (Math.random() * 360) + 'deg');
-      const poly = document.createElementNS(svgNS, 'polygon');
-      poly.setAttribute('points', '10,2 18,17 2,17');
-      poly.setAttribute('fill', 'none');
-      poly.setAttribute('stroke', color);
-      poly.setAttribute('stroke-width', '1.4');
-      svg.appendChild(poly);
-      container.appendChild(svg);
-    }
-  });
-
   // Scroll-reveal stat card: the card rises + fades in over the first part
   // of this section's pin range, then its sentence sweeps word-by-word from
   // dim gray to full white over the rest - a continuous rAF easing loop tied
@@ -862,7 +821,7 @@
       return clamp01((p - start) / (end - start));
     }
 
-    const RISE_END = 0.32;
+    const RISE_END = 0.28;
 
     function targetProgress() {
       const scrollY = window.scrollY || window.pageYOffset;
