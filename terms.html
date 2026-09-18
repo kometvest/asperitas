@@ -9,17 +9,77 @@
 <link href="css/style.css" rel="stylesheet"/>
 <link href="assets/logo-square-white.png" rel="icon" type="image/png"/>
 <style>
+  body {
+    background: #0a0a0a;
+  }
+  /* Hero: small eyebrow + one large title line, both letter-scrambled on
+     load (see script at the bottom) - the same decode effect used by the
+     header's own nav/mega-menu labels, just for this page's title. */
+  .legal-hero {
+    background: #0a0a0a;
+    padding: calc(var(--header-height) + 100px) 0 48px;
+  }
+  .legal-eyebrow {
+    display: block;
+    font-family: var(--font-title);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 28px;
+  }
+  .legal-title {
+    font-family: var(--font-title);
+    font-size: clamp(40px, 6vw, 68px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: #ffffff;
+    margin: 0;
+  }
+  .legal-rule {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 0;
+  }
+  .legal-body-section {
+    background: #0a0a0a;
+    padding: 64px 0 140px;
+  }
+  /* A blank left column plus the content column on the right - mirrors the
+     reference layout's own empty first column rather than a full-width
+     paragraph measure. */
+  .legal-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 40px;
+  }
   .legal-content {
-    max-width: 780px;
-    margin: 0 auto;
+    max-width: 820px;
+  }
+  .legal-effective-date {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.45);
+    margin-bottom: 28px;
+  }
+  .legal-content > p:first-of-type {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 56px;
+    max-width: 720px;
   }
   .legal-content h2 {
-    font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-top: 3rem;
-    margin-bottom: 1rem;
+    font-family: var(--font-title);
+    font-size: 28px;
+    font-weight: 500;
+    color: #ffffff;
+    margin-top: 56px;
+    margin-bottom: 18px;
     letter-spacing: -0.01em;
   }
   .legal-content h2:first-of-type {
@@ -27,10 +87,10 @@
   }
   .legal-content p,
   .legal-content li {
-    font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 1rem;
+    font-family: var(--font-body);
+    font-size: 16px;
     line-height: 1.8;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.6);
     margin-bottom: 1rem;
   }
   .legal-content ul {
@@ -42,23 +102,24 @@
     margin-bottom: 0.5rem;
   }
   .legal-content a {
-    color: var(--text-primary);
+    color: #ffffff;
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .legal-content a:hover {
     opacity: 0.7;
   }
-  .legal-effective-date {
-    font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
+  .legal-content strong {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  @media (max-width: 900px) {
+    .legal-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 </head>
-<body>
+<body class="page-dark-header">
 <!-- Header -->
 <header class="header">
 <div class="container header-container">
@@ -182,17 +243,20 @@
 </div>
 </header>
 <!-- Hero -->
-<section class="company-hero">
+<section class="legal-hero">
 <div class="container">
-<div class="overview-card animate-on-scroll">
-<span class="overview-tag">LEGAL</span>
-<h1 class="overview-card-title">Terms of Service</h1>
-</div>
+<span class="legal-eyebrow" id="legal-eyebrow">Asperitas</span>
+<h1 class="legal-title" id="legal-title">Terms of Service</h1>
 </div>
 </section>
-<!-- Terms of Service Content -->
-<section class="section-padding" style="background: var(--bg-primary);">
 <div class="container">
+<hr class="legal-rule"/>
+</div>
+<!-- Terms of Service Content -->
+<section class="legal-body-section">
+<div class="container">
+<div class="legal-grid">
+<div class="legal-grid-spacer"></div>
 <div class="legal-content">
 <p class="legal-effective-date">Effective Date: June 1, 2026</p>
 
@@ -264,6 +328,7 @@ Website: <a href="https://asperitas.bio">asperitas.bio</a>
 </p>
 </div>
 </div>
+</div>
 </section>
 <!-- Footer -->
 <footer class="footer">
@@ -311,5 +376,16 @@ Website: <a href="https://asperitas.bio">asperitas.bio</a>
 </div>
 </footer>
 <script src="js/main.js"></script>
+<script>
+  // Same letter-scramble decode as the header's own nav labels, just for
+  // this page's title on load - eyebrow first, then the title line.
+  document.addEventListener('DOMContentLoaded', () => {
+    [document.getElementById('legal-eyebrow'), document.getElementById('legal-title')].forEach((el, i) => {
+      if (!el) return;
+      const scrambler = new window.TextScramble(el);
+      setTimeout(() => scrambler.run(), i * 350);
+    });
+  });
+</script>
 </body>
 </html>
