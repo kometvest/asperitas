@@ -13,11 +13,10 @@
   }
 
   /* ---- Hero: light, plain eyebrow (no highlight), smaller/lighter left-
-     aligned headline - both letter-scrambled on load; a separate full-bleed
-     photo section follows below with a bottom-right scroll cue. ---- */
+     aligned headline - both letter-scrambled on load. ---- */
   .mission-hero-top {
     background: var(--bg-primary);
-    padding: calc(var(--header-height) + 110px) 0 90px;
+    padding: calc(var(--header-height) + 110px) 0 140px;
   }
   .mission-eyebrow {
     display: block;
@@ -42,46 +41,6 @@
   }
   .mission-headline-line {
     display: block;
-  }
-  .mission-hero-media {
-    position: relative;
-    height: 82vh;
-    min-height: 480px;
-    background: #000000 url('assets/plant-blue.jpg') center center/cover no-repeat;
-    overflow: hidden;
-  }
-  .mission-hero-media::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(240, 239, 233, 0) 32%, rgba(10, 10, 10, 0.15) 72%, rgba(10, 10, 10, 0.55) 100%);
-  }
-  .mission-scroll-cue {
-    position: absolute;
-    right: 40px;
-    bottom: 36px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #ffffff;
-  }
-  .mission-scroll-cue span {
-    font-family: var(--font-mono);
-    font-size: 13px;
-  }
-  .mission-scroll-cue-box {
-    width: 40px;
-    height: 40px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    animation: mission-bob 2.2s ease-in-out infinite;
-  }
-  @keyframes mission-bob {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(6px); }
   }
 
   /* ---- Shared section scaffolding - dark by default, .mission-light-section
@@ -261,77 +220,72 @@
     opacity: 0.75;
     color: inherit;
   }
+  /* ---- Where It Applies: the third panel in the same set as How We
+     Discover / Our Platform above, just full-width and white instead of
+     split in half - same heading/link/rule/PT pattern throughout. ---- */
+  .split-panel-wide {
+    display: flex;
+    flex-direction: column;
+    min-height: 420px;
+    padding: 56px 56px 40px;
+    text-decoration: none;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+  }
   @media (max-width: 860px) {
     .split-panels { grid-template-columns: 1fr; }
-    .split-panel { min-height: 360px; padding: 40px 32px 28px; }
+    .split-panel, .split-panel-wide { min-height: 360px; padding: 40px 32px 28px; }
   }
 
-  /* ---- Industries grid ---- */
-  .industries-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    margin-top: 64px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  .industry-col {
-    background: #0a0a0a;
-    padding: 36px 28px;
-  }
-  .industry-title {
-    font-family: var(--font-title);
-    font-size: 18px;
-    font-weight: 500;
-    color: #c8ff4d;
-    margin-bottom: 22px;
-  }
-  .industry-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .industry-list li {
-    font-family: var(--font-body);
-    font-size: 14px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.6);
-    padding: 9px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-  }
-  .industry-list li:first-child {
-    border-top: none;
-  }
-  @media (max-width: 900px) {
-    .industries-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 560px) {
-    .industries-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ---- We believe ---- */
+  /* ---- We believe: huge centered statement, matching the reference's big-
+     headline treatment, with the four lines beneath staggering in once the
+     section scrolls into view (animate-on-scroll toggles .appear on the
+     section; these child rules key off that same class). ---- */
   .believe-section {
     background: #0a0a0a;
-    padding: 140px 0;
+    padding: 160px 0;
+    text-align: center;
   }
-  .believe-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 40px;
+  .believe-title {
+    font-family: var(--font-title);
+    font-size: clamp(48px, 9vw, 128px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: #ffffff;
+    margin: 0 0 64px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .believe-section.appear .believe-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .believe-statements {
+    max-width: 760px;
+    margin: 0 auto;
   }
   .believe-statements p {
     font-family: var(--font-title);
-    font-size: clamp(22px, 2.6vw, 30px);
-    font-weight: 500;
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-weight: 400;
     font-style: italic;
-    line-height: 1.45;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 36px;
-    max-width: 760px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 32px;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  @media (max-width: 900px) {
-    .believe-grid { grid-template-columns: 1fr; }
+  .believe-section.appear .believe-statements p {
+    opacity: 1;
+    transform: translateY(0);
   }
+  .believe-statements p:nth-child(1) { transition-delay: 0.15s; }
+  .believe-statements p:nth-child(2) { transition-delay: 0.32s; }
+  .believe-statements p:nth-child(3) { transition-delay: 0.49s; }
+  .believe-statements p:nth-child(4) { transition-delay: 0.66s; }
 </style>
 </head>
 <body>
@@ -464,12 +418,6 @@
 <h1 class="mission-headline"><span class="mission-headline-line" id="mission-headline-1">Unlocking Biodiversity</span><span class="mission-headline-line" id="mission-headline-2">for Biotechnology.</span></h1>
 </div>
 </section>
-<div class="mission-hero-media">
-<div class="mission-scroll-cue">
-<span>Scroll to explore</span>
-<div class="mission-scroll-cue-box">↓</div>
-</div>
-</div>
 
 <!-- Who we are -->
 <section class="mission-section mission-light-section animate-on-scroll">
@@ -541,7 +489,7 @@
 <span class="split-panel-link">Read More ↗</span>
 </div>
 <div class="split-panel-body">
-<span class="split-panel-pt">PT — 01 / 02</span>
+<span class="split-panel-pt">PT — 01 / 03</span>
 </div>
 </a>
 <a class="split-panel panel-stone" href="mission-our-platform.html">
@@ -550,64 +498,24 @@
 <span class="split-panel-link">Read More ↗</span>
 </div>
 <div class="split-panel-body">
-<span class="split-panel-pt">PT — 02 / 02</span>
+<span class="split-panel-pt">PT — 02 / 03</span>
 </div>
 </a>
 </div>
-
-<!-- Industries -->
-<section class="mission-section animate-on-scroll">
-<div class="container">
-<span class="mission-label">Where It Applies</span>
-<h2 class="mission-section-title">Biodiversity-derived biology can transform every major industry.</h2>
-<div class="industries-grid">
-<div class="industry-col">
-<div class="industry-title">Pharma &amp; Biotech</div>
-<ul class="industry-list">
-<li>Novel therapeutics</li>
-<li>Bioactive peptides &amp; proteins</li>
-<li>Antimicrobial discovery</li>
-<li>AI-guided drug candidate generation</li>
-<li>Disease models &amp; target discovery</li>
-</ul>
+<a class="split-panel-wide animate-on-scroll" href="mission-where-it-applies.html">
+<div class="split-panel-top">
+<span class="split-panel-title">Where It Applies</span>
+<span class="split-panel-link">Read More ↗</span>
 </div>
-<div class="industry-col">
-<div class="industry-title">Environment &amp; Industrials</div>
-<ul class="industry-list">
-<li>Novel enzymes for green chemistry</li>
-<li>Biodegradable materials</li>
-<li>Natural adhesives, pigments &amp; coatings</li>
-<li>High-performance protein</li>
-<li>Bioremediation</li>
-</ul>
+<div class="split-panel-body">
+<span class="split-panel-pt">PT — 03 / 03</span>
 </div>
-<div class="industry-col">
-<div class="industry-title">Food &amp; Agriculture</div>
-<ul class="industry-list">
-<li>Plant resilience traits</li>
-<li>Natural pest control</li>
-<li>Crop microbiome engineering</li>
-<li>Sustainable feed &amp; aquaculture</li>
-<li>Functional metabolites &amp; nutrients</li>
-</ul>
-</div>
-<div class="industry-col">
-<div class="industry-title">Living Technology</div>
-<ul class="industry-list">
-<li>Autoluminescent plant</li>
-<li>Living sensors</li>
-<li>Plant extracts, flavors &amp; fragrance</li>
-<li>Skincare proteins</li>
-</ul>
-</div>
-</div>
-</div>
-</section>
+</a>
 
 <!-- We believe -->
 <section class="believe-section animate-on-scroll">
-<div class="container believe-grid">
-<h2 class="mission-section-title">We believe...</h2>
+<div class="container">
+<h2 class="believe-title">We believe...</h2>
 <div class="believe-statements">
 <p>The next generation of biotechnology will not be built from a narrow set of model organisms, but from the full diversity of life.</p>
 <p>Asperitas is building the discovery and engineering platform to make that future possible.</p>
