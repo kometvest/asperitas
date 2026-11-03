@@ -264,6 +264,17 @@
     border-color: rgba(255, 255, 255, 0.16);
   }
 
+  /* ---- Staged reveal (applied by the page script, never in raw markup) ---- */
+  .bp-anim {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bp-anim.bp-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .bp-foot-nav {
     padding: 70px 0;
     display: flex;
@@ -434,7 +445,7 @@
 </div>
 </section>
 <!-- Problem -->
-<section class="bp-section animate-on-scroll">
+<section class="bp-section">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">The problem</span>
@@ -450,7 +461,7 @@
 </div>
 </section>
 <!-- Platform -->
-<section class="bp-section animate-on-scroll">
+<section class="bp-section">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">Platform</span>
@@ -488,7 +499,7 @@
 </div>
 </section>
 <!-- Feedstock -->
-<section class="bp-section bp-section-dark animate-on-scroll">
+<section class="bp-section bp-section-dark">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">Feedstock</span>
@@ -509,7 +520,7 @@
 </div>
 </section>
 <!-- Enzymatic conversion -->
-<section class="bp-section animate-on-scroll">
+<section class="bp-section">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">Enzymatic conversion</span>
@@ -540,7 +551,7 @@
 </div>
 </section>
 <!-- Screening -->
-<section class="bp-section animate-on-scroll">
+<section class="bp-section">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">Bioactivity screening</span>
@@ -575,7 +586,7 @@
 </div>
 </section>
 <!-- Matrix -->
-<section class="bp-section bp-section-dark animate-on-scroll">
+<section class="bp-section bp-section-dark">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">Matrix engineering</span>
@@ -603,7 +614,7 @@
 </div>
 </section>
 <!-- Sensing -->
-<section class="bp-section animate-on-scroll">
+<section class="bp-section">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">Sensing layer</span>
@@ -653,7 +664,7 @@ def calculate_resistance(voltage):
 </div>
 </section>
 <!-- Modelling -->
-<section class="bp-section animate-on-scroll">
+<section class="bp-section">
 <div class="container">
 <div class="bp-split">
 <span class="bp-label">Modelling</span>
@@ -738,35 +749,89 @@ def calculate_resistance(voltage):
 </footer>
 <script src="js/main.js"></script>
 <script>
-  // Hero spec strip: each figure decodes in on its own beat, using the same
-  // letter-scramble the header menus use. The values are written into the
-  // markup so the strip still reads correctly without JavaScript; this only
-  // replays them. Honour a reduced-motion preference by leaving them static.
-  document.addEventListener('DOMContentLoaded', () => {
-    const specs = document.querySelectorAll('.bp-spec');
-    if (!specs.length || !window.TextScramble) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  (() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canScramble = !!window.TextScramble && !reduced;
 
-    const parts = [];
-    specs.forEach((spec) => {
-      const value = spec.querySelector('.bp-spec-value');
-      const label = spec.querySelector('.bp-spec-label');
-      [value, label].forEach((el) => {
-        if (!el) return;
-        const scramble = new window.TextScramble(el, { revealFromBlank: true });
-        el.textContent = '';
-        parts.push(scramble);
+    // Only elements whose text has no inline markup can be scrambled: the
+    // effect rewrites textContent, which would eat <em> and <sub>.
+    const plain = (el) => el && el.children.length === 0 && el.textContent.trim().length > 0;
+    const scramble = (el) => {
+      if (!canScramble || !plain(el)) return null;
+      const fx = new window.TextScramble(el, { revealFromBlank: true });
+      el.textContent = '';
+      return fx;
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- Hero spec strip: decodes on load, left to right, value then label.
+      const specParts = [];
+      document.querySelectorAll('.bp-spec').forEach((spec) => {
+        [spec.querySelector('.bp-spec-value'), spec.querySelector('.bp-spec-label')]
+          .forEach((el) => {
+            const fx = scramble(el);
+            if (fx) specParts.push(fx);
+          });
       });
-    });
+      let heroDelay = 420;
+      specParts.forEach((fx) => {
+        setTimeout(() => fx.run(), heroDelay);
+        heroDelay += 110;
+      });
 
-    // Starts after the page-transition overlay has cleared, then walks the
-    // strip left to right: value, its label, next spec.
-    let delay = 420;
-    parts.forEach((scramble) => {
-      setTimeout(() => scramble.run(), delay);
-      delay += 110;
+      // --- Every section below: its blocks rise in sequence as the section
+      // reaches the viewport, and the short text blocks decode as they land.
+      const SELECTOR = '.bp-label, .bp-h2, .bp-body, .bp-eq, .bp-code, .bp-figure, .bp-stage, .bp-table-wrap, .bp-table-note, .bp-foot-nav';
+      const sections = document.querySelectorAll('.bp-section');
+      if (!sections.length) return;
+
+      const sequences = [];
+      sections.forEach((section) => {
+        const blocks = Array.from(section.querySelectorAll(SELECTOR));
+        if (!blocks.length) return;
+        const steps = blocks.map((block) => {
+          if (!reduced) block.classList.add('bp-anim');
+          // A stage card animates as a unit, but its number and title still
+          // decode individually once the card has arrived.
+          const inner = block.classList.contains('bp-stage')
+            ? [scramble(block.querySelector('.bp-stage-num')), scramble(block.querySelector('.bp-stage-title'))]
+            : [scramble(block)];
+          return { block, parts: inner.filter(Boolean) };
+        });
+        sequences.push({ section, steps });
+      });
+
+      const play = (steps) => {
+        let delay = 0;
+        steps.forEach(({ block, parts }) => {
+          setTimeout(() => {
+            block.classList.add('bp-in');
+            parts.forEach((fx) => fx.run());
+          }, delay);
+          delay += 90;
+        });
+      };
+
+      if (reduced || !('IntersectionObserver' in window)) {
+        sequences.forEach(({ steps }) => steps.forEach(({ block, parts }) => {
+          block.classList.add('bp-in');
+          parts.forEach((fx) => fx.run());
+        }));
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          observer.unobserve(entry.target);
+          const match = sequences.find((seq) => seq.section === entry.target);
+          if (match) play(match.steps);
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+
+      sequences.forEach(({ section }) => observer.observe(section));
     });
-  });
+  })();
 </script>
 </body>
 </html>
