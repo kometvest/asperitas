@@ -5,43 +5,87 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Environment Research | Asperitas Inc.</title>
+<meta content="Asperitas engineers biological systems that remediate, monitor and restore natural environments, converting underutilised biomass into programmable materials." name="description"/>
 <link href="css/style.css" rel="stylesheet"/>
+<link href="assets/logo-square-white.png" rel="icon" type="image/png"/>
 <style>
-    body {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      font-family: 'Helvetica Now Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    }
-    .store-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px;
-    }
-    .preparing-text {
-      font-size: 8vw;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, #fff, #888);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 20px;
-    }
-    .sub-text {
-      font-size: 24px;
-      color: var(--text-secondary);
-      max-width: 600px;
-      margin: 0 auto 40px auto;
-    }
-  </style>
-<link href="assets/logo-square-white.png" rel="icon" type="image/png"/></head>
+  body { background: var(--bg-primary); }
+
+  /* Monochrome treatment of the house research-index layout. */
+  .env-track { border-top: 1px solid var(--border-color); }
+  .env-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 1.1fr;
+    gap: 48px;
+    align-items: start;
+    padding: 56px 0;
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-fast);
+  }
+  @media (max-width: 992px) {
+    .env-row { grid-template-columns: 1fr; gap: 16px; padding: 40px 0; }
+  }
+  .env-row-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    padding-top: 10px;
+  }
+  .env-row-title {
+    font-family: var(--font-title);
+    font-size: clamp(26px, 3vw, 38px);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin: 0;
+  }
+  .env-row-meta {
+    display: block;
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .env-row-desc {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+  .env-row-link {
+    display: inline-block;
+    margin-top: 22px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 3px;
+  }
+  a.env-row:hover { background: var(--bg-secondary); }
+  a.env-row:hover .env-row-link { opacity: 0.6; }
+  .env-intro {
+    max-width: 760px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+  .env-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 28px;
+  }
+</style>
+</head>
 <body>
+<!-- Header -->
 <header class="header">
 <div class="container header-container">
 <a class="logo-link" href="index.html">
@@ -96,7 +140,7 @@
 <div class="vertical-panel-col vertical-products-col">
 <span class="company-panel-label scramble-text">Products</span>
 <ul class="vertical-products-list">
-<li class="scramble-text">Biopatch</li>
+<li><a href="biopatch.html"><span class="scramble-text">Biopatch</span></a></li>
 </ul>
 </div>
 </div>
@@ -163,13 +207,59 @@
 </div>
 </div>
 </header>
-<div class="store-container">
+<!-- Hero -->
+<section class="company-hero">
+<div class="container">
+<div class="overview-card animate-on-scroll">
+<span class="overview-tag" style="color:var(--text-primary);">RESEARCH</span>
+<h1 class="overview-card-title">Environment</h1>
+<p class="overview-card-desc">
+          Engineering biological systems that remediate, monitor, and restore natural environments.
+        </p>
+</div>
+</div>
+</section>
+<!-- Intro -->
+<section class="section-padding" style="padding-bottom:0;">
+<div class="container">
+<span class="env-label">Thesis</span>
+<p class="env-intro">Environmental biology gives us two things at once: material and information. Our environment programme converts underutilised and invasive biomass into functional materials, and instruments those materials so they report on the conditions they are placed in. The result is a product line where the environmental argument and the performance argument are the same argument.</p>
+</div>
+</section>
+<!-- Research track -->
+<section class="section-padding">
+<div class="container">
+<span class="env-label">Technologies</span>
+<div class="env-track">
+<a class="env-row animate-on-scroll" href="biopatch.html">
+<span class="env-row-num">/0.1</span>
 <div>
-<h1 class="preparing-text animate-on-scroll">STILL WORKING</h1>
-<p class="sub-text animate-on-scroll">Our Environmental Biotechnology research division is currently ramping up operations. Check back later for novel bioremediation and biosensing technologies.</p>
-<a class="btn-secondary animate-on-scroll" href="technology-synthetic-biology.html">← Back to Synthetic Biology</a>
+<h2 class="env-row-title">Bioplastic</h2>
+<span class="env-row-meta">Product · Biopatch</span>
+</div>
+<div>
+<p class="env-row-desc">Aquatic biomass converted into programmable hydrogel materials. Seaweed-derived alginate supplies a reinforced double-network matrix; an invasive macrophyte supplies a ROS-modulating extract. Biopatch is the first product built on the platform, pairing that matrix with an integrated strain-sensing layer.</p>
+<span class="env-row-link">Biopatch ↗</span>
+</div>
+</a>
+<div class="env-row animate-on-scroll">
+<span class="env-row-num">/0.2</span>
+<div>
+<h2 class="env-row-title">Biofuel</h2>
+<span class="env-row-meta">In development</span>
+</div>
+<div>
+<p class="env-row-desc">Metabolic pathways drawn from our biodiversity collection for the conversion of waste and non-arable feedstocks into liquid fuels and precursors. Strain and pathway selection is in progress.</p>
 </div>
 </div>
+</div>
+</div>
+</section>
+<section style="padding:0 0 100px;">
+<div class="container" style="display:flex;justify-content:flex-end;">
+<a class="btn-secondary" href="technology-synthetic-biology.html">← Back to Synthetic Biology</a>
+</div>
+</section>
 <!-- Footer -->
 <footer class="footer">
 <div class="container">
