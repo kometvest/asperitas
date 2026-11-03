@@ -89,14 +89,16 @@
     overflow: hidden;
   }
 
-  /* Shared "outlet card" thumbnail treatment used in place of licensed press photography */
+  /* Shared thumbnail treatment. Press photography for these stories is not
+     ours to republish, so each plate stays a deliberate solid black field
+     carrying the outlet name, rather than borrowed or substituted imagery. */
   .outlet-card {
+    position: relative;
     width: 100%;
     height: 100%;
+    margin: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    align-items: flex-end;
     padding: 20px;
     background: #0a0a0a;
     color: #ffffff;
@@ -105,14 +107,11 @@
     font-family: var(--font-title);
     font-weight: 700;
     letter-spacing: -0.01em;
+    line-height: 1.25;
   }
-  .newsroom-featured-media .outlet-card span { font-size: 30px; }
-  .news-row-media .outlet-card span { font-size: 15px; }
-  .outlet-card.tone-1 { background: #0a0a0a; }
-  .outlet-card.tone-2 { background: #14231c; }
-  .outlet-card.tone-3 { background: #16181c; }
-  .outlet-card.tone-4 { background: #1c1610; }
-  .outlet-card.tone-5 { background: #11161c; }
+  .newsroom-featured-media .outlet-card { padding: 28px; }
+  .newsroom-featured-media .outlet-card span { font-size: 26px; }
+  .news-row-media .outlet-card span { font-size: 14px; }
 
   .newsroom-all {
     padding: 100px 0 140px;
@@ -347,7 +346,7 @@
 <a class="newsroom-readmore" href="https://n.news.naver.com/article/020/0003738722" rel="noopener noreferrer" target="_blank">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a>
 </div>
 <div class="newsroom-featured-media">
-<div class="outlet-card tone-3"><span>동아일보<br/>Dong-A Ilbo</span></div>
+<figure class="outlet-card"><span>동아일보<br/>Dong-A Ilbo</span></figure>
 </div>
 </div>
 </div>
@@ -367,7 +366,7 @@
 <h3 class="news-row-title">올림피아드 휩쓴 영재들 "의사보다 과학자"</h3>
 <span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
 </div>
-<div class="news-row-media"><div class="outlet-card tone-3"><span>동아일보</span></div></div>
+<div class="news-row-media"><figure class="outlet-card"><span>동아일보</span></figure></div>
 </a>
 <a class="news-row" data-title="국제생물올림피아드 전원 금메달…한국 과학영재 저력" href="https://www.yna.co.kr/view/AKR20260721047700017" rel="noopener noreferrer" target="_blank">
 <div>
@@ -375,7 +374,7 @@
 <h3 class="news-row-title">국제생물올림피아드 전원 금메달…한국 과학영재 저력</h3>
 <span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
 </div>
-<div class="news-row-media"><div class="outlet-card tone-2"><span>연합뉴스</span></div></div>
+<div class="news-row-media"><figure class="outlet-card"><span>연합뉴스</span></figure></div>
 </a>
 <a class="news-row" data-title="韓 과학영재에 세계가 깜짝…생물올림피아드 출전 4명 전원 금메달" href="https://www.donga.com/news/It/article/all/20260721/134336191/1" rel="noopener noreferrer" target="_blank">
 <div>
@@ -383,7 +382,7 @@
 <h3 class="news-row-title">韓 과학영재에 세계가 깜짝…생물올림피아드 출전 4명 전원 금메달</h3>
 <span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
 </div>
-<div class="news-row-media"><div class="outlet-card tone-3"><span>동아일보</span></div></div>
+<div class="news-row-media"><figure class="outlet-card"><span>동아일보</span></figure></div>
 </a>
 <a class="news-row" data-title="韓 과학영재, 물리 이어 생물올림피아드서도 전원 金" href="https://www.hankyung.com/article/2026072176751" rel="noopener noreferrer" target="_blank">
 <div>
@@ -391,7 +390,7 @@
 <h3 class="news-row-title">韓 과학영재, 물리 이어 생물올림피아드서도 전원 金</h3>
 <span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
 </div>
-<div class="news-row-media"><div class="outlet-card tone-5"><span>한국경제</span></div></div>
+<div class="news-row-media"><figure class="outlet-card"><span>한국경제</span></figure></div>
 </a>
 <a class="news-row" data-title="국제생물올림피아드 한국 대표 전원 금메달 쾌거" href="https://www.chosun.com/economy/science/2026/07/21/OQN7LLECXJEJLKXXWLRJIOJRHI/" rel="noopener noreferrer" target="_blank">
 <div>
@@ -399,7 +398,7 @@
 <h3 class="news-row-title">국제생물올림피아드 한국 대표 전원 금메달 쾌거</h3>
 <span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
 </div>
-<div class="news-row-media"><div class="outlet-card tone-4"><span>조선일보</span></div></div>
+<div class="news-row-media"><figure class="outlet-card"><span>조선일보</span></figure></div>
 </a>
 <a class="news-row" data-title="한 과학영재의 자체 발광 식물 연구 일기" href="https://www.dongascience.com/ko/news/64950" rel="noopener noreferrer" target="_blank">
 <div>
@@ -407,7 +406,7 @@
 <h3 class="news-row-title">한 과학영재의 자체 발광 식물 연구 일기</h3>
 <span class="newsroom-readmore">Read More <svg fill="none" height="14" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"><line x1="7" x2="17" y1="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></span>
 </div>
-<div class="news-row-media"><div class="outlet-card tone-1"><span>동아사이언스</span></div></div>
+<div class="news-row-media"><figure class="outlet-card"><span>동아사이언스</span></figure></div>
 </a>
 </div>
 <p class="newsroom-empty" id="newsroom-empty">No articles match your search.</p>
