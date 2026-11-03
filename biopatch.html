@@ -274,31 +274,6 @@
     border-color: rgba(255, 255, 255, 0.16);
   }
 
-  /* ---- Status list ---- */
-  .bp-status { margin-top: 48px; border-top: 1px solid rgba(255, 255, 255, 0.16); }
-  .bp-status-row {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 40px;
-    padding: 26px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  }
-  @media (max-width: 768px) {
-    .bp-status-row { grid-template-columns: 1fr; gap: 10px; }
-  }
-  .bp-status-stage {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.5);
-  }
-  .bp-status-text {
-    font-size: 16px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.78);
-  }
-
   .bp-foot-nav {
     padding: 70px 0;
     display: flex;
@@ -729,36 +704,6 @@ def calculate_resistance(voltage):
 <img alt="Simulated cumulative release at three diffusion coefficients, and the resulting normalised ROS trajectory." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/ea8af97fc916bf0e9676.webp"/>
 <figcaption class="bp-figcaption">Fig. 15 — Cumulative release for three assumed diffusivities, and the ROS trajectory under the intermediate release condition against the no-patch case. Theoretical; requires calibration.</figcaption>
 </figure>
-</div>
-</div>
-</div>
-</section>
-<!-- Status -->
-<section class="bp-section bp-section-dark animate-on-scroll">
-<div class="container">
-<div class="bp-split">
-<span class="bp-label">Development status</span>
-<div>
-<h2 class="bp-h2">What is demonstrated, and what is not.</h2>
-<p class="bp-body">Biopatch is a validated component set, not a validated device. The matrix, the selected ingredient and the sensing layer have each been built and measured on their own. Combined function in a physiologically relevant wound model has not been established, and the platform is described here on that basis.</p>
-<div class="bp-status">
-<div class="bp-status-row">
-<span class="bp-status-stage">Demonstrated</span>
-<span class="bp-status-text">Soluble expression and alginate-cleaving activity for two recombinant lyases. Concentration-dependent ROS reduction by the selected extract in a macrophage assay. A double-network matrix at ~700% strain and ~50 kPa. Measurable resistance response to mechanical deformation with live readout.</span>
-</div>
-<div class="bp-status-row">
-<span class="bp-status-stage">Open</span>
-<span class="bp-status-text">Bioactive release kinetics and cytocompatibility of the loaded matrix. Sensor calibration against known strain, with repeatability and drift over a wear period. Retained activity and mechanical stability of the assembled patch.</span>
-</div>
-<div class="bp-status-row">
-<span class="bp-status-stage">Not claimed</span>
-<span class="bp-status-text">Clinical efficacy. A cell-level reduction in ROS signal is not evidence of wound-healing benefit. No environmental benefit is claimed either: comparative life-cycle footprint, waste reduction and habitat effects remain to be measured.</span>
-</div>
-<div class="bp-status-row">
-<span class="bp-status-stage">Sourcing</span>
-<span class="bp-status-text">Documented material is purchased biomass. Removal-derived feedstock is a forward option conditional on records of origin, removal purpose and handling, and on sourcing that creates no incentive to cultivate or spread the plant.</span>
-</div>
-</div>
 </div>
 </div>
 </div>

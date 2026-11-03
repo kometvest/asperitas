@@ -6,6 +6,8 @@
 <title>Careers | Asperitas Inc.</title>
 <meta content="Careers at Asperitas Inc. — join the team building a biodiversity-derived synthetic biology platform." name="description"/>
 <link href="css/style.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net" rel="preconnect"/>
+<link href="https://cdn.jsdelivr.net" rel="dns-prefetch"/>
 <link href="assets/logo-square-white.png" rel="icon" type="image/png"/>
 <style>
   .careers-hero {
@@ -573,14 +575,13 @@
 </div>
 </div>
 </footer>
-<!-- defer: these were blocking the whole page's first paint behind a slow
-     CDN round-trip (the page-transition overlay only lifts once main.js's
-     script finishes, and a render-blocking script anywhere still holds that
-     up) - deferring is safe because everything below that touches d3/topojson
-     already waits for DOMContentLoaded, which fires after deferred scripts. -->
+<!-- Only our own script is deferred here. d3/topojson used to be deferred
+     too, but DOMContentLoaded waits for every deferred script, so the whole
+     page - the fade-in overlay, the sticky header, and every
+     .animate-on-scroll block - sat hidden behind two CDN round-trips. They
+     are now fetched on demand, when the globe is about to scroll into view
+     (see loadGlobeDeps below), so nothing above the globe waits on them. -->
 <script defer="" src="js/main.js"></script>
-<script defer="" src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
-<script defer="" src="https://cdn.jsdelivr.net/npm/topojson@3/dist/topojson.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     // How We Work - tabbed content. The panel's background/media never move;
@@ -627,8 +628,11 @@
       btn.addEventListener('click', () => switchTab(Number(btn.dataset.index)));
     });
 
-    // Asperitas All Around the World - interactive globe with office markers
-    (function () {
+    // Asperitas All Around the World - interactive globe with office markers.
+    // d3 (~280 KB) and topojson are only worth fetching once the reader is
+    // actually heading for the globe, so the section lazily pulls them in and
+    // then calls this. Everything above it renders without waiting.
+    function initWorldGlobe() {
       const container = document.querySelector('.world-globe-wrap');
       const svgEl = document.getElementById('world-globe-svg');
       const canvasEl = document.getElementById('world-globe-canvas');
@@ -1089,7 +1093,50 @@
         fitCanvas();
       });
       ro.observe(container);
-    })();
+    }
+
+    // Fetch the globe's dependencies once, the first time the section comes
+    // within a screen of the viewport (or straight away on a browser without
+    // IntersectionObserver).
+    const globeWrap = document.querySelector('.world-globe-wrap');
+    if (globeWrap) {
+      const loadScript = (src) => new Promise((resolve, reject) => {
+        const el = document.createElement('script');
+        el.src = src;
+        el.async = true;
+        el.onload = resolve;
+        el.onerror = () => reject(new Error('Failed to load ' + src));
+        document.head.appendChild(el);
+      });
+
+      let globeStarted = false;
+      const startGlobe = () => {
+        if (globeStarted) return;
+        globeStarted = true;
+        Promise.all([
+          loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js'),
+          loadScript('https://cdn.jsdelivr.net/npm/topojson@3/dist/topojson.min.js')
+        ]).then(initWorldGlobe).catch((err) => {
+          // The globe is an enhancement: if the CDN is unreachable the rest
+          // of the page is unaffected, so this stays a console warning.
+          console.warn('World globe unavailable:', err);
+        });
+      };
+
+      if ('IntersectionObserver' in window) {
+        const globeObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              globeObserver.disconnect();
+              startGlobe();
+            }
+          });
+        }, { rootMargin: '100% 0px' });
+        globeObserver.observe(globeWrap);
+      } else {
+        startGlobe();
+      }
+    }
   });
 </script>
 </body>
