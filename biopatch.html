@@ -51,21 +51,17 @@
   .bp-spec-strip {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    gap: 40px 56px;
     border-top: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 40px 0 84px;
   }
   @media (max-width: 860px) {
-    .bp-spec-strip { grid-template-columns: repeat(2, 1fr); }
+    .bp-spec-strip { grid-template-columns: repeat(2, 1fr); padding-bottom: 64px; }
   }
-  .bp-spec {
-    padding: 32px 32px 40px 0;
-    border-right: 1px solid rgba(255, 255, 255, 0.12);
-  }
-  .bp-spec:last-child { border-right: none; }
-  @media (max-width: 860px) {
-    .bp-spec:nth-child(2) { border-right: none; }
-  }
+  .bp-spec { padding: 0; }
   .bp-spec-value {
     display: block;
+    min-height: 1.1em;
     font-family: var(--font-title);
     font-size: 34px;
     font-weight: 500;
@@ -74,6 +70,7 @@
   }
   .bp-spec-label {
     display: block;
+    min-height: 1.2em;
     margin-top: 10px;
     font-family: var(--font-mono);
     font-size: 11px;
@@ -146,15 +143,8 @@
     border-color: rgba(255, 255, 255, 0.16);
     filter: grayscale(1) contrast(1.02);
   }
-  .bp-figcaption {
-    margin-top: 14px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 1.6;
-    letter-spacing: 0.02em;
-    color: var(--text-muted);
-  }
-  .bp-section-dark .bp-figcaption { color: rgba(255, 255, 255, 0.45); }
+  .bp-figure-sm { max-width: 540px; }
+
   .bp-figure-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -454,7 +444,6 @@
 <p class="bp-body">The second failure mode is mechanical. Repeated deformation at the wound margin is associated with delayed closure and heightened inflammation, and it is invisible to the clinician between dressing changes. Biopatch was specified to address both: a matrix that carries ROS-reducing chemistry, and a sensing layer that makes local mechanical load a measurable quantity.</p>
 <figure class="bp-figure">
 <img alt="Two failure modes in chronic wound repair: excessive reactive oxygen species and sustained mechanical stress at the wound margin." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/c9aad99d15485af0bdd5.webp"/>
-<figcaption class="bp-figcaption">Fig. 01 — The two concurrent failure modes targeted by the platform: oxidative load and mechanical disruption.</figcaption>
 </figure>
 </div>
 </div>
@@ -471,7 +460,6 @@
 <p class="bp-body">Both candidates enter the same cell-based screen. The selected ingredient is then carried into matrix fabrication, and the sensing layer is deposited on the finished patch. Each stage is specified as an independently testable unit, so a result at one stage does not have to be inferred from the behaviour of the assembled device.</p>
 <figure class="bp-figure">
 <img alt="Development workflow: alginate supplies matrix and enzyme substrate, water hyacinth supplies extract, both are screened for ROS activity before patch integration." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/abc3898e4ed2dd427cbd.webp"/>
-<figcaption class="bp-figcaption">Fig. 02 — Platform workflow from biomass intake through screening, matrix fabrication and sensor integration.</figcaption>
 </figure>
 <div class="bp-stages">
 <div class="bp-stage">
@@ -511,11 +499,9 @@
 <div class="bp-figure-grid">
 <figure class="bp-figure">
 <img alt="Properties of an alginate-based hydrogel relevant to wound contact." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/76a9e7d16cfc8d17d86b.webp"/>
-<figcaption class="bp-figcaption">Fig. 03 — Alginate matrix properties: hydration, biocompatibility, bioresorbability.</figcaption>
 </figure>
 <figure class="bp-figure">
 <img alt="Process for extracting bioactive compounds from water hyacinth biomass." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/c89343f698f47cda4701.webp"/>
-<figcaption class="bp-figcaption">Fig. 04 — Hydroethanolic extraction route for water hyacinth biomass.</figcaption>
 </figure>
 </div>
 </div>
@@ -546,9 +532,8 @@
 <p class="bp-table-note">Expression screened at 18 °C / 16 h, 26 °C / 6 h and 37 °C / 4 h, each at 0, 0.2 and 1.0 mM IPTG.</p>
 </div>
 <p class="bp-body" style="margin-top:48px;">Depolymerisation was confirmed by dinitrosalicylic acid assay. Reactions containing either enzyme generated significantly higher reducing-sugar equivalents than the empty-vector control, which establishes that alginate was cleaved. Reducing-sugar equivalents are a measure of cleavage activity and are not a yield figure for isolated oligosaccharide.</p>
-<figure class="bp-figure">
+<figure class="bp-figure bp-figure-sm">
 <img alt="Dinitrosalicylic acid assay results comparing alginate degradation by two recombinant lyases against an empty-vector control." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/6e2b03edf188399e2e76.webp"/>
-<figcaption class="bp-figcaption">Fig. 05 — Reducing-sugar equivalents released from sodium alginate. Both enzymes differ from the empty-vector control at p&lt;0.001 (ANOVA, Dunnett).</figcaption>
 </figure>
 </div>
 </div>
@@ -584,7 +569,6 @@
 </div>
 <figure class="bp-figure">
 <img alt="ROS-reducing effect of oligosaccharide preparations and botanical extract in LPS-stimulated macrophages." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/7c415b64987d70985603.webp"/>
-<figcaption class="bp-figcaption">Fig. 06 — Relative ROS-associated fluorescence by treatment group. Extract groups separate from the LPS group; oligosaccharide groups do not.</figcaption>
 </figure>
 </div>
 </div>
@@ -603,19 +587,15 @@
 <div class="bp-figure-grid">
 <figure class="bp-figure">
 <img alt="Polymer network structures of alginate alone and of a calcium-crosslinked alginate-polyacrylamide double network." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/3ae5fd71466fb7cbcd8e.webp"/>
-<figcaption class="bp-figcaption">Fig. 07 — Single ionic network versus interpenetrating ionic and covalent networks.</figcaption>
 </figure>
 <figure class="bp-figure">
 <img alt="Fabrication route for the calcium-crosslinked alginate-polyacrylamide double-network hydrogel." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/0c98f31f2a41eb36bcf5.webp"/>
-<figcaption class="bp-figcaption">Fig. 08 — Sequential fabrication: cast and polymerise, then ionically crosslink, then rinse.</figcaption>
 </figure>
 <figure class="bp-figure">
 <img alt="Mechanical comparison of alginate and alginate-polyacrylamide hydrogels under tensile loading." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/60e1b219aeaa3f331317.webp"/>
-<figcaption class="bp-figcaption">Fig. 09 — Deformation behaviour of the single-network and double-network materials.</figcaption>
 </figure>
 <figure class="bp-figure">
 <img alt="Stress-strain curves of alginate and polyacrylamide-alginate hydrogels under tensile loading." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/a554c027d1bbbe23a9ee.webp"/>
-<figcaption class="bp-figcaption">Fig. 10 — Stress–strain response. Brittle failure at low strain versus ~700% strain at ~50 kPa.</figcaption>
 </figure>
 </div>
 </div>
@@ -648,19 +628,15 @@
 <div class="bp-figure-grid">
 <figure class="bp-figure">
 <img alt="Schematic of mechanical strain monitoring at a wound site using the patch." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/4aa9aaa35826774bf626.webp"/>
-<figcaption class="bp-figcaption">Fig. 11 — Strain monitoring concept at the wound margin.</figcaption>
 </figure>
 <figure class="bp-figure">
 <img alt="Voltage divider circuit model used to convert sensor resistance into a measurable voltage." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/ab80894d625010995dae.webp"/>
-<figcaption class="bp-figcaption">Fig. 12 — Divider topology: patch as variable resistor, 1 kΩ fixed reference to ground.</figcaption>
 </figure>
 <figure class="bp-figure">
 <img alt="Hardware configuration of the strain-sensing platform, including the coated patch, flexible prototype and acquisition setup." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/9564a21417b7b812d96b.webp"/>
-<figcaption class="bp-figcaption">Fig. 13 — Coated patch, flexible prototype with leads, and the acquisition bench.</figcaption>
 </figure>
 <figure class="bp-figure">
 <img alt="Live resistance-versus-time display computed from the measured voltage stream." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/f4095911c47f59a91294.webp"/>
-<figcaption class="bp-figcaption">Fig. 14 — Live resistance trace. Prototype readout; movement calibration is pending.</figcaption>
 </figure>
 </div>
 <div class="bp-code">BAUDRATE  = 115200     # serial link to the acquisition module
@@ -702,7 +678,6 @@ def calculate_resistance(voltage):
 </div>
 <figure class="bp-figure">
 <img alt="Simulated cumulative release at three diffusion coefficients, and the resulting normalised ROS trajectory." loading="lazy" src="https://static.igem.wiki/teams/6046/wiki/media-2026/ea8af97fc916bf0e9676.webp"/>
-<figcaption class="bp-figcaption">Fig. 15 — Cumulative release for three assumed diffusivities, and the ROS trajectory under the intermediate release condition against the no-patch case. Theoretical; requires calibration.</figcaption>
 </figure>
 </div>
 </div>
@@ -762,5 +737,36 @@ def calculate_resistance(voltage):
 </div>
 </footer>
 <script src="js/main.js"></script>
+<script>
+  // Hero spec strip: each figure decodes in on its own beat, using the same
+  // letter-scramble the header menus use. The values are written into the
+  // markup so the strip still reads correctly without JavaScript; this only
+  // replays them. Honour a reduced-motion preference by leaving them static.
+  document.addEventListener('DOMContentLoaded', () => {
+    const specs = document.querySelectorAll('.bp-spec');
+    if (!specs.length || !window.TextScramble) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const parts = [];
+    specs.forEach((spec) => {
+      const value = spec.querySelector('.bp-spec-value');
+      const label = spec.querySelector('.bp-spec-label');
+      [value, label].forEach((el) => {
+        if (!el) return;
+        const scramble = new window.TextScramble(el, { revealFromBlank: true });
+        el.textContent = '';
+        parts.push(scramble);
+      });
+    });
+
+    // Starts after the page-transition overlay has cleared, then walks the
+    // strip left to right: value, its label, next spec.
+    let delay = 420;
+    parts.forEach((scramble) => {
+      setTimeout(() => scramble.run(), delay);
+      delay += 110;
+    });
+  });
+</script>
 </body>
 </html>
